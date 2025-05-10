@@ -11,6 +11,7 @@
 	<groupId>com.flightreservation</groupId>
 	<artifactId>flight-reservation-system</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<name>flight-reservation-system</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -20,6 +21,13 @@
 	<developers>
 		<developer/>
 	</developers>
+	<modules>
+		<module>Api-getway</module>
+		<module>api-getway</module>
+		<module>authentification-service</module>
+		<module>payment-service</module>
+		<module>reservation-service</module>
+	</modules>
 	<scm>
 		<connection/>
 		<developerConnection/>
