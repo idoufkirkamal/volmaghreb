@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.volmaghreb</groupId>
-	<artifactId>payment-service</artifactId>
+	<artifactId>user-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>payment-service</name>
+	<name>user-service</name>
 	<description>Authentication service</description>
 	<url/>
 	<licenses>
