@@ -1,6 +1,25 @@
+# Maven build artifacts
 target/
 *.log
+
+# IntelliJ IDEA files
 .idea/
 *.iml
+
+# macOS system files
 .DS_Store
+
+# Local environment files (for Docker Compose and other configurations)
 .env
+mysql-config.env
+
+# Docker volumes and temporary files
+docker-compose.yml.bak
+*.swp
+
+# Java class files
+*.class
+
+# Miscellaneous
+*.tmp
+*.bak
