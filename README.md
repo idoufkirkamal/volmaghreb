@@ -8,8 +8,6 @@ A flight reservation system built with a microservices architecture using Spring
 - **notification-service/**: Sends email notifications
 - **user-service/**: Manages user profiles
 - **payment-service/**: Handles payment processing
-- **dashboard-service/**: Provides admin statistics
-- **airline-service/**: Manages airline data
 - **airport-service/**: Manages airport data
 
 ## Setup Instructions
