@@ -1,9 +1,76 @@
-# Plan de Répartition du Travail - Système de Réservation de Vols MVC
-## Équipe de 4 Développeurs
+# 📋 Plan de Répartition du Travail - Système de Réservation de Vols MVC
+## 👥 Équipe de 4 Développeurs - VolMaghreb
+
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Java](https://img.shields.io/badge/Java-17+-orange.svg)](https://www.oracle.com/java/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)](https://www.mysql.com/)
+[![Thymeleaf](https://img.shields.io/badge/Thymeleaf-3.1-green.svg)](https://www.thymeleaf.org/)
 
 ---
 
-## 🎯 **PERSONNE 1 : DÉVELOPPEUR BACKEND SENIOR (Authentification & Sécurité)**
+## 📊 **Vue d'ensemble du Projet**
+
+**Nom du Projet** : VolMaghreb - Système de Réservation de Vols  
+**Architecture** : Model-View-Controller (MVC) Monolithique  
+**Technologie principale** : Spring Boot 3.2.0  
+**Durée estimée** : 3 semaines (15 jours ouvrables)  
+**Date de début** : 30 Mai 2025  
+**Date de livraison prévue** : 20 Juin 2025  
+
+### 🎯 **Objectifs du Projet**
+- Développer une plateforme de réservation de vols simple et efficace
+- Implémenter une architecture MVC robuste et maintenable
+- Assurer une expérience utilisateur moderne et responsive
+- Garantir la sécurité des données et des transactions
+- Faciliter la collaboration en équipe avec Git
+
+---
+
+## 🏗️ **Architecture du Système**
+
+### **Pattern MVC Détaillé**
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│      VIEW       │    │   CONTROLLER    │    │      MODEL      │
+│   (Thymeleaf)   │◄───┤  (Spring MVC)   │───►│   (JPA/Hibernate)│
+│                 │    │                 │    │                 │
+│ • Templates     │    │ • @Controller   │    │ • Entities      │
+│ • HTML/CSS/JS   │    │ • @RequestMapping│    │ • Repositories  │
+│ • Static Assets │    │ • @Service      │    │ • Services      │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+### **Stack Technologique**
+| Couche | Technologie | Version | Usage |
+|--------|-------------|---------|-------|
+| **Framework** | Spring Boot | 3.2.0 | Framework principal |
+| **Sécurité** | Spring Security | 6.2.0 | Authentification/Autorisation |
+| **ORM** | Spring Data JPA | 3.2.0 | Accès aux données |
+| **Base de données** | MySQL | 8.0 | Persistance des données |
+| **Template Engine** | Thymeleaf | 3.1.0 | Rendu des vues |
+| **Frontend** | Bootstrap | 5.3.0 | CSS Framework |
+| **Build Tool** | Maven | 3.9.0 | Gestion des dépendances |
+| **Conteneurisation** | Docker | Latest | Environnement de développement |
+
+---
+
+## 👥 **Répartition de l'Équipe & Responsabilités**
+
+### 📊 **Matrice de Responsabilités (RACI)**
+| Tâche | Dev 1 | Dev 2 | Dev 3 | Dev 4 |
+|-------|-------|-------|-------|-------|
+| Configuration projet | **R** | A | C | I |
+| Authentification | **R** | C | I | C |
+| Gestion vols | C | **R** | I | C |
+| Réservations | I | C | **R** | C |
+| Interface utilisateur | C | I | C | **R** |
+| Base de données | C | C | C | **R** |
+| Tests | C | C | C | **R** |
+| Déploiement | I | I | I | **R** |
+
+*R=Responsable, A=Approbateur, C=Consulté, I=Informé*
+
+---
 
 ### **Responsabilités principales :**
 - Configuration du projet Spring Boot principal
