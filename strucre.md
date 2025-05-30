@@ -1173,7 +1173,7 @@ main
 
 ```bash
 # Cloner le projet
-git clone <repository-url>
+git clone <repositories-url>
 cd flight-reservation-mvc
 
 # Installer les dépendances
