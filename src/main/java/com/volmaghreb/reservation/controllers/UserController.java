@@ -8,18 +8,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-@RequestMapping("/users")
 public class UserController {
 
     @Autowired
     private UserServiceImpl userService;
 
-    @GetMapping("/profile")
+    @GetMapping("/users/profile")
     public String getUser(Model model, Authentication authentication) {
-        String email = (authentication != null) ? authentication.getName() : "abdou@gamil.com";
+        String email = authentication.getName();
 
         User user = userService.findByEmail(email);
 
@@ -35,5 +35,12 @@ public class UserController {
         );
         model.addAttribute("user", profile);
         return "user/profile";
+    }
+
+    @PostMapping("/users")
+    public String updateUser(@ModelAttribute("user") UserProfileDTO user, Authentication authentication) {
+        String email = authentication.getName();
+        userService.updateUser(email, user);
+        return "redirect:/users/profile";
     }
 }

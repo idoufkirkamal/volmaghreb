@@ -89,7 +89,7 @@
                             <!-- Card body START -->
                             <div class="card-body">
                                 <!-- Form START -->
-                                <form class="row g-3">
+                                <form th:action="@{/users}" th:object="${user}" method="post" class="row g-3">
                                     <!-- Profile photo -->
                                     <div class="col-12">
                                         <label class="form-label">Upload your profile photo<span class="text-danger">*</span></label>
@@ -108,38 +108,44 @@
 
                                     <!-- Name -->
                                     <div class="col-md-6">
-                                        <label class="form-label">Full Name<span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="fullName" th:value="${user.firstname + ' ' + user.lastname}" placeholder="Enter your full name">
+                                        <label class="form-label">First Name<span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control"  th:field="*{firstname}" placeholder="Enter your first name">
                                     </div>
 
-                                    <!-- Email -->
                                     <div class="col-md-6">
-                                        <label class="form-label">Email address<span class="text-danger">*</span></label>
-                                        <input type="email" name="email" class="form-control" th:value="${user.email}" placeholder="Enter your email id">
+                                        <label class="form-label">Last Name<span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control"  th:field="*{lastname}" placeholder="Enter your last name">
+                                    </div>
+
+                                    <!-- Email (non-editable but still shown) -->                                    <div class="col-md-6">
+                                    <label class="form-label">Email address<span class="text-danger">*</span></label>
+                                        <input type="email" name="email" class="form-control" readonly th:field="*{email}" placeholder="Enter your email id">
                                     </div>
 
                                     <!-- Mobile -->
                                     <div class="col-md-6">
                                         <label class="form-label">Mobile number<span class="text-danger">*</span></label>
-                                        <input type="text" name="phone" class="form-control" th:value="${user.phone}" placeholder="Enter your mobile number">
+                                        <input type="text" name="phone" class="form-control" th:field="*{phone}" placeholder="Enter your mobile number">
                                     </div>
 
                                     <!-- Nationality -->
                                     <div class="col-md-6">
                                         <label class="form-label">Nationality<span class="text-danger">*</span></label>
-                                        <select class="form-select js-choice" name="nationality">
+                                        <select class="form-select js-choice" th:field="*{nationality}">
                                             <option value="">Select your country</option>
-                                            <option th:selected="${user.nationality == 'USA'}">USA</option>
-                                            <option th:selected="${user.nationality == 'Paris'}">Paris</option>
-                                            <option th:selected="${user.nationality == 'India'}">India</option>
-                                            <option th:selected="${user.nationality == 'UK'}">UK</option>
+                                            <option value="USA">USA</option>
+                                            <option value="Paris">Paris</option>
+                                            <option value="India">India</option>
+                                            <option value="UK">UK</option>
                                         </select>
+
                                     </div>
 
                                     <!-- Date of birth -->
                                     <div class="col-md-6">
                                         <label class="form-label">Date of Birth<span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control flatpickr" th:value="${#temporals.format(user.dateOfBirth, 'dd MMM yyyy')}" placeholder="Enter date of birth" data-date-format="d M Y">
+<!--                                     <input type="text" class="form-control flatpickr" th:field="*{dateOfBirth}" placeholder="Enter date of birth" data-date-format="d M Y">-->
+                                        <input type="date" class="form-control" th:field="*{dateOfBirth}">
                                     </div>
 
                                     <!-- Gender -->
@@ -147,11 +153,11 @@
                                         <label class="form-label">Select Gender<span class="text-danger">*</span></label>
                                         <div class="d-flex gap-4">
                                             <div class="form-check radio-bg-light">
-                                                <input class="form-check-input" type="radio" name="sex" id="male" value="MALE" th:checked="${user.sex.name() == 'MALE'}">
+                                                <input class="form-check-input" type="radio" th:field="*{sex}" id="male" value="MALE">
                                                 <label class="form-check-label" for="male">Male</label>
                                             </div>
                                             <div class="form-check radio-bg-light">
-                                                <input class="form-check-input" type="radio" name="sex" id="female" value="FEMALE" th:checked="${user.sex.name() == 'FEMALE'}">
+                                                <input class="form-check-input" type="radio" th:field="*{sex}" id="female" value="FEMALE">
                                                 <label class="form-check-label" for="female">Female</label>
                                             </div>
                                         </div>
@@ -160,12 +166,13 @@
                                     <!-- Address -->
                                     <div class="col-12">
                                         <label class="form-label">Address</label>
-                                        <textarea class="form-control" name="address" rows="3" spellcheck="false" th:text="${user.address}">Your address</textarea>
+                                        <textarea class="form-control" name="address" rows="3" spellcheck="false" th:field="*{address}">Your address</textarea>
                                     </div>
 
                                     <!-- Button -->
                                     <div class="col-12 text-end">
-                                        <a href="#" class="btn btn-primary mb-0">Save Changes</a>
+<!--                                        <a href="#" class="btn btn-primary mb-0">Save Changes</a>-->
+                                        <button type="submit" class="btn btn-primary mb-0">Save Changes</button>
                                     </div>
                                 </form>
                                 <!-- Form END -->
