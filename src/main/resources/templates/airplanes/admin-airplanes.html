@@ -225,8 +225,56 @@
                     </div>
                 </div>
             </div>
+        </div>        <!-- Confirm Delete Modal END -->
+
+        <!-- Confirm Add Modal START -->
+        <div class="modal fade" id="confirmAddModal" tabindex="-1" aria-labelledby="confirmAddModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmAddModalLabel">Confirm Addition</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to add this airplane?</p>
+                        <p><strong>Model:</strong> <span id="addAirplaneModel"></span></p>
+                        <p><strong>First Class Capacity:</strong> <span id="addFirstClass"></span></p>
+                        <p><strong>Business Class Capacity:</strong> <span id="addBusinessClass"></span></p>
+                        <p><strong>Economy Class Capacity:</strong> <span id="addEconomyClass"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmAddBtn">Add Airplane</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- Confirm Delete Modal END -->
+        <!-- Confirm Add Modal END -->
+
+        <!-- Confirm Edit Modal START -->
+        <div class="modal fade" id="confirmEditModal" tabindex="-1" aria-labelledby="confirmEditModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmEditModalLabel">Confirm Update</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to update this airplane?</p>
+                        <p><strong>ID:</strong> <span id="editAirplaneIdConfirm"></span></p>
+                        <p><strong>Model:</strong> <span id="editAirplaneModel"></span></p>
+                        <p><strong>First Class Capacity:</strong> <span id="editFirstClass"></span></p>
+                        <p><strong>Business Class Capacity:</strong> <span id="editBusinessClass"></span></p>
+                        <p><strong>Economy Class Capacity:</strong> <span id="editEconomyClass"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmEditBtn">Update Airplane</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Confirm Edit Modal END -->
 	</div>
 	<!-- Page content END -->
 	
@@ -246,16 +294,19 @@
         const airplaneDetailModal = document.getElementById('airplaneDetailModal');
         const airplaneForm = document.getElementById('airplaneForm');
         const saveAirplaneBtn = document.getElementById('saveAirplaneBtn');
-        const airplaneFormModalLabel = document.getElementById('airplaneFormModalLabel');
-        const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+        const airplaneFormModalLabel = document.getElementById('airplaneFormModalLabel');        const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+        const confirmAddModal = document.getElementById('confirmAddModal');
+        const confirmEditModal = document.getElementById('confirmEditModal');
         const deleteAirplaneIdSpan = document.getElementById('deleteAirplaneId');
         const deleteAirplaneModelSpan = document.getElementById('deleteAirplaneModel');
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        const confirmAddBtn = document.getElementById('confirmAddBtn');
+        const confirmEditBtn = document.getElementById('confirmEditBtn');
         const editAirplaneBtn = document.getElementById('editAirplaneBtn');
-        const removeAirplaneBtn = document.getElementById('removeAirplaneBtn');
-        
+        const removeAirplaneBtn = document.getElementById('removeAirplaneBtn');        
         let currentAirplaneId = null;
-        let currentAirplaneData = {};        // Get CSRF token from meta tag (with null check for when CSRF is disabled)
+        let currentAirplaneData = {};
+        let pendingAirplaneData = {};// Get CSRF token from meta tag (with null check for when CSRF is disabled)
         const csrfTokenElement = document.querySelector('meta[name="_csrf"]');
         const csrfHeaderElement = document.querySelector('meta[name="_csrf_header"]');
         const csrfToken = csrfTokenElement ? csrfTokenElement.getAttribute('content') : null;
@@ -314,9 +365,7 @@
         // Handle edit button in detail modal
         editAirplaneBtn.addEventListener('click', () => {
             editAirplaneBtn.setAttribute('data-bs-mode', 'edit');
-        });
-
-        // Handle form submission
+        });        // Handle form submission
         airplaneForm.addEventListener('submit', (event) => {
             event.preventDefault();
             
@@ -325,9 +374,39 @@
                 firstClassCapacity: parseInt(document.getElementById('firstClassCapacity').value),
                 businessClassCapacity: parseInt(document.getElementById('businessClassCapacity').value),
                 economyClassCapacity: parseInt(document.getElementById('economyClassCapacity').value)
-            };            const isUpdate = saveAirplaneBtn.textContent === 'Update';
-            const url = isUpdate ? `/volmaghreb/api/airplanes/${currentAirplaneId}` : '/volmaghreb/api/airplanes';
-            const method = isUpdate ? 'PUT' : 'POST';// Set CSRF header (only if CSRF is enabled)
+            };
+
+            // Store pending data for confirmation
+            pendingAirplaneData = airplaneData;
+            
+            const isUpdate = saveAirplaneBtn.textContent === 'Update';
+            
+            if (isUpdate) {
+                // Show edit confirmation modal
+                document.getElementById('editAirplaneIdConfirm').textContent = currentAirplaneId;
+                document.getElementById('editAirplaneModel').textContent = airplaneData.model;
+                document.getElementById('editFirstClass').textContent = airplaneData.firstClassCapacity;
+                document.getElementById('editBusinessClass').textContent = airplaneData.businessClassCapacity;
+                document.getElementById('editEconomyClass').textContent = airplaneData.economyClassCapacity;
+                
+                bootstrap.Modal.getInstance(airplaneFormModal).hide();
+                const editModal = new bootstrap.Modal(confirmEditModal);
+                editModal.show();
+            } else {
+                // Show add confirmation modal
+                document.getElementById('addAirplaneModel').textContent = airplaneData.model;
+                document.getElementById('addFirstClass').textContent = airplaneData.firstClassCapacity;
+                document.getElementById('addBusinessClass').textContent = airplaneData.businessClassCapacity;
+                document.getElementById('addEconomyClass').textContent = airplaneData.economyClassCapacity;
+                
+                bootstrap.Modal.getInstance(airplaneFormModal).hide();
+                const addModal = new bootstrap.Modal(confirmAddModal);
+                addModal.show();
+            }
+        });
+
+        // Handle confirm add
+        confirmAddBtn.addEventListener('click', () => {
             const headers = {
                 'Content-Type': 'application/json'
             };
@@ -335,10 +414,10 @@
                 headers[csrfHeader] = csrfToken;
             }
 
-            fetch(url, {
-                method: method,
+            fetch('/volmaghreb/api/airplanes', {
+                method: 'POST',
                 headers: headers,
-                body: JSON.stringify(airplaneData)
+                body: JSON.stringify(pendingAirplaneData)
             })
             .then(response => {
                 if (!response.ok) {
@@ -347,8 +426,40 @@
                 return response.json();
             })
             .then(data => {
-                console.log('Airplane saved:', data);
-                bootstrap.Modal.getInstance(airplaneFormModal).hide();
+                console.log('Airplane added:', data);
+                bootstrap.Modal.getInstance(confirmAddModal).hide();
+                // Refresh the page to show updated data
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error adding airplane:', error);
+                alert('Error adding airplane: ' + error.message);
+            });
+        });
+
+        // Handle confirm edit
+        confirmEditBtn.addEventListener('click', () => {
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            if (csrfToken && csrfHeader) {
+                headers[csrfHeader] = csrfToken;
+            }
+
+            fetch(`/volmaghreb/api/airplanes/${currentAirplaneId}`, {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(pendingAirplaneData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Airplane updated:', data);
+                bootstrap.Modal.getInstance(confirmEditModal).hide();
                 // Close detail modal if open
                 if (airplaneDetailModal.classList.contains('show')) {
                     bootstrap.Modal.getInstance(airplaneDetailModal).hide();
@@ -357,8 +468,8 @@
                 window.location.reload();
             })
             .catch(error => {
-                console.error('Error saving airplane:', error);
-                alert('Error saving airplane: ' + error.message);
+                console.error('Error updating airplane:', error);
+                alert('Error updating airplane: ' + error.message);
             });
         });
 
@@ -398,14 +509,26 @@
                 console.error('Error removing airplane:', error);
                 alert('Error removing airplane: ' + error.message);
             });
-        });
-
-        // Ensure proper modal layering
+        });        // Ensure proper modal layering
         confirmDeleteModal.addEventListener('show.bs.modal', () => {
             document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
                 backdrop.style.zIndex = '1050';
             });
             confirmDeleteModal.style.zIndex = '1060';
+        });
+
+        confirmAddModal.addEventListener('show.bs.modal', () => {
+            document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+                backdrop.style.zIndex = '1050';
+            });
+            confirmAddModal.style.zIndex = '1060';
+        });
+
+        confirmEditModal.addEventListener('show.bs.modal', () => {
+            document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+                backdrop.style.zIndex = '1050';
+            });
+            confirmEditModal.style.zIndex = '1060';
         });
     });
 </script>
