@@ -9,17 +9,16 @@ import lombok.AllArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class aireport {
+@Table(name = "aireports")
+public class Aireport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;   @Column(nullable = false)
+    private Long id;  
+    
+    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
     private String country;
-
-    @Column(nullable = false)
     private String city;
 
     @Column(unique = true, nullable = false)

@@ -1,6 +1,6 @@
 package com.volmaghreb.reservation.controllers;
 
-import com.volmaghreb.reservation.entities.aireport;
+import com.volmaghreb.reservation.entities.Aireport;
 import com.volmaghreb.reservation.services.AireportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,18 +17,18 @@ public class AireportController {
     private AireportService aireportService;
 
     @GetMapping
-    public List<aireport> getAllAireports() {
+    public List<Aireport> getAllAireports() {
         return aireportService.getAllAireports();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<aireport> getAireportById(@PathVariable Long id) {
-        Optional<aireport> aireport = aireportService.getAireportById(id);
+    public ResponseEntity<Aireport> getAireportById(@PathVariable Long id) {
+        Optional<Aireport> aireport = aireportService.getAireportById(id);
         return aireport.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public aireport createAireport(@RequestBody aireport aireport) {
+    public Aireport createAireport(@RequestBody Aireport aireport) {
         return aireportService.saveAireport(aireport);
     }
 
