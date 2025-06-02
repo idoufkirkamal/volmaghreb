@@ -1,0 +1,60 @@
+<nav th:fragment="admin-sidebar" class="navbar sidebar navbar-expand-xl navbar-light">
+    <!-- Navbar brand for xl START -->
+    <div class="d-flex align-items-center">
+        <a class="navbar-brand" th:href="@{/admin/dashboard}">
+            <img class="light-mode-item navbar-brand-item h-70px" th:src="@{/assets/images/logo-dark.png}" alt="logo">
+            <img class="dark-mode-item navbar-brand-item h-70px" th:src="@{/assets/images/logo-light.png}" alt="logo">
+        </a>
+    </div>
+    <!-- Navbar brand for xl END -->
+    
+    <div class="offcanvas offcanvas-start flex-row custom-scrollbar h-100" data-bs-backdrop="true" tabindex="-1" id="offcanvasSidebar">
+        <div class="offcanvas-body sidebar-content d-flex flex-column pt-4">
+
+            <!-- Sidebar menu START -->
+            <ul class="navbar-nav flex-column" id="navbar-sidebar">                <!-- Menu item -->
+                <li class="nav-item">
+                    <a th:href="@{/admin/dashboard}" 
+                       th:class="${#httpServletRequest != null and #strings.contains(#httpServletRequest.requestURI, '/admin/dashboard') ? 'nav-link active' : 'nav-link'}">
+                        <i class="bi bi-house-door fa-fw me-1"></i>Dashboard
+                    </a>
+                </li>
+
+                <!-- Title -->
+                <li class="nav-item ms-2 my-2">Pages</li>
+                  <!-- Menu item -->
+                <li class="nav-item"> 
+                    <a th:href="@{/admin/flights}" 
+                       th:class="${#httpServletRequest != null and #strings.contains(#httpServletRequest.requestURI, '/admin/flights') ? 'nav-link active' : 'nav-link'}">
+                        <i class="fa-solid fa-plane fa-fw me-1"></i>Flights
+                    </a>
+                </li>                <!-- Menu item -->
+                <li class="nav-item"> 
+                    <a th:href="@{/admin/reservations}" 
+                       th:class="${#httpServletRequest != null and #strings.contains(#httpServletRequest.requestURI, '/admin/reservations') ? 'nav-link active' : 'nav-link'}">
+                        <i class="fa-solid fa-ticket fa-fw me-1"></i>Reservations
+                    </a>
+                </li>                <!-- Menu item -->
+                <li class="nav-item"> 
+                    <a th:href="@{/admin/users}" 
+                       th:class="${#httpServletRequest != null and #strings.contains(#httpServletRequest.requestURI, '/admin/users') ? 'nav-link active' : 'nav-link'}">
+                        <i class="fa-solid fa-user fa-fw me-1"></i>Users
+                    </a>
+                </li>                <!-- Menu item -->
+                <li class="nav-item"> 
+                    <a th:href="@{/admin/airplanes}" 
+                       th:class="${#httpServletRequest != null and #strings.contains(#httpServletRequest.requestURI, '/admin/airplanes') ? 'nav-link active' : 'nav-link'}">
+                        <i class="fa-solid fa-plane-circle-check fa-fw me-1"></i>Airplanes
+                    </a>
+                </li>                <!-- Menu item -->
+                <li class="nav-item"> 
+                    <a th:href="@{/admin/airports}" 
+                       th:class="${#httpServletRequest != null and #strings.contains(#httpServletRequest.requestURI, '/admin/airports') ? 'nav-link active' : 'nav-link'}">
+                        <i class="fa-solid fa-map-marker-alt fa-fw me-1"></i>Airports
+                    </a>
+                </li>
+            </ul>
+            <!-- Sidebar menu end -->
+        </div>
+    </div>
+</nav>
