@@ -190,30 +190,33 @@
                             </div>
 
                             <!-- Card body START -->
-                            <form class="card-body">
+                            <form th:action="@{/users/update-password}" th:object="${passwordUpdate}" method="post" class="card-body">
                                 <!-- Current password -->
                                 <div class="mb-3">
                                     <label class="form-label">Current password</label>
-                                    <input class="form-control" type="password" placeholder="Enter current password">
+                                    <input th:field="*{oldPassword}" class="form-control" type="password" placeholder="Enter current password">
+                                    <small th:if="${#fields.hasErrors('oldPassword')}" th:errorclass="text-danger" th:errors="*{oldPassword}"></small>
                                 </div>
                                 <!-- New password -->
                                 <div class="mb-3">
                                     <label class="form-label"> Enter new password</label>
                                     <div class="input-group">
-                                        <input class="form-control fakepassword" placeholder="Enter new password" type="password" id="psw-input">
+                                        <input th:field="*{newPassword}" class="form-control fakepassword" placeholder="Enter new password" type="password" id="psw-input">
                                         <span class="input-group-text p-0 bg-transparent">
-										<i class="fakepasswordicon fas fa-eye-slash cursor-pointer p-2"></i>
-									</span>
+                                            <i class="fakepasswordicon fas fa-eye-slash cursor-pointer p-2"></i>
+                                        </span>
+                                        <small th:if="${#fields.hasErrors('newPassword')}" th:errorclass="text-danger" th:errors="*{newPassword}"></small>
                                     </div>
                                 </div>
                                 <!-- Confirm -->
                                 <div class="mb-3">
                                     <label class="form-label">Confirm new password</label>
-                                    <input class="form-control" type="password" placeholder="Confirm new password">
+                                    <input th:field="*{confirmPassword}" class="form-control" type="password" placeholder="Confirm new password">
+                                    <small th:if="${#fields.hasErrors('confirmPassword')}" th:errorclass="text-danger" th:errors="*{confirmPassword}"></small>
                                 </div>
 
                                 <div class="text-end">
-                                    <a href="#" class="btn btn-primary mb-0">Change Password</a>
+                                    <button type="submit" class="btn btn-primary mb-0">Change Password</button>
                                 </div>
                             </form>
                             <!-- Card body END -->

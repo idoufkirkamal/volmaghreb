@@ -1,9 +1,11 @@
 package com.volmaghreb.reservation.services;
 
+import com.volmaghreb.reservation.dtos.PasswordUpdateDTO;
 import com.volmaghreb.reservation.dtos.UserProfileDTO;
-import com.volmaghreb.reservation.entities.User;
+import org.springframework.validation.BindingResult;
 
 public interface UserService {
-    User findByEmail(String email);
+    UserProfileDTO findByEmail(String email);
     void updateUser(String email, UserProfileDTO user);
+    boolean updatePassword(String email, PasswordUpdateDTO dto, BindingResult result);
 }
