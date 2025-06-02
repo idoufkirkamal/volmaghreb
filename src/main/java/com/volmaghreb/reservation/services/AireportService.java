@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class AireportService {
 
@@ -20,6 +21,10 @@ public class AireportService {
 
     public Optional<Aireport> getAireportById(Long id) {
         return aireportRepository.findById(id);
+    }
+
+    public Optional<Aireport> getAireportByCode(String code) {
+        return aireportRepository.findByCode(code);
     }
 
     public Aireport saveAireport(Aireport aireport) {
