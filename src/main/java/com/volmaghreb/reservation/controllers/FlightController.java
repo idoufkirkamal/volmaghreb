@@ -37,13 +37,21 @@ public class FlightController {
     @PostMapping
     public Flight createFlight(@RequestBody Flight flight) {
         return flightService.saveFlight(flight);
-    }
-    
-    @PutMapping("/{id}")
+    }    @PutMapping("/{id}")
     public ResponseEntity<Flight> updateFlight(@PathVariable Long id, @RequestBody Flight flight) {
-        flight.setId(id);
-        Flight updatedFlight = flightService.saveFlight(flight);
-        return ResponseEntity.ok(updatedFlight);
+        try {
+            // Don't modify the reservations collection to avoid Hibernate cascade issues
+            Flight updatedFlight = flightService.updateFlight(id, flight);
+            return ResponseEntity.ok(updatedFlight);
+        } catch (RuntimeException e) {
+            System.err.println("Error updating flight: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            System.err.println("Error updating flight: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
     
     @DeleteMapping("/{id}")
