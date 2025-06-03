@@ -46,11 +46,12 @@
                        th:class="${#httpServletRequest != null and #strings.contains(#httpServletRequest.requestURI, '/admin/airplanes') ? 'nav-link active' : 'nav-link'}">
                         <i class="fa-solid fa-plane-circle-check fa-fw me-1"></i>Airplanes
                     </a>
-                </li>                <!-- Menu item -->
+                </li>    
+                <!-- Menu item -->
                 <li class="nav-item"> 
                     <a th:href="@{/admin/airports}" 
                        th:class="${#httpServletRequest != null and #strings.contains(#httpServletRequest.requestURI, '/admin/airports') ? 'nav-link active' : 'nav-link'}">
-                        <i class="fa-solid fa-map-marker-alt fa-fw me-1"></i>Airports
+                        <i class="fa-solid fa-plane-departure fa-fw me-1"></i>Airports
                     </a>
                 </li>
             </ul>
