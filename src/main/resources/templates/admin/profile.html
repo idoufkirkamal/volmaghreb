@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Mirrored from stackbros.in/bookinga/landing/account-profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 Apr 2025 18:38:22 GMT -->
+<head th:replace="~{admin/fragments/head :: admin-head(title='Profile')}"></head>
+
+<body class="dashboard">
+
+<!-- Header START -->
+<header th:replace="/fragments/navbar :: navbar"></header>
+<!-- Header END -->
+
+<!-- **************** MAIN CONTENT START **************** -->
+<main>
+
+<!-- =======================
+Content START -->
+<section class="pt-3">
+	<div class="container">
+		<div class="row">
+
+			<!-- Sidebar START -->
+			<div th:replace="/fragments/profileSidebarFragment :: profile-sidebar"></div>
+			<!-- Sidebar END -->
+
+			<!-- Main content START -->
+			<div class="col-lg-8 col-xl-9">
+
+				<!-- Offcanvas menu button -->
+				<div class="d-grid mb-0 d-lg-none w-100">
+					<button class="btn btn-primary mb-4" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+						<i class="fas fa-sliders-h"></i> Menu
+					</button>
+				</div>
+
+				<div class="vstack gap-4">
+
+					<!-- Personal info START -->
+					<div class="card border">
+						<!-- Card header -->
+						<div class="card-header border-bottom">
+							<h4 class="card-header-title">Personal Information</h4>
+						</div>
+
+						<!-- Card body START -->
+						<div th:replace="/fragments/profileFormFragment :: profile-form"></div>
+
+						<!-- Card body END -->
+					</div>
+					<!-- Personal info END -->
+
+					<!-- Update Password START -->
+					<div th:replace="/fragments/passwordFormFragment :: password-form"></div>
+					<!-- Update Password END -->
+				</div>
+			</div>
+			<!-- Main content END -->
+
+		</div>
+	</div>
+</section>
+<!-- =======================
+Content END -->
+
+</main>
+<!-- **************** MAIN CONTENT END **************** -->
+
+
+<!-- ======================= Footer START -->
+<div th:replace="/fragments/footer :: footer"></div>
+<!-- ======================= Footer END -->
+
+Footer END -->
+
+<!-- Back to top -->
+<div class="back-top"></div>
+
+<!-- Bootstrap JS -->
+<script th:src="@{/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Vendors -->
+<script th:src="@{/assets/vendor/aos/aos.js}"></script>
+<script th:src="@{/assets/vendor/flatpickr/js/flatpickr.min.js}"></script>
+<script th:src="@{/assets/vendor/choices/js/choices.min.js}"></script>
+
+<!-- ThemeFunctions -->
+<script th:src="@{/assets/js/functions.js}"></script>
+
+</body>
+
+<!-- Mirrored from stackbros.in/bookinga/landing/account-profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 Apr 2025 18:38:22 GMT -->
+</html>

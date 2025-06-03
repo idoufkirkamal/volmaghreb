@@ -9,7 +9,7 @@ import org.springframework.validation.BindingResult;
 import java.util.List;
 
 public interface UserService {
-    PaginatedResponse<UserManagementDTO> getAll(int page, int size);
+    PaginatedResponse<UserManagementDTO> getAllClients(int page, int size);
     UserProfileDTO findByEmail(String email);
     void updateUser(String email, UserProfileDTO user);
     boolean updatePassword(String email, PasswordUpdateDTO dto, BindingResult result);
