@@ -1,25 +1,22 @@
 package com.volmaghreb.reservation.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "iataCode"))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "aireports")
-public class Aireport {    @Id
+public class Airport {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  
+    private Long id;    @Column(unique = true, length = 3, nullable = false)
+    private String iataCode;
     
-    @Column(unique = true, nullable = false)
-    private String code;
     private String name;
     private String city;
     private String country;
-
-    
-    
 }
