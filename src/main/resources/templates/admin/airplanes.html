@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/admin-head :: admin-head(title='Airplane Management')}"></head>
+<head th:replace="~{admin/fragments/head :: admin-head(title='Airplane Management')}"></head>
 
 <body>
 
@@ -9,14 +9,14 @@
 <main>
 	
 	<!-- Sidebar START -->
-	<nav th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></nav>
+	<nav th:replace="~{admin/fragments/sidebar :: admin-sidebar}"></nav>
 	<!-- Sidebar END -->
 	
 	<!-- Page content START -->
 	<div class="page-content">
 	
 		<!-- Top bar START -->
-		<nav th:replace="~{fragments/admin-navbar :: admin-navbar}"></nav>
+		<nav th:replace="~{admin/fragments/navbar :: admin-navbar}"></nav>
 		<!-- Top bar END -->
 	
 		<!-- Content START -->
