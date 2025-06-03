@@ -12,12 +12,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class UserController {
 
     @Autowired
     private UserServiceImpl userService;
+
+    @GetMapping("/admin/users")
+    public String getUsers(@RequestParam(defaultValue = "0") int page, Model model) {
+        model.addAttribute("page", userService.getAll(page, 5));
+        return "admin/admin-users";
+    }
 
     @GetMapping("/users/profile")
     public String getUser(Model model, Authentication authentication) {

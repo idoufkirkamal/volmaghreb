@@ -1,5 +1,6 @@
 package com.volmaghreb.reservation.enums;
 
 public enum Role {
-    CLIENT, ADMIN
+    ROLE_CLIENT,
+    ROLE_ADMIN
 }
