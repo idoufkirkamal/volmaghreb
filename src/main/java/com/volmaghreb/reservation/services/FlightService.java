@@ -26,8 +26,9 @@ public interface FlightService {
     List<Flight> getFlightsByRoute(Long originId, Long destinationId);
     
     List<Flight> getFlightsByDateRange(LocalDateTime startDate, LocalDateTime endDate);
-    
-    String generateFlightNumber();
+      String generateFlightNumber();
     
     boolean isFlightNumberUnique(String flightNumber);
+    
+    Flight updateFlight(Long id, Flight flightData);
 }

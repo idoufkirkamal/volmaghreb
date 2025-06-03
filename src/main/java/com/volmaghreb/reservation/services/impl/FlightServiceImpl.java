@@ -6,6 +6,7 @@ import com.volmaghreb.reservation.repositories.FlightRepository;
 import com.volmaghreb.reservation.services.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,6 +35,7 @@ public class FlightServiceImpl implements FlightService {
     }
     
     @Override
+    @Transactional
     public Flight saveFlight(Flight flight) {
         // Generate flight number if not provided
         if (flight.getFlightNumber() == null || flight.getFlightNumber().isEmpty()) {
@@ -84,5 +86,28 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public boolean isFlightNumberUnique(String flightNumber) {
         return !flightRepository.existsByFlightNumber(flightNumber);
+    }
+    
+    @Override
+    @Transactional
+    public Flight updateFlight(Long id, Flight flightData) {
+        Optional<Flight> existingFlightOpt = flightRepository.findById(id);
+        if (existingFlightOpt.isEmpty()) {
+            throw new RuntimeException("Flight not found with id: " + id);
+        }
+
+        Flight existingFlight = existingFlightOpt.get();
+
+        // Update basic fields
+        existingFlight.setFlightNumber(flightData.getFlightNumber());
+        existingFlight.setOriginAirport(flightData.getOriginAirport());
+        existingFlight.setDestinationAirport(flightData.getDestinationAirport());
+        existingFlight.setAirplane(flightData.getAirplane());
+        existingFlight.setDepartureDateTime(flightData.getDepartureDateTime());
+        existingFlight.setArrivalDateTime(flightData.getArrivalDateTime());
+        existingFlight.setPrice(flightData.getPrice());
+        existingFlight.setStatus(flightData.getStatus());
+
+        return flightRepository.save(existingFlight);
     }
 }
