@@ -1,7 +1,9 @@
 package com.volmaghreb.reservation.controllers;
 
 import com.volmaghreb.reservation.entities.Airplane;
+import com.volmaghreb.reservation.entities.Airport;
 import com.volmaghreb.reservation.services.AirplaneService;
+import com.volmaghreb.reservation.services.AirportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,9 @@ public class AdminController {
 
     @Autowired
     private AirplaneService airplaneService;
+    
+    @Autowired
+    private AirportService airportService;
 
     @GetMapping("/dashboard")
     public String adminDashboard(Model model) {
@@ -28,7 +33,7 @@ public class AdminController {
         List<Airplane> airplanes = airplaneService.getAllAirplanes();
         model.addAttribute("airplanes", airplanes);
         model.addAttribute("pageTitle", "Airplane Management - Booking");
-        return "airplanes/admin-airplanes";
+        return "admin/airplanes";
     }
 
     @GetMapping("/flights")
@@ -51,7 +56,9 @@ public class AdminController {
 
     @GetMapping("/airports")
     public String adminAirports(Model model) {
+        List<Airport> airports = airportService.getAllAirports();
+        model.addAttribute("airports", airports);
         model.addAttribute("pageTitle", "Airport Management - Booking");
-        return "airports/admin-airports";
+        return "admin/airports";
     }
 }
