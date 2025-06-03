@@ -15,7 +15,9 @@ public class DataSeeder implements CommandLineRunner {
     private AirportRepository airportRepository;
     
     @Autowired
-    private AirplaneRepository airplaneRepository;    @Override
+    private AirplaneRepository airplaneRepository;
+
+    @Override
     public void run(String... args) throws Exception {
         // Only seed data if the airport table is empty
         if (airportRepository.count() == 0) {
@@ -53,7 +55,9 @@ public class DataSeeder implements CommandLineRunner {
         createAirportIfNotExists("NDR", "Nador International Airport", "Nador", "Morocco");
         createAirportIfNotExists("OUJ", "Angads Airport", "Oujda", "Morocco");
         createAirportIfNotExists("ESS", "Essaouira-Mogador Airport", "Essaouira", "Morocco");
-    }    private void createAirportIfNotExists(String iataCode, String name, String city, String country) {
+    }
+
+    private void createAirportIfNotExists(String iataCode, String name, String city, String country) {
         if (!airportRepository.existsByIataCode(iataCode)) {
             Airport airport = new Airport();
             airport.setIataCode(iataCode);
