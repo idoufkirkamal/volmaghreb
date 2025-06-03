@@ -8,13 +8,14 @@ import com.volmaghreb.reservation.services.AirportService;
 import com.volmaghreb.reservation.services.FlightService;
 import com.volmaghreb.reservation.services.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
@@ -54,7 +55,7 @@ public class AdminController {
     }
 
     @GetMapping("/flights")
-    public String adminFlights(Model model) {
+    public String adminFlights(Model model, HttpServletRequest request) {
         List<Flight> flights = flightService.getAllFlights();
         List<Airport> airports = airportService.getAllAirports();
         List<Airplane> airplanes = airplaneService.getAllAirplanes();
@@ -62,6 +63,7 @@ public class AdminController {
         model.addAttribute("flights", flights);
         model.addAttribute("airports", airports);
         model.addAttribute("airplanes", airplanes);
+        model.addAttribute("contextPath", request.getContextPath());
         model.addAttribute("pageTitle", "Flight Management - Booking");
         return "admin/flights";
     }
@@ -78,5 +80,55 @@ public class AdminController {
         model.addAttribute("airports", airports);
         model.addAttribute("pageTitle", "Airport Management - Booking");
         return "admin/airports";
+    }
+
+    // REST endpoints for flight management
+    @PostMapping("/flights")
+    @ResponseBody
+    public Flight createFlight(@RequestBody Flight flight) {
+        return flightService.saveFlight(flight);
+    }
+    
+    @PutMapping("/flights/{id}")
+    @ResponseBody
+    public ResponseEntity<Flight> updateFlight(@PathVariable Long id, @RequestBody Flight flight) {
+        try {
+            Flight updatedFlight = flightService.updateFlight(id, flight);
+            return ResponseEntity.ok(updatedFlight);
+        } catch (RuntimeException e) {
+            System.err.println("Error updating flight: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            System.err.println("Error updating flight: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    
+    @DeleteMapping("/flights/{id}")
+    @ResponseBody
+    public ResponseEntity<Void> deleteFlight(@PathVariable Long id) {
+        flightService.deleteFlight(id);
+        return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/flights/{id}")
+    @ResponseBody
+    public ResponseEntity<Flight> getFlightById(@PathVariable Long id) {
+        Optional<Flight> flight = flightService.getFlightById(id);
+        return flight.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    
+    @GetMapping("/flights/generate-number")
+    @ResponseBody
+    public ResponseEntity<String> generateFlightNumber() {
+        return ResponseEntity.ok(flightService.generateFlightNumber());
+    }
+    
+    @GetMapping("/flights/search")
+    @ResponseBody
+    public List<Flight> searchFlights(@RequestParam String searchTerm) {
+        return flightService.searchFlights(searchTerm);
     }
 }
