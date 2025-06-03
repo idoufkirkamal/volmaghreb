@@ -2,8 +2,10 @@ package com.volmaghreb.reservation.controllers;
 
 import com.volmaghreb.reservation.entities.Airplane;
 import com.volmaghreb.reservation.entities.Airport;
+import com.volmaghreb.reservation.entities.Flight;
 import com.volmaghreb.reservation.services.AirplaneService;
 import com.volmaghreb.reservation.services.AirportService;
+import com.volmaghreb.reservation.services.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +23,9 @@ public class AdminController {
     
     @Autowired
     private AirportService airportService;
+    
+    @Autowired
+    private FlightService flightService;
 
     @GetMapping("/dashboard")
     public String adminDashboard(Model model) {
@@ -38,8 +43,15 @@ public class AdminController {
 
     @GetMapping("/flights")
     public String adminFlights(Model model) {
+        List<Flight> flights = flightService.getAllFlights();
+        List<Airport> airports = airportService.getAllAirports();
+        List<Airplane> airplanes = airplaneService.getAllAirplanes();
+        
+        model.addAttribute("flights", flights);
+        model.addAttribute("airports", airports);
+        model.addAttribute("airplanes", airplanes);
         model.addAttribute("pageTitle", "Flight Management - Booking");
-        return "flights/admin-flights";
+        return "admin/flights";
     }
 
     @GetMapping("/reservations")
