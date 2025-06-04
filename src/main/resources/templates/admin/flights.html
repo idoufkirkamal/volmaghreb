@@ -284,9 +284,61 @@
                         <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Yes, Remove</button>
                     </div>
                 </div>
+            </div>        </div>
+        <!-- Confirm Delete Modal END -->
+
+        <!-- Confirm Add Modal START -->
+        <div class="modal fade" id="confirmAddModal" tabindex="-1" aria-labelledby="confirmAddModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmAddModalLabel">Confirm Addition</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to add this flight?</p>
+                        <p><strong>Flight Number:</strong> <span id="addFlightNumber"></span></p>
+                        <p><strong>Route:</strong> <span id="addFlightRoute"></span></p>
+                        <p><strong>Departure:</strong> <span id="addFlightDeparture"></span></p>
+                        <p><strong>Arrival:</strong> <span id="addFlightArrival"></span></p>
+                        <p><strong>Airplane:</strong> <span id="addFlightAirplane"></span></p>
+                        <p><strong>Price:</strong> <span id="addFlightPrice"></span> MAD</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmAddBtn">Add Flight</button>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- Confirm Delete Modal END -->
+        <!-- Confirm Add Modal END -->
+
+        <!-- Confirm Edit Modal START -->
+        <div class="modal fade" id="confirmEditModal" tabindex="-1" aria-labelledby="confirmEditModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmEditModalLabel">Confirm Update</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to update this flight?</p>
+                        <p><strong>Flight Number:</strong> <span id="editFlightNumber"></span></p>
+                        <p><strong>Route:</strong> <span id="editFlightRoute"></span></p>
+                        <p><strong>Departure:</strong> <span id="editFlightDeparture"></span></p>
+                        <p><strong>Arrival:</strong> <span id="editFlightArrival"></span></p>
+                        <p><strong>Airplane:</strong> <span id="editFlightAirplane"></span></p>
+                        <p><strong>Price:</strong> <span id="editFlightPrice"></span> MAD</p>
+                        <p><strong>Status:</strong> <span id="editFlightStatus"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmEditBtn">Update Flight</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Confirm Edit Modal END -->
     </div>
     <!-- Page content END -->
 </main>
@@ -326,14 +378,21 @@ document.addEventListener('DOMContentLoaded', function() {
     var viewModalBody = document.getElementById('viewModalBody');
     var editFlightBtn = document.getElementById('editFlightBtn');
     var deleteFlightBtn = document.getElementById('deleteFlightBtn');
-    
-    // Delete modal elements
+      // Delete modal elements
     var confirmDeleteModal = document.getElementById('confirmDeleteModal');
     var deleteFlightInfo = document.getElementById('deleteFlightInfo');
     var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-      var currentFlightId = null;
+    
+    // Confirmation modal elements
+    var confirmAddModal = document.getElementById('confirmAddModal');
+    var confirmEditModal = document.getElementById('confirmEditModal');
+    var confirmAddBtn = document.getElementById('confirmAddBtn');
+    var confirmEditBtn = document.getElementById('confirmEditBtn');
+    
+    var currentFlightId = null;
     var currentMode = 'add';
     var currentFlightData = null;
+    var pendingFlightData = {};
 
     // Handle form modal
     flightFormModal.addEventListener('show.bs.modal', function(event) {
@@ -350,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Clear flight number field and show placeholder for auto-generation
             if (flightNumberInput) {
                 flightNumberInput.value = '';
-                flightNumberInput.placeholder = 'Auto-generated (e.g., VOL5682)';
+                flightNumberInput.placeholder = 'Auto-generated';
                 flightNumberInput.setAttribute('readonly', true);
             }
             
@@ -360,9 +419,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('airplane').value = '';
             
             saveFlightBtn.textContent = 'Save';
-            statusField.style.display = 'none';
-        } else if (currentMode === 'edit') {
-            flightFormModalLabel.textContent = 'Edit Flight';
+            statusField.style.display = 'none';        } else if (currentMode === 'edit') {
             loadFlightData(currentFlightId);
             saveFlightBtn.textContent = 'Update';
             statusField.style.display = 'block';
@@ -397,45 +454,45 @@ document.addEventListener('DOMContentLoaded', function() {
         
         console.log('Flight data:', flightData);
         
-        var url = currentMode === 'edit' ? '/volmaghreb/api/flights/' + currentFlightId : '/volmaghreb/api/flights';
-        var method = currentMode === 'edit' ? 'PUT' : 'POST';
+        // Store pending data for confirmation
+        pendingFlightData = flightData;
         
-        console.log('Request URL:', url);
-        console.log('Request method:', method);
+        // Get airport and airplane names for display
+        var originSelect = document.getElementById('origin');
+        var destinationSelect = document.getElementById('destination');
+        var airplaneSelect = document.getElementById('airplane');
         
-        var headers = {
-            'Content-Type': 'application/json'
-        };
+        var originText = originSelect.options[originSelect.selectedIndex].text;
+        var destinationText = destinationSelect.options[destinationSelect.selectedIndex].text;
+        var airplaneText = airplaneSelect.options[airplaneSelect.selectedIndex].text;
         
-        if (csrfHeader && csrfToken) {
-            headers[csrfHeader] = csrfToken;
-        }
+        var departureDate = new Date(flightData.departureDateTime).toLocaleString();
+        var arrivalDate = new Date(flightData.arrivalDateTime).toLocaleString();
         
-        console.log('Request headers:', headers);
-        
-        fetch(url, {
-            method: method,
-            headers: headers,
-            body: JSON.stringify(flightData)
-        }).then(function(response) {
-            console.log('Response status:', response.status);
-            console.log('Response ok:', response.ok);
+        if (currentMode === 'edit') {
+            // Show edit confirmation modal
+            document.getElementById('editFlightNumber').textContent = flightData.flightNumber;
+            document.getElementById('editFlightRoute').textContent = originText + ' to ' + destinationText;
+            document.getElementById('editFlightDeparture').textContent = departureDate;
+            document.getElementById('editFlightArrival').textContent = arrivalDate;
+            document.getElementById('editFlightAirplane').textContent = airplaneText;
+            document.getElementById('editFlightPrice').textContent = flightData.price;
+            document.getElementById('editFlightStatus').textContent = flightData.status;
             
-            if (response.ok) {
-                console.log('Flight saved successfully');
-                bootstrap.Modal.getInstance(flightFormModal).hide();
-                location.reload(); // Refresh page to show updated data
-            } else {
-                console.error('Error response:', response.status, response.statusText);
-                response.text().then(function(text) {
-                    console.error('Error details:', text);
-                });
-                alert('Error saving flight. Please check the console for details.');
-            }
-        }).catch(function(error) {
-            console.error('Fetch error:', error);
-            alert('Error saving flight: ' + error.message);
-        });
+            bootstrap.Modal.getInstance(flightFormModal).hide();
+            bootstrap.Modal.getOrCreateInstance(confirmEditModal).show();
+        } else {
+            // Show add confirmation modal
+            document.getElementById('addFlightNumber').textContent = 'Auto-generated (e.g., VOL5682)';
+            document.getElementById('addFlightRoute').textContent = originText + ' to ' + destinationText;
+            document.getElementById('addFlightDeparture').textContent = departureDate;
+            document.getElementById('addFlightArrival').textContent = arrivalDate;
+            document.getElementById('addFlightAirplane').textContent = airplaneText;
+            document.getElementById('addFlightPrice').textContent = flightData.price;
+            
+            bootstrap.Modal.getInstance(flightFormModal).hide();
+            bootstrap.Modal.getOrCreateInstance(confirmAddModal).show();
+        }
     });
 
     // Handle view flight
@@ -474,9 +531,7 @@ document.addEventListener('DOMContentLoaded', function() {
             bootstrap.Modal.getInstance(viewModal).hide();
             bootstrap.Modal.getOrCreateInstance(confirmDeleteModal).show();
         });
-    });
-
-    // Handle confirm delete
+    });    // Handle confirm delete
     confirmDeleteBtn.addEventListener('click', function() {
         fetch('/volmaghreb/api/flights/' + currentFlightId, {
             method: 'DELETE',
@@ -493,6 +548,94 @@ document.addEventListener('DOMContentLoaded', function() {
         }).catch(function(error) {
             console.error('Error:', error);
             alert('Error deleting flight. Please try again.');
+        });
+    });
+
+    // Handle confirm add
+    confirmAddBtn.addEventListener('click', function() {
+        var url = '/volmaghreb/api/flights';
+        var method = 'POST';
+        
+        console.log('Confirmed add - Request URL:', url);
+        console.log('Confirmed add - Request method:', method);
+        
+        var headers = {
+            'Content-Type': 'application/json'
+        };
+        
+        if (csrfHeader && csrfToken) {
+            headers[csrfHeader] = csrfToken;
+        }
+        
+        console.log('Confirmed add - Request headers:', headers);
+        console.log('Confirmed add - Flight data:', pendingFlightData);
+        
+        fetch(url, {
+            method: method,
+            headers: headers,
+            body: JSON.stringify(pendingFlightData)
+        }).then(function(response) {
+            console.log('Confirmed add - Response status:', response.status);
+            console.log('Confirmed add - Response ok:', response.ok);
+            
+            if (response.ok) {
+                console.log('Flight added successfully');
+                bootstrap.Modal.getInstance(confirmAddModal).hide();
+                location.reload(); // Refresh page to show updated data
+            } else {
+                console.error('Error response:', response.status, response.statusText);
+                response.text().then(function(text) {
+                    console.error('Error details:', text);
+                });
+                alert('Error adding flight. Please check the console for details.');
+            }
+        }).catch(function(error) {
+            console.error('Fetch error:', error);
+            alert('Error adding flight: ' + error.message);
+        });
+    });
+
+    // Handle confirm edit
+    confirmEditBtn.addEventListener('click', function() {
+        var url = '/volmaghreb/api/flights/' + currentFlightId;
+        var method = 'PUT';
+        
+        console.log('Confirmed edit - Request URL:', url);
+        console.log('Confirmed edit - Request method:', method);
+        
+        var headers = {
+            'Content-Type': 'application/json'
+        };
+        
+        if (csrfHeader && csrfToken) {
+            headers[csrfHeader] = csrfToken;
+        }
+        
+        console.log('Confirmed edit - Request headers:', headers);
+        console.log('Confirmed edit - Flight data:', pendingFlightData);
+        
+        fetch(url, {
+            method: method,
+            headers: headers,
+            body: JSON.stringify(pendingFlightData)
+        }).then(function(response) {
+            console.log('Confirmed edit - Response status:', response.status);
+            console.log('Confirmed edit - Response ok:', response.ok);
+            
+            if (response.ok) {
+                console.log('Flight updated successfully');
+                bootstrap.Modal.getInstance(confirmEditModal).hide();
+                location.reload(); // Refresh page to show updated data
+            } else {
+                console.error('Error response:', response.status, response.statusText);
+                response.text().then(function(text) {
+                    console.error('Error details:', text);
+                });
+                alert('Error updating flight. Please check the console for details.');
+            }
+        }).catch(function(error) {
+            console.error('Fetch error:', error);
+            alert('Error updating flight: ' + error.message);
         });
     });
 
@@ -520,10 +663,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // The backend will automatically generate flight numbers when creating new flights
 
     // Helper functions
-    function loadFlightData(flightId) {
-        fetchFlightData(flightId).then(function(flight) {
+    function loadFlightData(flightId) {        fetchFlightData(flightId).then(function(flight) {
             // Store flight data for form submission
             currentFlightData = flight;
+            
+            // Update modal title with flight number for edit mode
+            if (flightFormModalLabel) {
+                flightFormModalLabel.textContent = 'Edit Flight - ' + flight.flightNumber;
+            }
             
             // Populate form fields safely
             if (flightNumberInput) flightNumberInput.value = flight.flightNumber;
@@ -578,7 +725,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         '<p><strong>Route:</strong> ' + flight.originAirport.iataCode + ' - ' + flight.originAirport.name + ' (' + flight.originAirport.city + ', ' + flight.originAirport.country + ') to ' + flight.destinationAirport.iataCode + ' - ' + flight.destinationAirport.name + ' (' + flight.destinationAirport.city + ', ' + flight.destinationAirport.country + ')</p>' +
                         '<p><strong>Departure:</strong> ' + departureDate + '</p>' +
                         '<p><strong>Arrival:</strong> ' + arrivalDate + '</p>' +
-                        '<p><strong>Aircraft:</strong> ' + flight.airplane.model + '</p>' +
+                        '<p><strong>Airplane:</strong> ' + flight.airplane.model + '</p>' +
                         '<p><strong>Price:</strong> ' + flight.price + ' MAD</p>' +
                         '<p><strong>Status:</strong> <span class="badge ' + (flight.status === 'ACTIVE' ? 'text-bg-success' : 'text-bg-danger') + '">' + flight.status + '</span></p>' +
                     '</div>' +
@@ -678,8 +825,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             '<p class="text-muted">Try adjusting your search criteria</p>' +
                         '</div>' +
                     '</td>' +
-                '</tr>';
-            return;
+                '</tr>';            return;
         }
         
         tableBody.innerHTML = flights.map(function(flight, index) {
@@ -698,6 +844,28 @@ document.addEventListener('DOMContentLoaded', function() {
             '</tr>';
         }).join('');
     }
+
+    // Ensure proper modal layering
+    confirmDeleteModal.addEventListener('show.bs.modal', function() {
+        document.querySelectorAll('.modal-backdrop').forEach(function(backdrop) {
+            backdrop.style.zIndex = '1050';
+        });
+        confirmDeleteModal.style.zIndex = '1060';
+    });
+
+    confirmAddModal.addEventListener('show.bs.modal', function() {
+        document.querySelectorAll('.modal-backdrop').forEach(function(backdrop) {
+            backdrop.style.zIndex = '1050';
+        });
+        confirmAddModal.style.zIndex = '1060';
+    });
+
+    confirmEditModal.addEventListener('show.bs.modal', function() {
+        document.querySelectorAll('.modal-backdrop').forEach(function(backdrop) {
+            backdrop.style.zIndex = '1050';
+        });
+        confirmEditModal.style.zIndex = '1060';
+    });
 });
 </script>
 
