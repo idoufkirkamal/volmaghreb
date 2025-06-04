@@ -1,5 +1,6 @@
 package com.volmaghreb.reservation.entities;
 
+import com.volmaghreb.reservation.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,9 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -31,11 +35,8 @@ public class Reservation {
     private Flight flight;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalPrice;
+    private BigDecimal price;
 
     @Column(nullable = false)
     private LocalDateTime reservationTime;
-
-    @Column(nullable = false)
-    private String status = "CONFIRMED"; // Could be made into an enum later
 }
