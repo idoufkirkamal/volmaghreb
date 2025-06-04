@@ -4,6 +4,7 @@ import com.volmaghreb.reservation.dtos.PasswordUpdateDTO;
 import com.volmaghreb.reservation.dtos.UserManagementDTO;
 import com.volmaghreb.reservation.dtos.UserProfileDTO;
 import com.volmaghreb.reservation.entities.User;
+import com.volmaghreb.reservation.enums.Role;
 import com.volmaghreb.reservation.repositories.ReservationRepository;
 import com.volmaghreb.reservation.repositories.UserRepository;
 import com.volmaghreb.reservation.services.UserService;
@@ -28,9 +29,9 @@ public class UserServiceImpl implements UserService {
     private ReservationRepository reservationRepository;
 
     @Override
-    public PaginatedResponse<UserManagementDTO> getAll(int page, int size) {
+    public PaginatedResponse<UserManagementDTO> getAllClients(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<User> userPage = userRepository.findAll(pageable);
+        Page<User> userPage = userRepository.findByRole(Role.ROLE_CLIENT, pageable);
 
         List<UserManagementDTO> userDTO = userPage.getContent()
                 .stream()
@@ -71,7 +72,8 @@ public class UserServiceImpl implements UserService {
                 user.getDateOfBirth(),
                 user.getNationality(),
                 user.getSex(),
-                user.getAddress()
+                user.getAddress(),
+                user.getRole()
         );
     }
 

@@ -1,5 +1,6 @@
 package com.volmaghreb.reservation.dtos;
 
+import com.volmaghreb.reservation.enums.Role;
 import com.volmaghreb.reservation.enums.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +20,5 @@ public class UserProfileDTO {
     private String nationality;
     private Sex sex;
     private String address;
+    private Role role;
 }

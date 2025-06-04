@@ -42,8 +42,8 @@ public class AdminController {
     @GetMapping("/users")
     public String adminUsers(@RequestParam(defaultValue = "0") int page, Model model) {
         model.addAttribute("pageTitle", "User Management - Volmaghreb");
-        model.addAttribute("page", userService.getAll(page, 5));
-        return "admin/admin-users";
+        model.addAttribute("page", userService.getAllClients(page, 5));
+        return "admin/users";
     }
 
     @GetMapping("/airplanes")
