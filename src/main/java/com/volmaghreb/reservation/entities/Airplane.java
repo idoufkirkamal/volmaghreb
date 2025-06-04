@@ -18,4 +18,7 @@ public class Airplane {
     private int firstClassCapacity;
     private int businessClassCapacity;
     private int economyClassCapacity;
+
+    @OneToOne(mappedBy = "airplane",  cascade = CascadeType.ALL)
+    private Flight flight;
 }
