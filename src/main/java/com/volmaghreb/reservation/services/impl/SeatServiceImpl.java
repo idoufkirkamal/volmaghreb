@@ -1,12 +1,12 @@
 package com.volmaghreb.reservation.services.impl;
 
+import com.volmaghreb.reservation.entities.Flight;
 import com.volmaghreb.reservation.entities.Seat;
 import com.volmaghreb.reservation.enums.SeatClass;
 import com.volmaghreb.reservation.repositories.SeatRepository;
 import com.volmaghreb.reservation.services.SeatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.volmaghreb.reservation.entities.Flight;
 
 @Service
 public class SeatServiceImpl implements SeatService {

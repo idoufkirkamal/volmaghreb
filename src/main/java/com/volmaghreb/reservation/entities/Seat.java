@@ -1,7 +1,6 @@
 package com.volmaghreb.reservation.entities;
 
 import com.volmaghreb.reservation.enums.SeatClass;
-import org.volmaghreb.reservation.entities.Flight;
 import jakarta.persistence.*;
 import lombok.Data;
 
