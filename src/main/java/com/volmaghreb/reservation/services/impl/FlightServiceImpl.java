@@ -105,7 +105,9 @@ public class FlightServiceImpl implements FlightService {
         existingFlight.setAirplane(flightData.getAirplane());
         existingFlight.setDepartureDateTime(flightData.getDepartureDateTime());
         existingFlight.setArrivalDateTime(flightData.getArrivalDateTime());
-        existingFlight.setPrice(flightData.getPrice());
+        existingFlight.setFirstClassPrice(flightData.getFirstClassPrice());
+        existingFlight.setBusinessClassPrice(flightData.getBusinessClassPrice());
+        existingFlight.setEconomyClassPrice(flightData.getEconomyClassPrice());
         existingFlight.setStatus(flightData.getStatus());
 
         return flightRepository.save(existingFlight);
