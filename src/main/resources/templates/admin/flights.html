@@ -176,12 +176,22 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="flightForm">
-                            <div class="row g-3">
+                        <form id="flightForm">                            <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="price" class="form-label">Price (MAD)</label>
                                     <input type="number" class="form-control" id="price" name="price" 
                                            step="0.01" min="0" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="airplane" class="form-label">Airplane</label>
+                                    <select class="form-select" id="airplane" name="airplane.id" required>
+                                        <option value="">Select Airplane</option>
+                                        <option th:each="airplane : ${airplanes}" 
+                                                th:value="${airplane.id}" 
+                                                th:text="${airplane.model}">
+                                            Boeing 737-800
+                                        </option>
+                                    </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="origin" class="form-label">Origin Airport</label>
@@ -212,17 +222,6 @@
                                 <div class="col-md-6">
                                     <label for="arrivalDate" class="form-label">Arrival Date & Time</label>
                                     <input type="datetime-local" class="form-control" id="arrivalDate" name="arrivalDateTime" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="airplane" class="form-label">Airplane</label>
-                                    <select class="form-select" id="airplane" name="airplane.id" required>
-                                        <option value="">Select Airplane</option>
-                                        <option th:each="airplane : ${airplanes}" 
-                                                th:value="${airplane.id}" 
-                                                th:text="${airplane.model}">
-                                            Boeing 737-800
-                                        </option>
-                                    </select>
                                 </div>
                                 <div class="col-12" id="statusField" style="display: none;">
                                     <label for="status" class="form-label">Status</label>
