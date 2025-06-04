@@ -1,21 +1,63 @@
 package com.volmaghreb.reservation.services.impl;
 
 import com.volmaghreb.reservation.dtos.PasswordUpdateDTO;
+import com.volmaghreb.reservation.dtos.UserManagementDTO;
 import com.volmaghreb.reservation.dtos.UserProfileDTO;
 import com.volmaghreb.reservation.entities.User;
+import com.volmaghreb.reservation.enums.Role;
+import com.volmaghreb.reservation.repositories.ReservationRepository;
 import com.volmaghreb.reservation.repositories.UserRepository;
 import com.volmaghreb.reservation.services.UserService;
+import com.volmaghreb.reservation.utilities.PaginatedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ReservationRepository reservationRepository;
+
+    @Override
+    public PaginatedResponse<UserManagementDTO> getAllClients(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> userPage = userRepository.findByRole(Role.ROLE_CLIENT, pageable);
+
+        List<UserManagementDTO> userDTO = userPage.getContent()
+                .stream()
+                .map(user -> {
+                    UserManagementDTO dto = new UserManagementDTO();
+                    dto.setId(user.getId());
+                    dto.setFirstname(user.getFirstname());
+                    dto.setLastname(user.getLastname());
+                    dto.setEmail(user.getEmail());
+                    dto.setPhone(user.getPhone());
+                    dto.setNationality(user.getNationality());
+                    dto.setNumberOfReservations(reservationRepository.countByUserId(user.getId()));
+                    return dto;
+                })
+                .toList();
+
+        PaginatedResponse<UserManagementDTO> response = new PaginatedResponse<>();
+        response.setContent(userDTO);
+        response.setPageNumber(userPage.getNumber());
+        response.setPageSize(userPage.getSize());
+        response.setTotalElements(userPage.getTotalElements());
+        response.setTotalPages(userPage.getTotalPages());
+        response.setLast(userPage.isLast());
+
+        return response;
+    }
 
     @Override
     public UserProfileDTO findByEmail(String email) {
@@ -30,7 +72,8 @@ public class UserServiceImpl implements UserService {
                 user.getDateOfBirth(),
                 user.getNationality(),
                 user.getSex(),
-                user.getAddress()
+                user.getAddress(),
+                user.getRole()
         );
     }
 
