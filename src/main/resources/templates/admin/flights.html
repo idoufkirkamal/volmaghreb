@@ -179,16 +179,6 @@
                         <form id="flightForm">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label for="flightNumber" class="form-label">Flight Number</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="flightNumber" name="flightNumber" 
-                                               placeholder="e.g., VOL1234" required>
-                                        <button type="button" class="btn btn-outline-secondary" id="generateFlightNumberBtn">
-                                            <i class="bi bi-magic"></i> Generate
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
                                     <label for="price" class="form-label">Price (MAD)</label>
                                     <input type="number" class="form-control" id="price" name="price" 
                                            step="0.01" min="0" required>
@@ -214,7 +204,8 @@
                                             Casablanca, Morocco (CMN)
                                         </option>
                                     </select>
-                                </div>                                <div class="col-md-6">
+                                </div>
+                                <div class="col-md-6">
                                     <label for="departureDate" class="form-label">Departure Date & Time</label>
                                     <input type="datetime-local" class="form-control" id="departureDate" name="departureDateTime" required>
                                 </div>
@@ -308,7 +299,8 @@
 <script th:src="@{/assets/vendor/overlay-scrollbar/js/overlayscrollbars.min.js}"></script>
 
 <!-- Custom Script -->
-<script th:inline="javascript">    // Get context path - using hardcoded value for now
+<script th:inline="javascript">
+    // Get context path - using hardcoded value for now
     var contextPath = '/volmaghreb';
     console.log('Context Path:', contextPath);
 
@@ -316,6 +308,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get CSRF token
     var csrfToken = /*[[${_csrf?.token}]]*/ '';
     var csrfHeader = /*[[${_csrf?.headerName}]]*/ '';
+    
+    // Debug CSRF token
+    console.log('CSRF Token:', csrfToken);
+    console.log('CSRF Header:', csrfHeader);
 
     // Form elements
     var flightFormModal = document.getElementById('flightFormModal');
@@ -323,7 +319,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var saveFlightBtn = document.getElementById('saveFlightBtn');
     var flightFormModalLabel = document.getElementById('flightFormModalLabel');
     var statusField = document.getElementById('statusField');
-    var generateFlightNumberBtn = document.getElementById('generateFlightNumberBtn');
     var flightNumberInput = document.getElementById('flightNumber');
     
     // Modal elements
@@ -336,9 +331,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var confirmDeleteModal = document.getElementById('confirmDeleteModal');
     var deleteFlightInfo = document.getElementById('deleteFlightInfo');
     var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-    
-    var currentFlightId = null;
+      var currentFlightId = null;
     var currentMode = 'add';
+    var currentFlightData = null;
 
     // Handle form modal
     flightFormModal.addEventListener('show.bs.modal', function(event) {
@@ -346,9 +341,18 @@ document.addEventListener('DOMContentLoaded', function() {
         currentMode = button.getAttribute('data-bs-mode') || 'add';
         currentFlightId = button.getAttribute('data-bs-flight-id');
         
-        if (currentMode === 'add') {
+        console.log('Modal opened in mode:', currentMode);
+          if (currentMode === 'add') {
             flightFormModalLabel.textContent = 'New Flight';
             flightForm.reset();
+            currentFlightData = null; // Clear stored flight data for new flights
+            
+            // Clear flight number field and show placeholder for auto-generation
+            if (flightNumberInput) {
+                flightNumberInput.value = '';
+                flightNumberInput.placeholder = 'Auto-generated (e.g., VOL5682)';
+                flightNumberInput.setAttribute('readonly', true);
+            }
             
             // Reset all select elements
             document.getElementById('origin').value = '';
@@ -362,16 +366,20 @@ document.addEventListener('DOMContentLoaded', function() {
             loadFlightData(currentFlightId);
             saveFlightBtn.textContent = 'Update';
             statusField.style.display = 'block';
+            
+            // Make flight number readonly for edit mode too (to prevent manual changes)
+            if (flightNumberInput) {
+                flightNumberInput.setAttribute('readonly', true);
+            }
         }
-    });
-
-    // Handle form submission
+    });    // Handle form submission
     flightForm.addEventListener('submit', function(event) {
         event.preventDefault();
         
+        console.log('Form submitted in mode:', currentMode);
+        
         var formData = new FormData(flightForm);
         var flightData = {
-            flightNumber: formData.get('flightNumber') || '',
             originAirport: { id: parseInt(formData.get('originAirport.id')) },
             destinationAirport: { id: parseInt(formData.get('destinationAirport.id')) },
             airplane: { id: parseInt(formData.get('airplane.id')) },
@@ -379,28 +387,58 @@ document.addEventListener('DOMContentLoaded', function() {
             arrivalDateTime: formData.get('arrivalDateTime'),
             price: parseFloat(formData.get('price')),
             status: formData.get('status') || 'ACTIVE'
-        };        var url = currentMode === 'edit' ? '/volmaghreb/api/flights/' + currentFlightId : '/volmaghreb/api/flights';
+        };
+        
+        // For edit mode, we need to include the flight number from the stored flight data
+        if (currentMode === 'edit' && currentFlightData && currentFlightData.flightNumber) {
+            flightData.flightNumber = currentFlightData.flightNumber;
+        }
+        // For new flights, let the backend auto-generate the flight number
+        
+        console.log('Flight data:', flightData);
+        
+        var url = currentMode === 'edit' ? '/volmaghreb/api/flights/' + currentFlightId : '/volmaghreb/api/flights';
         var method = currentMode === 'edit' ? 'PUT' : 'POST';
+        
+        console.log('Request URL:', url);
+        console.log('Request method:', method);
+        
+        var headers = {
+            'Content-Type': 'application/json'
+        };
+        
+        if (csrfHeader && csrfToken) {
+            headers[csrfHeader] = csrfToken;
+        }
+        
+        console.log('Request headers:', headers);
         
         fetch(url, {
             method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                [csrfHeader]: csrfToken
-            },
+            headers: headers,
             body: JSON.stringify(flightData)
         }).then(function(response) {
+            console.log('Response status:', response.status);
+            console.log('Response ok:', response.ok);
+            
             if (response.ok) {
+                console.log('Flight saved successfully');
                 bootstrap.Modal.getInstance(flightFormModal).hide();
                 location.reload(); // Refresh page to show updated data
             } else {
-                alert('Error saving flight. Please try again.');
+                console.error('Error response:', response.status, response.statusText);
+                response.text().then(function(text) {
+                    console.error('Error details:', text);
+                });
+                alert('Error saving flight. Please check the console for details.');
             }
         }).catch(function(error) {
-            console.error('Error:', error);
-            alert('Error saving flight. Please try again.');
+            console.error('Fetch error:', error);
+            alert('Error saving flight: ' + error.message);
         });
-    });    // Handle view flight
+    });
+
+    // Handle view flight
     document.addEventListener('click', function(event) {
         if (event.target.closest('.view-flight-btn')) {
             event.preventDefault();
@@ -436,7 +474,9 @@ document.addEventListener('DOMContentLoaded', function() {
             bootstrap.Modal.getInstance(viewModal).hide();
             bootstrap.Modal.getOrCreateInstance(confirmDeleteModal).show();
         });
-    });    // Handle confirm delete
+    });
+
+    // Handle confirm delete
     confirmDeleteBtn.addEventListener('click', function() {
         fetch('/volmaghreb/api/flights/' + currentFlightId, {
             method: 'DELETE',
@@ -454,14 +494,19 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error:', error);
             alert('Error deleting flight. Please try again.');
         });
-    });// Search functionality
-    var searchForm = document.getElementById('searchForm');
-    var searchInput = document.getElementById('searchInput');    var sortSelect = document.getElementById('sortSelect');
-    
-    searchForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        performSearch(searchInput.value);
     });
+
+    // Search functionality
+    var searchForm = document.getElementById('searchForm');
+    var searchInput = document.getElementById('searchInput');
+    var sortSelect = document.getElementById('sortSelect');
+    
+    if (searchForm && searchInput) {
+        searchForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            performSearch(searchInput.value);
+        });
+    }
 
     // Sort functionality
     if (sortSelect) {
@@ -471,30 +516,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 performSort(sortBy);
             }
         });
-    }    // Flight number generation
-    if (generateFlightNumberBtn) {
-        generateFlightNumberBtn.addEventListener('click', function() {
-            fetch('/volmaghreb/api/flights/generate-flight-number', {
-                headers: {
-                    [csrfHeader]: csrfToken
-                }
-            }).then(function(response) {
-                if (response.ok) {
-                    return response.text();
-                }
-            }).then(function(flightNumber) {
-                if (flightNumber) {
-                    flightNumberInput.value = flightNumber;
-                }
-            }).catch(function(error) {
-                console.error('Error generating flight number:', error);
-            });
-        });
-    }
+    }    // Remove the manual flight number generation since we auto-generate now
+    // The backend will automatically generate flight numbers when creating new flights
 
     // Helper functions
     function loadFlightData(flightId) {
         fetchFlightData(flightId).then(function(flight) {
+            // Store flight data for form submission
+            currentFlightData = flight;
+            
             // Populate form fields safely
             if (flightNumberInput) flightNumberInput.value = flight.flightNumber;
             
@@ -530,7 +560,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }).catch(function(error) {
             console.error('Error loading flight data:', error);
         });
-    }    function loadFlightView(flightId) {
+    }
+
+    function loadFlightView(flightId) {
         console.log('Loading flight view for ID:', flightId);
         currentFlightId = flightId;
         fetchFlightData(flightId).then(function(flight) {
@@ -566,7 +598,9 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error loading flight view:', error);
             viewModalBody.innerHTML = '<div class="alert alert-danger">Error loading flight details: ' + error.message + '</div>';
         });
-    }    function fetchFlightData(flightId) {
+    }
+
+    function fetchFlightData(flightId) {
         console.log('Fetching flight data for ID:', flightId);
         var url = '/volmaghreb/api/flights/' + flightId;
         console.log('Request URL:', url);
@@ -595,7 +629,8 @@ document.addEventListener('DOMContentLoaded', function() {
             location.reload();
             return;
         }
-          fetch('/volmaghreb/api/flights/search?searchTerm=' + encodeURIComponent(searchTerm), {
+        
+        fetch('/volmaghreb/api/flights/search?searchTerm=' + encodeURIComponent(searchTerm), {
             headers: {
                 [csrfHeader]: csrfToken
             }
@@ -610,7 +645,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }).catch(function(error) {
             console.error('Error searching flights:', error);
         });
-    }    function performSort(sortBy) {
+    }
+
+    function performSort(sortBy) {
         fetch('/volmaghreb/api/flights?sortBy=' + encodeURIComponent(sortBy), {
             headers: {
                 [csrfHeader]: csrfToken
