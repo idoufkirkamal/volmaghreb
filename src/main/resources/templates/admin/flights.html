@@ -155,7 +155,17 @@
                                        th:text="'Showing 1 to ' + ${#lists.size(flights)} + ' of ' + ${#lists.size(flights)} + ' flights'">
                                         Showing 1 to 3 of 50 flights
                                     </p>
-                                    <!-- Add pagination here if needed -->
+                                    <nav class="mb-sm-0 d-flex justify-content-center" aria-label="navigation">
+                                        <ul class="pagination pagination-sm pagination-primary-soft mb-0">
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#" tabindex="-1">Prev</a>
+                                            </li>
+                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#">Next</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
                                 </div>
                             </div>
                             <!-- Card footer END -->
@@ -482,7 +492,7 @@ document.addEventListener('DOMContentLoaded', function() {
             bootstrap.Modal.getOrCreateInstance(confirmEditModal).show();
         } else {
             // Show add confirmation modal
-            document.getElementById('addFlightNumber').textContent = 'Auto-generated (e.g., VOL5682)';
+            document.getElementById('addFlightNumber').textContent = 'Auto-generated';
             document.getElementById('addFlightRoute').textContent = originText + ' to ' + destinationText;
             document.getElementById('addFlightDeparture').textContent = departureDate;
             document.getElementById('addFlightArrival').textContent = arrivalDate;

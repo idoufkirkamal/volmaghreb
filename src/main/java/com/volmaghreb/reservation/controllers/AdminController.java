@@ -35,13 +35,13 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String adminDashboard(Model model) {
-        model.addAttribute("pageTitle", "Admin Dashboard - Booking");
+        model.addAttribute("pageTitle", "Admin Dashboard - Volmaghreb");
         return "admin/dashboard";
     }
 
     @GetMapping("/users")
     public String adminUsers(@RequestParam(defaultValue = "0") int page, Model model) {
-        model.addAttribute("pageTitle", "User Management - Booking");
+        model.addAttribute("pageTitle", "User Management - Volmaghreb");
         model.addAttribute("page", userService.getAll(page, 5));
         return "admin/admin-users";
     }
@@ -50,7 +50,7 @@ public class AdminController {
     public String adminAirplanes(Model model) {
         List<Airplane> airplanes = airplaneService.getAllAirplanes();
         model.addAttribute("airplanes", airplanes);
-        model.addAttribute("pageTitle", "Airplane Management - Booking");
+        model.addAttribute("pageTitle", "Airplane Management - Volmaghreb");
         return "admin/airplanes";
     }
 
@@ -64,13 +64,13 @@ public class AdminController {
         model.addAttribute("airports", airports);
         model.addAttribute("airplanes", airplanes);
         model.addAttribute("contextPath", request.getContextPath());
-        model.addAttribute("pageTitle", "Flight Management - Booking");
+        model.addAttribute("pageTitle", "Flight Management - Volmaghreb");
         return "admin/flights";
     }
 
     @GetMapping("/reservations")
     public String adminReservations(Model model) {
-        model.addAttribute("pageTitle", "Reservation Management - Booking");
+        model.addAttribute("pageTitle", "Reservation Management - Volmaghreb");
         return "reservations/admin-reservations";
     }
 
@@ -78,7 +78,7 @@ public class AdminController {
     public String adminAirports(Model model) {
         List<Airport> airports = airportService.getAllAirports();
         model.addAttribute("airports", airports);
-        model.addAttribute("pageTitle", "Airport Management - Booking");
+        model.addAttribute("pageTitle", "Airport Management - Volmaghreb");
         return "admin/airports";
     }
 
