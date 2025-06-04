@@ -12,4 +12,8 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToOne
+    @JoinColumn(name = "seat_id", nullable=false)
+    private Seat seat;
 }
