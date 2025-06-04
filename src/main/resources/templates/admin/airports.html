@@ -73,10 +73,10 @@
                                 <!-- Airport list START -->
                                 <div class="table-responsive border-0">
                                     <table class="table align-middle p-4 mb-0 table-hover table-shrink">
-                                        <!-- Table head -->
-                                        <thead class="table-light">
+                                        <!-- Table head -->                                        <thead class="table-light">
                                             <tr>
-                                                <th scope="col" class="border-0 rounded-start">IATA Code</th>
+                                                <th scope="col" class="border-0 rounded-start">ID</th>
+                                                <th scope="col" class="border-0">IATA Code</th>
                                                 <th scope="col" class="border-0">Name</th>
                                                 <th scope="col" class="border-0">City</th>
                                                 <th scope="col" class="border-0">Country</th>
@@ -84,9 +84,9 @@
                                             </tr>
                                         </thead>
 
-                                        <!-- Table body START -->
-                                        <tbody class="border-top-0">
+                                        <!-- Table body START -->                                        <tbody class="border-top-0">
                                             <tr th:each="airport : ${airports}">
+                                                <td><h6 class="mb-0" th:text="${airport.id}">1</h6></td>
                                                 <td><h6 class="mb-0"><a href="#" th:text="${airport.iataCode}">JFK</a></h6></td>
                                                 <td th:text="${airport.name}">John F. Kennedy International Airport</td>
                                                 <td th:text="${airport.city}">New York</td>
