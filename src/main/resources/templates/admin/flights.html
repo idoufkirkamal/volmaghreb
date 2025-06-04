@@ -80,10 +80,9 @@
                                 <!-- Flight list START -->
                                 <div class="table-responsive border-0">
                                     <table class="table align-middle p-4 mb-0 table-hover table-shrink">
-                                        <!-- Table head -->
-                                        <thead class="table-light">
+                                        <!-- Table head -->                                        <thead class="table-light">
                                             <tr>
-                                                <th scope="col" class="border-0 rounded-start">#</th>
+                                                <th scope="col" class="border-0 rounded-start">ID</th>
                                                 <th scope="col" class="border-0">Flight Number</th>
                                                 <th scope="col" class="border-0">Route</th>
                                                 <th scope="col" class="border-0">Departure</th>
@@ -103,10 +102,9 @@
                                                         <p class="text-muted">Start by adding your first flight</p>
                                                     </div>
                                                 </td>
-                                            </tr>
-                                            <tr th:each="flight, iterStat : ${flights}" th:unless="${#lists.isEmpty(flights)}">
+                                            </tr>                                            <tr th:each="flight, iterStat : ${flights}" th:unless="${#lists.isEmpty(flights)}">
                                                 <td>
-                                                    <h6 class="mb-0" th:text="${iterStat.count}">01</h6>
+                                                    <h6 class="mb-0" th:text="${flight.id}">01</h6>
                                                 </td>
                                                 <td>
                                                     <h6 class="mb-0">
@@ -836,10 +834,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     '</td>' +
                 '</tr>';            return;
         }
-        
-        tableBody.innerHTML = flights.map(function(flight, index) {
+          tableBody.innerHTML = flights.map(function(flight, index) {
             return '<tr>' +
-                '<td><h6 class="mb-0">' + (index + 1) + '</h6></td>' +
+                '<td><h6 class="mb-0">' + flight.id + '</h6></td>' +
                 '<td><h6 class="mb-0"><a href="#" class="flight-link" data-flight-id="' + flight.id + '">' + flight.flightNumber + '</a></h6></td>' +
                 '<td>' + flight.originAirport.iataCode + ' (' + flight.originAirport.city + ') to ' + flight.destinationAirport.iataCode + ' (' + flight.destinationAirport.city + ')</td>' +
                 '<td><h6 class="mb-0 fw-light">' + new Date(flight.departureDateTime).toLocaleString() + '</h6></td>' +
