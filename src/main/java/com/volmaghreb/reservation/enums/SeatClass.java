@@ -1,7 +1,7 @@
 package com.volmaghreb.reservation.enums;
 
 public enum SeatClass {
-    FIRST,
-    BUSINESS,
-    ECONOMY
+    FIRST_CLASS,
+    BUSINESS_CLASS,
+    ECONOMY_CLASS
 }
