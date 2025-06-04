@@ -18,7 +18,7 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @GetMapping("/user/sign-in")
+    @GetMapping("/auth/sign-in")
     public String loginPage(@RequestParam(value = "error", required = false) String error,
                           @RequestParam(value = "logout", required = false) String logout,
                           @RequestParam(value = "expired", required = false) String expired,
@@ -33,7 +33,7 @@ public class AuthController {
             model.addAttribute("expired", "Your session has expired. Please log in again.");
         }
         model.addAttribute("loginDTO", new LoginDTO());
-        return "user/sign-in";
+        return "auth/sign-in";
     }
 
     @GetMapping("/dashboard")
