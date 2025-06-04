@@ -28,37 +28,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/",
-                    "/user/sign-in",
-                    "/register",
-                    "/css/**",
-                    "/js/**",
-                    "/images/**",
-                    "/assets/**",
-                    "/webjars/**",
-                    "/vendor/**"
-                ).permitAll()
-                .requestMatchers("/admin/**", "/dashboard/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .loginPage("/user/sign-in")
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/dashboard")
-                .failureUrl("/user/sign-in?error")
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/user/sign-in?logout")
-                .permitAll()
-            )
-            .sessionManagement(session -> session
-                .maximumSessions(1)
-                .expiredUrl("/user/sign-in?expired")
-            );
+
 
         return http.build();
     }

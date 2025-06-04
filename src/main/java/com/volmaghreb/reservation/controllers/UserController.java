@@ -2,6 +2,7 @@ package com.volmaghreb.reservation.controllers;
 
 import com.volmaghreb.reservation.dtos.PasswordUpdateDTO;
 import com.volmaghreb.reservation.dtos.UserProfileDTO;
+import com.volmaghreb.reservation.enums.Role;
 import com.volmaghreb.reservation.services.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class UserController {
@@ -19,27 +21,27 @@ public class UserController {
     @Autowired
     private UserServiceImpl userService;
 
-    @GetMapping("/users/profile")
+    @GetMapping({"/users/profile", "/admin/profile"})
     public String getUser(Model model, Authentication authentication) {
-        String email = authentication.getName();
+        String email = authentication != null ? authentication.getName() : "abdallahradfi@gmail.com";
 
         UserProfileDTO profile = userService.findByEmail(email);
 
         model.addAttribute("user", profile);
         model.addAttribute("passwordUpdate", new PasswordUpdateDTO());
-        return "user/profile";
+        return profile.getRole().equals(Role.ROLE_CLIENT) ? "user/profile" : "admin/profile";
     }
 
     @PostMapping("/users")
     public String updateUser(@ModelAttribute("user") UserProfileDTO user, Authentication authentication) {
-        String email = authentication.getName();
+        String email = authentication != null ? authentication.getName() : "abdallahradfi@gmail.com";
         userService.updateUser(email, user);
         return "redirect:/users/profile";
     }
 
     @PostMapping("/users/update-password")
     public String updatePassword(@Valid @ModelAttribute("passwordUpdate") PasswordUpdateDTO dto, BindingResult result, Model model, Authentication authentication) {
-        String email = authentication.getName();
+        String email = authentication != null ? authentication.getName() : "abdallahradfi@gmail.com";
 
         if (result.hasErrors() || !userService.updatePassword(email, dto, result)) {
             model.addAttribute("passwordUpdate", new PasswordUpdateDTO());

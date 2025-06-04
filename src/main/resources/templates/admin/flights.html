@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{admin/fragments/head :: admin-head(${pageTitle})}">
+</head>
+
+<body>
+<!-- **************** MAIN CONTENT START **************** -->
+<main>
+    <!-- Sidebar START -->
+    <nav th:replace="~{admin/fragments/sidebar :: admin-sidebar}"></nav>
+    <!-- Sidebar END -->
+    
+    <!-- Page content START -->
+    <div class="page-content">
+        <!-- Top bar START -->
+        <nav th:replace="~{admin/fragments/navbar :: admin-navbar}"></nav>
+        <!-- Top bar END -->
+    
+        <!-- Content START -->
+        <section>
+            <div class="container vstack gap-4">
+                <!-- Title and New Flight Button START -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h1 class="fs-4 mb-0"><i class="fa-solid fa-plane fa-fw me-1"></i>Flights</h1>
+                            <button type="button" class="btn btn-primary-soft mb-0" data-bs-toggle="modal" data-bs-target="#flightFormModal" data-bs-mode="add">
+                                <i class="bi bi-plus-lg fa-fw"></i>New Flight
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Title and New Flight Button END -->
+
+                <!-- Flight table START -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card border">
+                            <!-- Card header START -->
+                            <div class="card-header border-bottom">
+                                <h5 class="card-header-title">
+                                    Flights
+                                    <span class="badge bg-primary bg-opacity-10 text-primary ms-2" 
+                                          th:text="${#lists.size(flights)} + ' Flights'">50 Flights</span>
+                                </h5>
+                            </div>
+                            <!-- Card header END -->
+
+                            <!-- Card body START -->
+                            <div class="card-body">
+                                <!-- Search and select START -->
+                                <div class="row g-3 align-items-center justify-content-between mb-3">
+                                    <!-- Search -->
+                                    <div class="col-md-8">
+                                        <form class="rounded position-relative" id="searchForm">
+                                            <input class="form-control pe-5" type="search" id="searchInput" 
+                                                   placeholder="Search flights..." aria-label="Search">
+                                            <button class="btn border-0 px-3 py-0 position-absolute top-50 end-0 translate-middle-y" 
+                                                    type="submit">
+                                                <i class="fas fa-search fs-6"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Select option -->
+                                    <div class="col-md-3">
+                                        <form>
+                                            <select class="form-select" id="sortSelect" aria-label="Sort by">
+                                                <option value="">Sort by</option>
+                                                <option value="departureDate">Departure Date</option>
+                                                <option value="price">Price</option>
+                                                <option value="flightNumber">Flight Number</option>
+                                            </select>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- Search and select END -->
+
+                                <!-- Flight list START -->
+                                <div class="table-responsive border-0">
+                                    <table class="table align-middle p-4 mb-0 table-hover table-shrink">
+                                        <!-- Table head -->                                        <thead class="table-light">
+                                            <tr>
+                                                <th scope="col" class="border-0 rounded-start">ID</th>
+                                                <th scope="col" class="border-0">Flight Number</th>
+                                                <th scope="col" class="border-0">Route</th>
+                                                <th scope="col" class="border-0">Departure</th>
+                                                <th scope="col" class="border-0">Price</th>
+                                                <th scope="col" class="border-0">Status</th>
+                                                <th scope="col" class="border-0 rounded-end">Action</th>
+                                            </tr>
+                                        </thead>
+
+                                        <!-- Table body START -->
+                                        <tbody class="border-top-0" id="flightsTableBody">
+                                            <tr th:if="${#lists.isEmpty(flights)}">
+                                                <td colspan="7" class="text-center py-4">
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <i class="fa-solid fa-plane fa-3x text-muted mb-3"></i>
+                                                        <h5 class="text-muted">No flights found</h5>
+                                                        <p class="text-muted">Start by adding your first flight</p>
+                                                    </div>
+                                                </td>
+                                            </tr>                                            <tr th:each="flight, iterStat : ${flights}" th:unless="${#lists.isEmpty(flights)}">
+                                                <td>
+                                                    <h6 class="mb-0" th:text="${flight.id}">01</h6>
+                                                </td>
+                                                <td>
+                                                    <h6 class="mb-0">
+                                                        <a href="#" th:text="${flight.flightNumber}" 
+                                                           th:data-flight-id="${flight.id}"
+                                                           class="flight-link">VOL5682</a>
+                                                    </h6>
+                                                </td>
+                                                <td th:text="${flight.originAirport.iataCode + ' (' + flight.originAirport.city + ') to ' + flight.destinationAirport.iataCode + ' (' + flight.destinationAirport.city + ')'}">
+                                                    AGA (Agadir) to CMN (Casablanca)
+                                                </td>
+                                                <td>
+                                                    <h6 class="mb-0 fw-light" 
+                                                        th:text="${#temporals.format(flight.departureDateTime, 'MMM dd, yyyy HH:mm')}">
+                                                        May 10, 2025 14:00
+                                                    </h6>
+                                                </td>
+                                                <td>
+                                                    <span th:text="${flight.price + ' MAD'}">5000.00 MAD</span>
+                                                </td>
+                                                <td>
+                                                    <div th:class="${flight.status.name() == 'ACTIVE' ? 'badge text-bg-success' : 'badge text-bg-danger'}"
+                                                         th:text="${flight.status.name()}">Active</div>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-light mb-0 view-flight-btn" 
+                                                            th:data-flight-id="${flight.id}"
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#viewModal">
+                                                        <i class="bi bi-eye fa-fw me-1"></i>View
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <!-- Table body END -->
+                                    </table>
+                                </div>
+                                <!-- Flight list END -->
+                            </div>
+                            <!-- Card body END -->
+
+                            <!-- Card footer START -->
+                            <div class="card-footer pt-0" th:unless="${#lists.isEmpty(flights)}">
+                                <div class="d-sm-flex justify-content-sm-between align-items-sm-center">
+                                    <p class="mb-sm-0 text-center text-sm-start" 
+                                       th:text="'Showing 1 to ' + ${#lists.size(flights)} + ' of ' + ${#lists.size(flights)} + ' flights'">
+                                        Showing 1 to 3 of 50 flights
+                                    </p>
+                                    <nav class="mb-sm-0 d-flex justify-content-center" aria-label="navigation">
+                                        <ul class="pagination pagination-sm pagination-primary-soft mb-0">
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#" tabindex="-1">Prev</a>
+                                            </li>
+                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#">Next</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                            <!-- Card footer END -->
+                        </div>
+                    </div>
+                </div> 
+                <!-- Flight table END -->
+            </div>
+        </section>
+        <!-- Content END -->
+
+        <!-- Add/edit Modal START-->
+        <div class="modal fade" id="flightFormModal" tabindex="-1" aria-labelledby="flightFormModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="flightFormModalLabel">New Flight</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="flightForm">                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="price" class="form-label">Price (MAD)</label>
+                                    <input type="number" class="form-control" id="price" name="price" 
+                                           step="0.01" min="0" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="airplane" class="form-label">Airplane</label>
+                                    <select class="form-select" id="airplane" name="airplane.id" required>
+                                        <option value="">Select Airplane</option>
+                                        <option th:each="airplane : ${airplanes}" 
+                                                th:value="${airplane.id}" 
+                                                th:text="${airplane.model}">
+                                            Boeing 737-800
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="origin" class="form-label">Origin Airport</label>
+                                    <select class="form-select" id="origin" name="originAirport.id" required>
+                                        <option value="">Select Origin</option>
+                                        <option th:each="airport : ${airports}" 
+                                                th:value="${airport.id}" 
+                                                th:text="${airport.city + ', ' + airport.country + ' (' + airport.iataCode + ')'}">
+                                            Agadir, Morocco (AGA)
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="destination" class="form-label">Destination Airport</label>
+                                    <select class="form-select" id="destination" name="destinationAirport.id" required>
+                                        <option value="">Select Destination</option>
+                                        <option th:each="airport : ${airports}" 
+                                                th:value="${airport.id}" 
+                                                th:text="${airport.city + ', ' + airport.country + ' (' + airport.iataCode + ')'}">
+                                            Casablanca, Morocco (CMN)
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="departureDate" class="form-label">Departure Date & Time</label>
+                                    <input type="datetime-local" class="form-control" id="departureDate" name="departureDateTime" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="arrivalDate" class="form-label">Arrival Date & Time</label>
+                                    <input type="datetime-local" class="form-control" id="arrivalDate" name="arrivalDateTime" required>
+                                </div>
+                                <div class="col-12" id="statusField" style="display: none;">
+                                    <label for="status" class="form-label">Status</label>
+                                    <select class="form-select" id="status" name="status">
+                                        <option value="ACTIVE">Active</option>
+                                        <option value="CANCELLED">Cancelled</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="saveFlightBtn" form="flightForm">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add/edit Modal END-->
+
+        <!-- Flight View Modal START -->
+        <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="viewModalLabel">Flight Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="viewModalBody">
+                        <!-- Content will be loaded dynamically -->
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary btn-sm" id="editFlightBtn">
+                            <i class="bi bi-pencil-square fa-fw me-1"></i>Edit
+                        </button>
+                        <button class="btn btn-danger btn-sm" id="deleteFlightBtn">
+                            <i class="bi bi-trash3 fa-fw me-1"></i>Remove
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Flight View Modal END -->
+
+        <!-- Confirm Delete Modal START -->
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to remove this flight?</p>
+                        <p>Flight: <span id="deleteFlightInfo"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Yes, Remove</button>
+                    </div>
+                </div>
+            </div>        </div>
+        <!-- Confirm Delete Modal END -->
+
+        <!-- Confirm Add Modal START -->
+        <div class="modal fade" id="confirmAddModal" tabindex="-1" aria-labelledby="confirmAddModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmAddModalLabel">Confirm Addition</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to add this flight?</p>
+                        <p><strong>Flight Number:</strong> <span id="addFlightNumber"></span></p>
+                        <p><strong>Route:</strong> <span id="addFlightRoute"></span></p>
+                        <p><strong>Departure:</strong> <span id="addFlightDeparture"></span></p>
+                        <p><strong>Arrival:</strong> <span id="addFlightArrival"></span></p>
+                        <p><strong>Airplane:</strong> <span id="addFlightAirplane"></span></p>
+                        <p><strong>Price:</strong> <span id="addFlightPrice"></span> MAD</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmAddBtn">Add Flight</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Confirm Add Modal END -->
+
+        <!-- Confirm Edit Modal START -->
+        <div class="modal fade" id="confirmEditModal" tabindex="-1" aria-labelledby="confirmEditModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmEditModalLabel">Confirm Update</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to update this flight?</p>
+                        <p><strong>Flight Number:</strong> <span id="editFlightNumber"></span></p>
+                        <p><strong>Route:</strong> <span id="editFlightRoute"></span></p>
+                        <p><strong>Departure:</strong> <span id="editFlightDeparture"></span></p>
+                        <p><strong>Arrival:</strong> <span id="editFlightArrival"></span></p>
+                        <p><strong>Airplane:</strong> <span id="editFlightAirplane"></span></p>
+                        <p><strong>Price:</strong> <span id="editFlightPrice"></span> MAD</p>
+                        <p><strong>Status:</strong> <span id="editFlightStatus"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmEditBtn">Update Flight</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Confirm Edit Modal END -->
+    </div>
+    <!-- Page content END -->
+</main>
+<!-- **************** MAIN CONTENT END **************** -->
+
+<!-- Bootstrap JS -->
+<script th:src="@{/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Vendor -->
+<script th:src="@{/assets/vendor/overlay-scrollbar/js/overlayscrollbars.min.js}"></script>
+
+<!-- Custom Script -->
+<script th:inline="javascript">
+    // Get context path - using hardcoded value for now
+    var contextPath = '/volmaghreb';
+    console.log('Context Path:', contextPath);
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get CSRF token
+    var csrfToken = /*[[${_csrf?.token}]]*/ '';
+    var csrfHeader = /*[[${_csrf?.headerName}]]*/ '';
+    
+    // Debug CSRF token
+    console.log('CSRF Token:', csrfToken);
+    console.log('CSRF Header:', csrfHeader);
+
+    // Form elements
+    var flightFormModal = document.getElementById('flightFormModal');
+    var flightForm = document.getElementById('flightForm');
+    var saveFlightBtn = document.getElementById('saveFlightBtn');
+    var flightFormModalLabel = document.getElementById('flightFormModalLabel');
+    var statusField = document.getElementById('statusField');
+    var flightNumberInput = document.getElementById('flightNumber');
+    
+    // Modal elements
+    var viewModal = document.getElementById('viewModal');
+    var viewModalBody = document.getElementById('viewModalBody');
+    var editFlightBtn = document.getElementById('editFlightBtn');
+    var deleteFlightBtn = document.getElementById('deleteFlightBtn');
+      // Delete modal elements
+    var confirmDeleteModal = document.getElementById('confirmDeleteModal');
+    var deleteFlightInfo = document.getElementById('deleteFlightInfo');
+    var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    
+    // Confirmation modal elements
+    var confirmAddModal = document.getElementById('confirmAddModal');
+    var confirmEditModal = document.getElementById('confirmEditModal');
+    var confirmAddBtn = document.getElementById('confirmAddBtn');
+    var confirmEditBtn = document.getElementById('confirmEditBtn');
+    
+    var currentFlightId = null;
+    var currentMode = 'add';
+    var currentFlightData = null;
+    var pendingFlightData = {};
+
+    // Handle form modal
+    flightFormModal.addEventListener('show.bs.modal', function(event) {
+        var button = event.relatedTarget;
+        currentMode = button.getAttribute('data-bs-mode') || 'add';
+        currentFlightId = button.getAttribute('data-bs-flight-id');
+        
+        console.log('Modal opened in mode:', currentMode);
+          if (currentMode === 'add') {
+            flightFormModalLabel.textContent = 'New Flight';
+            flightForm.reset();
+            currentFlightData = null; // Clear stored flight data for new flights
+            
+            // Clear flight number field and show placeholder for auto-generation
+            if (flightNumberInput) {
+                flightNumberInput.value = '';
+                flightNumberInput.placeholder = 'Auto-generated';
+                flightNumberInput.setAttribute('readonly', true);
+            }
+            
+            // Reset all select elements
+            document.getElementById('origin').value = '';
+            document.getElementById('destination').value = '';
+            document.getElementById('airplane').value = '';
+            
+            saveFlightBtn.textContent = 'Save';
+            statusField.style.display = 'none';        } else if (currentMode === 'edit') {
+            loadFlightData(currentFlightId);
+            saveFlightBtn.textContent = 'Update';
+            statusField.style.display = 'block';
+            
+            // Make flight number readonly for edit mode too (to prevent manual changes)
+            if (flightNumberInput) {
+                flightNumberInput.setAttribute('readonly', true);
+            }
+        }
+    });    // Handle form submission
+    flightForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        console.log('Form submitted in mode:', currentMode);
+        
+        var formData = new FormData(flightForm);
+        var flightData = {
+            originAirport: { id: parseInt(formData.get('originAirport.id')) },
+            destinationAirport: { id: parseInt(formData.get('destinationAirport.id')) },
+            airplane: { id: parseInt(formData.get('airplane.id')) },
+            departureDateTime: formData.get('departureDateTime'),
+            arrivalDateTime: formData.get('arrivalDateTime'),
+            price: parseFloat(formData.get('price')),
+            status: formData.get('status') || 'ACTIVE'
+        };
+        
+        // For edit mode, we need to include the flight number from the stored flight data
+        if (currentMode === 'edit' && currentFlightData && currentFlightData.flightNumber) {
+            flightData.flightNumber = currentFlightData.flightNumber;
+        }
+        // For new flights, let the backend auto-generate the flight number
+        
+        console.log('Flight data:', flightData);
+        
+        // Store pending data for confirmation
+        pendingFlightData = flightData;
+        
+        // Get airport and airplane names for display
+        var originSelect = document.getElementById('origin');
+        var destinationSelect = document.getElementById('destination');
+        var airplaneSelect = document.getElementById('airplane');
+        
+        var originText = originSelect.options[originSelect.selectedIndex].text;
+        var destinationText = destinationSelect.options[destinationSelect.selectedIndex].text;
+        var airplaneText = airplaneSelect.options[airplaneSelect.selectedIndex].text;
+        
+        var departureDate = new Date(flightData.departureDateTime).toLocaleString();
+        var arrivalDate = new Date(flightData.arrivalDateTime).toLocaleString();
+        
+        if (currentMode === 'edit') {
+            // Show edit confirmation modal
+            document.getElementById('editFlightNumber').textContent = flightData.flightNumber;
+            document.getElementById('editFlightRoute').textContent = originText + ' to ' + destinationText;
+            document.getElementById('editFlightDeparture').textContent = departureDate;
+            document.getElementById('editFlightArrival').textContent = arrivalDate;
+            document.getElementById('editFlightAirplane').textContent = airplaneText;
+            document.getElementById('editFlightPrice').textContent = flightData.price;
+            document.getElementById('editFlightStatus').textContent = flightData.status;
+            
+            bootstrap.Modal.getInstance(flightFormModal).hide();
+            bootstrap.Modal.getOrCreateInstance(confirmEditModal).show();
+        } else {
+            // Show add confirmation modal
+            document.getElementById('addFlightNumber').textContent = 'Auto-generated';
+            document.getElementById('addFlightRoute').textContent = originText + ' to ' + destinationText;
+            document.getElementById('addFlightDeparture').textContent = departureDate;
+            document.getElementById('addFlightArrival').textContent = arrivalDate;
+            document.getElementById('addFlightAirplane').textContent = airplaneText;
+            document.getElementById('addFlightPrice').textContent = flightData.price;
+            
+            bootstrap.Modal.getInstance(flightFormModal).hide();
+            bootstrap.Modal.getOrCreateInstance(confirmAddModal).show();
+        }
+    });
+
+    // Handle view flight
+    document.addEventListener('click', function(event) {
+        if (event.target.closest('.view-flight-btn')) {
+            event.preventDefault();
+            var flightId = event.target.closest('.view-flight-btn').getAttribute('data-flight-id');
+            console.log('View button clicked for flight ID:', flightId);
+            if (flightId) {
+                loadFlightView(flightId);
+            } else {
+                console.error('No flight ID found on view button');
+            }
+        }
+    });
+
+    // Handle edit from view modal
+    editFlightBtn.addEventListener('click', function() {
+        bootstrap.Modal.getInstance(viewModal).hide();
+        var button = document.createElement('button');
+        button.setAttribute('data-bs-mode', 'edit');
+        button.setAttribute('data-bs-flight-id', currentFlightId);
+        
+        var event = new Event('show.bs.modal');
+        event.relatedTarget = button;
+        flightFormModal.dispatchEvent(event);
+        
+        bootstrap.Modal.getOrCreateInstance(flightFormModal).show();
+    });
+
+    // Handle delete from view modal
+    deleteFlightBtn.addEventListener('click', function() {
+        fetchFlightData(currentFlightId).then(function(flight) {
+            deleteFlightInfo.textContent = flight.flightNumber + ' - ' + flight.originAirport.iataCode + ' to ' + flight.destinationAirport.iataCode;
+            
+            bootstrap.Modal.getInstance(viewModal).hide();
+            bootstrap.Modal.getOrCreateInstance(confirmDeleteModal).show();
+        });
+    });    // Handle confirm delete
+    confirmDeleteBtn.addEventListener('click', function() {
+        fetch('/volmaghreb/api/flights/' + currentFlightId, {
+            method: 'DELETE',
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        }).then(function(response) {
+            if (response.ok) {
+                bootstrap.Modal.getInstance(confirmDeleteModal).hide();
+                location.reload(); // Refresh page to show updated data
+            } else {
+                alert('Error deleting flight. Please try again.');
+            }
+        }).catch(function(error) {
+            console.error('Error:', error);
+            alert('Error deleting flight. Please try again.');
+        });
+    });
+
+    // Handle confirm add
+    confirmAddBtn.addEventListener('click', function() {
+        var url = '/volmaghreb/api/flights';
+        var method = 'POST';
+        
+        console.log('Confirmed add - Request URL:', url);
+        console.log('Confirmed add - Request method:', method);
+        
+        var headers = {
+            'Content-Type': 'application/json'
+        };
+        
+        if (csrfHeader && csrfToken) {
+            headers[csrfHeader] = csrfToken;
+        }
+        
+        console.log('Confirmed add - Request headers:', headers);
+        console.log('Confirmed add - Flight data:', pendingFlightData);
+        
+        fetch(url, {
+            method: method,
+            headers: headers,
+            body: JSON.stringify(pendingFlightData)
+        }).then(function(response) {
+            console.log('Confirmed add - Response status:', response.status);
+            console.log('Confirmed add - Response ok:', response.ok);
+            
+            if (response.ok) {
+                console.log('Flight added successfully');
+                bootstrap.Modal.getInstance(confirmAddModal).hide();
+                location.reload(); // Refresh page to show updated data
+            } else {
+                console.error('Error response:', response.status, response.statusText);
+                response.text().then(function(text) {
+                    console.error('Error details:', text);
+                });
+                alert('Error adding flight. Please check the console for details.');
+            }
+        }).catch(function(error) {
+            console.error('Fetch error:', error);
+            alert('Error adding flight: ' + error.message);
+        });
+    });
+
+    // Handle confirm edit
+    confirmEditBtn.addEventListener('click', function() {
+        var url = '/volmaghreb/api/flights/' + currentFlightId;
+        var method = 'PUT';
+        
+        console.log('Confirmed edit - Request URL:', url);
+        console.log('Confirmed edit - Request method:', method);
+        
+        var headers = {
+            'Content-Type': 'application/json'
+        };
+        
+        if (csrfHeader && csrfToken) {
+            headers[csrfHeader] = csrfToken;
+        }
+        
+        console.log('Confirmed edit - Request headers:', headers);
+        console.log('Confirmed edit - Flight data:', pendingFlightData);
+        
+        fetch(url, {
+            method: method,
+            headers: headers,
+            body: JSON.stringify(pendingFlightData)
+        }).then(function(response) {
+            console.log('Confirmed edit - Response status:', response.status);
+            console.log('Confirmed edit - Response ok:', response.ok);
+            
+            if (response.ok) {
+                console.log('Flight updated successfully');
+                bootstrap.Modal.getInstance(confirmEditModal).hide();
+                location.reload(); // Refresh page to show updated data
+            } else {
+                console.error('Error response:', response.status, response.statusText);
+                response.text().then(function(text) {
+                    console.error('Error details:', text);
+                });
+                alert('Error updating flight. Please check the console for details.');
+            }
+        }).catch(function(error) {
+            console.error('Fetch error:', error);
+            alert('Error updating flight: ' + error.message);
+        });
+    });
+
+    // Search functionality
+    var searchForm = document.getElementById('searchForm');
+    var searchInput = document.getElementById('searchInput');
+    var sortSelect = document.getElementById('sortSelect');
+    
+    if (searchForm && searchInput) {
+        searchForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            performSearch(searchInput.value);
+        });
+    }
+
+    // Sort functionality
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function(event) {
+            var sortBy = event.target.value;
+            if (sortBy) {
+                performSort(sortBy);
+            }
+        });
+    }    // Remove the manual flight number generation since we auto-generate now
+    // The backend will automatically generate flight numbers when creating new flights
+
+    // Helper functions
+    function loadFlightData(flightId) {        fetchFlightData(flightId).then(function(flight) {
+            // Store flight data for form submission
+            currentFlightData = flight;
+            
+            // Update modal title with flight number for edit mode
+            if (flightFormModalLabel) {
+                flightFormModalLabel.textContent = 'Edit Flight - ' + flight.flightNumber;
+            }
+            
+            // Populate form fields safely
+            if (flightNumberInput) flightNumberInput.value = flight.flightNumber;
+            
+            // Set select values
+            document.getElementById('origin').value = flight.originAirport.id.toString();
+            document.getElementById('destination').value = flight.destinationAirport.id.toString();
+            document.getElementById('airplane').value = flight.airplane.id.toString();
+            
+            var departureInput = document.getElementById('departureDate');
+            var arrivalInput = document.getElementById('arrivalDate');
+            var priceInput = document.getElementById('price');
+            var statusSelect = document.getElementById('status');
+            
+            // Format dates for datetime-local input (YYYY-MM-DDTHH:MM)
+            if (departureInput && flight.departureDateTime) {
+                var depDate = new Date(flight.departureDateTime);
+                departureInput.value = depDate.getFullYear() + '-' + 
+                    String(depDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                    String(depDate.getDate()).padStart(2, '0') + 'T' + 
+                    String(depDate.getHours()).padStart(2, '0') + ':' + 
+                    String(depDate.getMinutes()).padStart(2, '0');
+            }
+            if (arrivalInput && flight.arrivalDateTime) {
+                var arrDate = new Date(flight.arrivalDateTime);
+                arrivalInput.value = arrDate.getFullYear() + '-' + 
+                    String(arrDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                    String(arrDate.getDate()).padStart(2, '0') + 'T' + 
+                    String(arrDate.getHours()).padStart(2, '0') + ':' + 
+                    String(arrDate.getMinutes()).padStart(2, '0');
+            }
+            if (priceInput) priceInput.value = flight.price;
+            if (statusSelect) statusSelect.value = flight.status;
+        }).catch(function(error) {
+            console.error('Error loading flight data:', error);
+        });
+    }
+
+    function loadFlightView(flightId) {
+        console.log('Loading flight view for ID:', flightId);
+        currentFlightId = flightId;
+        fetchFlightData(flightId).then(function(flight) {
+            console.log('Flight data received:', flight);
+            var departureDate = new Date(flight.departureDateTime).toLocaleString();
+            var arrivalDate = new Date(flight.arrivalDateTime).toLocaleString();
+            
+            viewModalBody.innerHTML = 
+                '<div class="row g-3">' +
+                    '<div class="col-12">' +
+                        '<h6>Flight Information</h6>' +
+                        '<p><strong>Flight Number:</strong> ' + flight.flightNumber + '</p>' +
+                        '<p><strong>Route:</strong> ' + flight.originAirport.iataCode + ' - ' + flight.originAirport.name + ' (' + flight.originAirport.city + ', ' + flight.originAirport.country + ') to ' + flight.destinationAirport.iataCode + ' - ' + flight.destinationAirport.name + ' (' + flight.destinationAirport.city + ', ' + flight.destinationAirport.country + ')</p>' +
+                        '<p><strong>Departure:</strong> ' + departureDate + '</p>' +
+                        '<p><strong>Arrival:</strong> ' + arrivalDate + '</p>' +
+                        '<p><strong>Airplane:</strong> ' + flight.airplane.model + '</p>' +
+                        '<p><strong>Price:</strong> ' + flight.price + ' MAD</p>' +
+                        '<p><strong>Status:</strong> <span class="badge ' + (flight.status === 'ACTIVE' ? 'text-bg-success' : 'text-bg-danger') + '">' + flight.status + '</span></p>' +
+                    '</div>' +
+                    '<div class="col-12">' +
+                        '<h6>Seat Availability</h6>' +
+                        '<ul class="list-unstyled">' +
+                            '<li>First Class: ' + flight.airplane.firstClassCapacity + ' seats (' + (flight.availableFirstClassSeats || flight.airplane.firstClassCapacity) + ' available)</li>' +
+                            '<li>Business Class: ' + flight.airplane.businessClassCapacity + ' seats (' + (flight.availableBusinessClassSeats || flight.airplane.businessClassCapacity) + ' available)</li>' +
+                            '<li>Economy Class: ' + flight.airplane.economyClassCapacity + ' seats (' + (flight.availableEconomyClassSeats || flight.airplane.economyClassCapacity) + ' available)</li>' +
+                            '<li><strong>Total Capacity:</strong> ' + (flight.airplane.firstClassCapacity + flight.airplane.businessClassCapacity + flight.airplane.economyClassCapacity) + ' seats</li>' +
+                        '</ul>' +
+                    '</div>' +
+                '</div>';
+            
+            bootstrap.Modal.getOrCreateInstance(viewModal).show();
+        }).catch(function(error) {
+            console.error('Error loading flight view:', error);
+            viewModalBody.innerHTML = '<div class="alert alert-danger">Error loading flight details: ' + error.message + '</div>';
+        });
+    }
+
+    function fetchFlightData(flightId) {
+        console.log('Fetching flight data for ID:', flightId);
+        var url = '/volmaghreb/api/flights/' + flightId;
+        console.log('Request URL:', url);
+        
+        return fetch(url, {
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        }).then(function(response) {
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status + ': Failed to fetch flight data');
+            }
+            return response.json();
+        }).then(function(data) {
+            console.log('Parsed flight data:', data);
+            return data;
+        }).catch(function(error) {
+            console.error('Fetch error:', error);
+            throw error;
+        });
+    }
+
+    function performSearch(searchTerm) {
+        if (!searchTerm.trim()) {
+            location.reload();
+            return;
+        }
+        
+        fetch('/volmaghreb/api/flights/search?searchTerm=' + encodeURIComponent(searchTerm), {
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        }).then(function(response) {
+            if (response.ok) {
+                return response.json();
+            }
+        }).then(function(flights) {
+            if (flights) {
+                updateFlightsTable(flights);
+            }
+        }).catch(function(error) {
+            console.error('Error searching flights:', error);
+        });
+    }
+
+    function performSort(sortBy) {
+        fetch('/volmaghreb/api/flights?sortBy=' + encodeURIComponent(sortBy), {
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        }).then(function(response) {
+            if (response.ok) {
+                return response.json();
+            }
+        }).then(function(flights) {
+            if (flights) {
+                updateFlightsTable(flights);
+            }
+        }).catch(function(error) {
+            console.error('Error sorting flights:', error);
+        });
+    }
+
+    function updateFlightsTable(flights) {
+        var tableBody = document.getElementById('flightsTableBody');
+        
+        if (flights.length === 0) {
+            tableBody.innerHTML = 
+                '<tr>' +
+                    '<td colspan="7" class="text-center py-4">' +
+                        '<div class="d-flex flex-column align-items-center">' +
+                            '<i class="fa-solid fa-plane fa-3x text-muted mb-3"></i>' +
+                            '<h5 class="text-muted">No flights found</h5>' +
+                            '<p class="text-muted">Try adjusting your search criteria</p>' +
+                        '</div>' +
+                    '</td>' +
+                '</tr>';            return;
+        }
+          tableBody.innerHTML = flights.map(function(flight, index) {
+            return '<tr>' +
+                '<td><h6 class="mb-0">' + flight.id + '</h6></td>' +
+                '<td><h6 class="mb-0"><a href="#" class="flight-link" data-flight-id="' + flight.id + '">' + flight.flightNumber + '</a></h6></td>' +
+                '<td>' + flight.originAirport.iataCode + ' (' + flight.originAirport.city + ') to ' + flight.destinationAirport.iataCode + ' (' + flight.destinationAirport.city + ')</td>' +
+                '<td><h6 class="mb-0 fw-light">' + new Date(flight.departureDateTime).toLocaleString() + '</h6></td>' +
+                '<td>' + flight.price + ' MAD</td>' +
+                '<td><div class="badge ' + (flight.status === 'ACTIVE' ? 'text-bg-success' : 'text-bg-danger') + '">' + flight.status + '</div></td>' +
+                '<td>' +
+                    '<button class="btn btn-sm btn-light mb-0 view-flight-btn" data-flight-id="' + flight.id + '" data-bs-toggle="modal" data-bs-target="#viewModal">' +
+                        '<i class="bi bi-eye fa-fw me-1"></i>View' +
+                    '</button>' +
+                '</td>' +
+            '</tr>';
+        }).join('');
+    }
+
+    // Ensure proper modal layering
+    confirmDeleteModal.addEventListener('show.bs.modal', function() {
+        document.querySelectorAll('.modal-backdrop').forEach(function(backdrop) {
+            backdrop.style.zIndex = '1050';
+        });
+        confirmDeleteModal.style.zIndex = '1060';
+    });
+
+    confirmAddModal.addEventListener('show.bs.modal', function() {
+        document.querySelectorAll('.modal-backdrop').forEach(function(backdrop) {
+            backdrop.style.zIndex = '1050';
+        });
+        confirmAddModal.style.zIndex = '1060';
+    });
+
+    confirmEditModal.addEventListener('show.bs.modal', function() {
+        document.querySelectorAll('.modal-backdrop').forEach(function(backdrop) {
+            backdrop.style.zIndex = '1050';
+        });
+        confirmEditModal.style.zIndex = '1060';
+    });
+});
+</script>
+
+<!-- ThemeFunctions -->
+<script th:src="@{/assets/js/functions.js}"></script>
+
+</body>
+</html>
