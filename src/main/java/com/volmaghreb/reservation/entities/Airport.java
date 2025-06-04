@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "iataCode"))
 @Data
@@ -13,10 +15,17 @@ import lombok.NoArgsConstructor;
 public class Airport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;    @Column(unique = true, length = 3, nullable = false)
+    private Long id;
+
+    @Column(unique = true, length = 3, nullable = false)
     private String iataCode;
-    
     private String name;
     private String city;
     private String country;
+
+    @OneToMany(mappedBy = "originAirport", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Flight> departures;
+
+    @OneToMany(mappedBy = "destinationAirport", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Flight> arrivals;
 }

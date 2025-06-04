@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,8 +18,13 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String reservationNumber;
+
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
+
+    @Column(nullable = false)
+    private LocalDateTime reservationTime;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -34,9 +38,11 @@ public class Reservation {
     @JoinColumn(name = "flight_id", nullable = false)
     private Flight flight;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+   @OneToOne
+   @JoinColumn(name = "traveler_id", nullable = false)
+   private Traveler traveler;
 
-    @Column(nullable = false)
-    private LocalDateTime reservationTime;
+   @OneToOne
+   @JoinColumn(name = "payment_id", nullable = false)
+   private Payment payment;
 }
