@@ -1,5 +1,6 @@
 package com.volmaghreb.reservation.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.volmaghreb.reservation.enums.FlightStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -55,5 +56,6 @@ public class Flight {
     private FlightStatus status = FlightStatus.ACTIVE;
 
     @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("flight-reservations")
     private List<Reservation> reservations;
 }

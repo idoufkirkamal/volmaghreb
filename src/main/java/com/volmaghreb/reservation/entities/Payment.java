@@ -1,13 +1,16 @@
 package com.volmaghreb.reservation.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.volmaghreb.reservation.enums.PaymentMethod;
 import com.volmaghreb.reservation.enums.PaymentStatus;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "payments")
+@Data
 public class Payment {
 
     @Id
@@ -27,5 +30,6 @@ public class Payment {
     private PaymentStatus status;
 
     @OneToOne(mappedBy = "payment")
+    @JsonIgnore
     private Reservation reservation;
 }

@@ -1,5 +1,6 @@
 package com.volmaghreb.reservation.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,8 +25,10 @@ public class Airport {
     private String country;
 
     @OneToMany(mappedBy = "originAirport", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Flight> departures;
 
     @OneToMany(mappedBy = "destinationAirport", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Flight> arrivals;
 }
