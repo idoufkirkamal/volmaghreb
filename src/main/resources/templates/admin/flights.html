@@ -123,7 +123,7 @@
                                                     </h6>
                                                 </td>
                                                 <td>
-                                                    <span th:text="${flight.price + ' MAD'}">5000.00 MAD</span>
+                                                    <span th:text="'From ' + ${flight.economyClassPrice} + ' MAD'">From 5000.00 MAD</span>
                                                 </td>
                                                 <td>
                                                     <div th:class="${flight.status.name() == 'ACTIVE' ? 'badge text-bg-success' : 'badge text-bg-danger'}"
@@ -185,9 +185,19 @@
                     </div>
                     <div class="modal-body">
                         <form id="flightForm">                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label for="price" class="form-label">Price (MAD)</label>
-                                    <input type="number" class="form-control" id="price" name="price" 
+                                <div class="col-md-4">
+                                    <label for="firstClassPrice" class="form-label">First Class Price (MAD)</label>
+                                    <input type="number" class="form-control" id="firstClassPrice" name="firstClassPrice" 
+                                           step="0.01" min="0" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="businessClassPrice" class="form-label">Business Class Price (MAD)</label>
+                                    <input type="number" class="form-control" id="businessClassPrice" name="businessClassPrice" 
+                                           step="0.01" min="0" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="economyClassPrice" class="form-label">Economy Class Price (MAD)</label>
+                                    <input type="number" class="form-control" id="economyClassPrice" name="economyClassPrice" 
                                            step="0.01" min="0" required>
                                 </div>
                                 <div class="col-md-6">
@@ -309,7 +319,12 @@
                         <p><strong>Departure:</strong> <span id="addFlightDeparture"></span></p>
                         <p><strong>Arrival:</strong> <span id="addFlightArrival"></span></p>
                         <p><strong>Airplane:</strong> <span id="addFlightAirplane"></span></p>
-                        <p><strong>Price:</strong> <span id="addFlightPrice"></span> MAD</p>
+                        <p><strong>Pricing:</strong></p>
+                        <ul class="ms-3">
+                            <li>First Class: <span id="addFlightFirstClassPrice"></span> MAD</li>
+                            <li>Business Class: <span id="addFlightBusinessClassPrice"></span> MAD</li>
+                            <li>Economy Class: <span id="addFlightEconomyClassPrice"></span> MAD</li>
+                        </ul>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -335,7 +350,12 @@
                         <p><strong>Departure:</strong> <span id="editFlightDeparture"></span></p>
                         <p><strong>Arrival:</strong> <span id="editFlightArrival"></span></p>
                         <p><strong>Airplane:</strong> <span id="editFlightAirplane"></span></p>
-                        <p><strong>Price:</strong> <span id="editFlightPrice"></span> MAD</p>
+                        <p><strong>Pricing:</strong></p>
+                        <ul class="ms-3">
+                            <li>First Class: <span id="editFlightFirstClassPrice"></span> MAD</li>
+                            <li>Business Class: <span id="editFlightBusinessClassPrice"></span> MAD</li>
+                            <li>Economy Class: <span id="editFlightEconomyClassPrice"></span> MAD</li>
+                        </ul>
                         <p><strong>Status:</strong> <span id="editFlightStatus"></span></p>
                     </div>
                     <div class="modal-footer">
@@ -449,7 +469,9 @@ document.addEventListener('DOMContentLoaded', function() {
             airplane: { id: parseInt(formData.get('airplane.id')) },
             departureDateTime: formData.get('departureDateTime'),
             arrivalDateTime: formData.get('arrivalDateTime'),
-            price: parseFloat(formData.get('price')),
+            firstClassPrice: parseFloat(formData.get('firstClassPrice')),
+            businessClassPrice: parseFloat(formData.get('businessClassPrice')),
+            economyClassPrice: parseFloat(formData.get('economyClassPrice')),
             status: formData.get('status') || 'ACTIVE'
         };
         
@@ -483,7 +505,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('editFlightDeparture').textContent = departureDate;
             document.getElementById('editFlightArrival').textContent = arrivalDate;
             document.getElementById('editFlightAirplane').textContent = airplaneText;
-            document.getElementById('editFlightPrice').textContent = flightData.price;
+            document.getElementById('editFlightFirstClassPrice').textContent = flightData.firstClassPrice;
+            document.getElementById('editFlightBusinessClassPrice').textContent = flightData.businessClassPrice;
+            document.getElementById('editFlightEconomyClassPrice').textContent = flightData.economyClassPrice;
             document.getElementById('editFlightStatus').textContent = flightData.status;
             
             bootstrap.Modal.getInstance(flightFormModal).hide();
@@ -495,7 +519,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('addFlightDeparture').textContent = departureDate;
             document.getElementById('addFlightArrival').textContent = arrivalDate;
             document.getElementById('addFlightAirplane').textContent = airplaneText;
-            document.getElementById('addFlightPrice').textContent = flightData.price;
+            document.getElementById('addFlightFirstClassPrice').textContent = flightData.firstClassPrice;
+            document.getElementById('addFlightBusinessClassPrice').textContent = flightData.businessClassPrice;
+            document.getElementById('addFlightEconomyClassPrice').textContent = flightData.economyClassPrice;
             
             bootstrap.Modal.getInstance(flightFormModal).hide();
             bootstrap.Modal.getOrCreateInstance(confirmAddModal).show();
@@ -689,7 +715,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             var departureInput = document.getElementById('departureDate');
             var arrivalInput = document.getElementById('arrivalDate');
-            var priceInput = document.getElementById('price');
+            var firstClassPriceInput = document.getElementById('firstClassPrice');
+            var businessClassPriceInput = document.getElementById('businessClassPrice');
+            var economyClassPriceInput = document.getElementById('economyClassPrice');
             var statusSelect = document.getElementById('status');
             
             // Format dates for datetime-local input (YYYY-MM-DDTHH:MM)
@@ -709,7 +737,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     String(arrDate.getHours()).padStart(2, '0') + ':' + 
                     String(arrDate.getMinutes()).padStart(2, '0');
             }
-            if (priceInput) priceInput.value = flight.price;
+            if (firstClassPriceInput) firstClassPriceInput.value = flight.firstClassPrice;
+            if (businessClassPriceInput) businessClassPriceInput.value = flight.businessClassPrice;
+            if (economyClassPriceInput) economyClassPriceInput.value = flight.economyClassPrice;
             if (statusSelect) statusSelect.value = flight.status;
         }).catch(function(error) {
             console.error('Error loading flight data:', error);
@@ -733,7 +763,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         '<p><strong>Departure:</strong> ' + departureDate + '</p>' +
                         '<p><strong>Arrival:</strong> ' + arrivalDate + '</p>' +
                         '<p><strong>Airplane:</strong> ' + flight.airplane.model + '</p>' +
-                        '<p><strong>Price:</strong> ' + flight.price + ' MAD</p>' +
+                        '<p><strong>Pricing:</strong></p>' +
+                        '<ul class="ms-3">' +
+                            '<li>First Class: ' + flight.firstClassPrice + ' MAD</li>' +
+                            '<li>Business Class: ' + flight.businessClassPrice + ' MAD</li>' +
+                            '<li>Economy Class: ' + flight.economyClassPrice + ' MAD</li>' +
+                        '</ul>' +
                         '<p><strong>Status:</strong> <span class="badge ' + (flight.status === 'ACTIVE' ? 'text-bg-success' : 'text-bg-danger') + '">' + flight.status + '</span></p>' +
                     '</div>' +
                     '<div class="col-12">' +
@@ -840,7 +875,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 '<td><h6 class="mb-0"><a href="#" class="flight-link" data-flight-id="' + flight.id + '">' + flight.flightNumber + '</a></h6></td>' +
                 '<td>' + flight.originAirport.iataCode + ' (' + flight.originAirport.city + ') to ' + flight.destinationAirport.iataCode + ' (' + flight.destinationAirport.city + ')</td>' +
                 '<td><h6 class="mb-0 fw-light">' + new Date(flight.departureDateTime).toLocaleString() + '</h6></td>' +
-                '<td>' + flight.price + ' MAD</td>' +
+                '<td>From ' + flight.economyClassPrice + ' MAD</td>' +
                 '<td><div class="badge ' + (flight.status === 'ACTIVE' ? 'text-bg-success' : 'text-bg-danger') + '">' + flight.status + '</div></td>' +
                 '<td>' +
                     '<button class="btn btn-sm btn-light mb-0 view-flight-btn" data-flight-id="' + flight.id + '" data-bs-toggle="modal" data-bs-target="#viewModal">' +

@@ -1,5 +1,6 @@
 package com.volmaghreb.reservation.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.volmaghreb.reservation.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class Reservation {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference("user-reservations")
     private User user;
 
     @OneToOne
@@ -36,6 +38,7 @@ public class Reservation {
 
     @ManyToOne
     @JoinColumn(name = "flight_id", nullable = false)
+    @JsonBackReference("flight-reservations")
     private Flight flight;
 
    @OneToOne

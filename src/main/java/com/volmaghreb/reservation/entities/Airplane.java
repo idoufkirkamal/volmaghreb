@@ -1,5 +1,6 @@
 package com.volmaghreb.reservation.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,5 +21,6 @@ public class Airplane {
     private int economyClassCapacity;
 
     @OneToOne(mappedBy = "airplane",  cascade = CascadeType.ALL)
+    @JsonIgnore
     private Flight flight;
 }

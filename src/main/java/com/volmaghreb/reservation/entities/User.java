@@ -1,5 +1,6 @@
 package com.volmaghreb.reservation.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.volmaghreb.reservation.enums.Role;
 import com.volmaghreb.reservation.enums.Sex;
 import jakarta.persistence.*;
@@ -38,6 +39,7 @@ public class User implements UserDetails {
     private boolean credentialsNonExpired = true;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("user-reservations")
     private List<Reservation> reservations;
 
     @Override
