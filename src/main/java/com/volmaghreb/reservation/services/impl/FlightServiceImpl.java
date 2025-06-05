@@ -4,6 +4,7 @@ import com.volmaghreb.reservation.entities.Flight;
 import com.volmaghreb.reservation.enums.FlightStatus;
 import com.volmaghreb.reservation.repositories.FlightRepository;
 import com.volmaghreb.reservation.services.FlightService;
+import com.volmaghreb.reservation.services.SeatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,9 @@ public class FlightServiceImpl implements FlightService {
     
     @Autowired
     private FlightRepository flightRepository;
+    
+    @Autowired
+    private SeatService seatService;
     
     @Override
     public List<Flight> getAllFlights() {
@@ -41,7 +45,14 @@ public class FlightServiceImpl implements FlightService {
         if (flight.getFlightNumber() == null || flight.getFlightNumber().isEmpty()) {
             flight.setFlightNumber(generateFlightNumber());
         }
-        return flightRepository.save(flight);
+        
+        // Save the flight first
+        Flight savedFlight = flightRepository.save(flight);
+        
+        // Create seats for the flight
+        seatService.createSeatsForFlight(savedFlight);
+        
+        return savedFlight;
     }
     
     @Override

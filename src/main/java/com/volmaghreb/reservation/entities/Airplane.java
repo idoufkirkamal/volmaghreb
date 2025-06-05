@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -20,7 +22,7 @@ public class Airplane {
     private int businessClassCapacity;
     private int economyClassCapacity;
 
-    @OneToOne(mappedBy = "airplane",  cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "airplane")
     @JsonIgnore
-    private Flight flight;
+    private List<Flight> flights;
 }
