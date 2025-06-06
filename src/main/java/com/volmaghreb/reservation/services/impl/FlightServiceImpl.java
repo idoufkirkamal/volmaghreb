@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +69,37 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public List<Flight> searchFlights(String searchTerm) {
         return flightRepository.searchFlights(searchTerm, searchTerm, searchTerm);
+    }
+    
+    @Override
+    public List<Flight> searchFlights(Long originId, Long destinationId, LocalDate departureDate) {
+        List<Flight> flights = getAllFlights();
+        
+        // Filter by origin airport if provided
+        if (originId != null) {
+            flights = flights.stream()
+                    .filter(flight -> flight.getOriginAirport() != null && 
+                                    flight.getOriginAirport().getId().equals(originId))
+                    .toList();
+        }
+        
+        // Filter by destination airport if provided
+        if (destinationId != null) {
+            flights = flights.stream()
+                    .filter(flight -> flight.getDestinationAirport() != null && 
+                                    flight.getDestinationAirport().getId().equals(destinationId))
+                    .toList();
+        }
+        
+        // Filter by departure date if provided
+        if (departureDate != null) {
+            flights = flights.stream()
+                    .filter(flight -> flight.getDepartureDateTime() != null && 
+                                    flight.getDepartureDateTime().toLocalDate().equals(departureDate))
+                    .toList();
+        }
+        
+        return flights;
     }
     
     @Override
