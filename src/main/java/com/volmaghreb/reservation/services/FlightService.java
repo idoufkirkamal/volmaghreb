@@ -27,6 +27,9 @@ public interface FlightService {
     // Enhanced search method for web interface
     List<Flight> searchFlights(Long originId, Long destinationId, LocalDate departureDate);
     
+    // Enhanced search method with seat availability check
+    List<Flight> searchFlightsWithAvailability(Long originId, Long destinationId, LocalDate departureDate, String travelClass, Integer requiredSeats);
+    
     List<Flight> getFlightsByRoute(Long originId, Long destinationId);
     
     List<Flight> getFlightsByDateRange(LocalDateTime startDate, LocalDateTime endDate);
