@@ -32,6 +32,7 @@ public class FlightWebController {
             @RequestParam(required = false) String from,
             @RequestParam(required = false) String to,
             @RequestParam(required = false) String departureDate,
+            @RequestParam(required = false) String travelClass,
             @RequestParam(required = false) Integer travelers,
             Model model) {
         
@@ -42,14 +43,24 @@ public class FlightWebController {
         model.addAttribute("searchFrom", from);
         model.addAttribute("searchTo", to);
         model.addAttribute("searchDepartureDate", departureDate);
+        model.addAttribute("searchTravelClass", travelClass);
         model.addAttribute("searchTravelers", travelers);
         
         List<Flight> flights = null;
+        Long fromAirportId = null;
+        Long toAirportId = null;
+        LocalDate searchDate = null;
+        
+        // Debug logging
+        System.out.println("Flight search parameters:");
+        System.out.println("  From: " + from);
+        System.out.println("  To: " + to);
+        System.out.println("  Departure Date: " + departureDate);
+        System.out.println("  Travel Class: " + travelClass);
+        System.out.println("  Travelers: " + travelers);
         
         try {
-            Long fromAirportId = null;
-            Long toAirportId = null;
-            LocalDate searchDate = null;
+            Integer requiredTravelers = travelers != null ? travelers : 1;
             
             // Parse parameters
             if (from != null && !from.isEmpty()) {
@@ -60,29 +71,71 @@ public class FlightWebController {
             }
             if (departureDate != null && !departureDate.isEmpty()) {
                 try {
-                    // Try parsing as "d M yyyy" format first (from flatpickr)
-                    searchDate = LocalDate.parse(departureDate, DateTimeFormatter.ofPattern("d M yyyy"));
+                    // Handle various date formats that could come from the flatpickr component
+                    // Try parsing as "d M yyyy" format first (from flatpickr with Y format: "6 Jan 2025")
+                    searchDate = LocalDate.parse(departureDate, DateTimeFormatter.ofPattern("d MMM yyyy"));
                 } catch (Exception e) {
                     try {
-                        // Try parsing as ISO date format (yyyy-MM-dd)
-                        searchDate = LocalDate.parse(departureDate);
+                        // Try parsing as "d M yyyy" format with short month names: "6 Jan 2025" 
+                        searchDate = LocalDate.parse(departureDate, DateTimeFormatter.ofPattern("d M yyyy"));
                     } catch (Exception e2) {
-                        // If both fail, ignore the date filter
-                        searchDate = null;
+                        try {
+                            // Try parsing as ISO date format (yyyy-MM-dd)
+                            searchDate = LocalDate.parse(departureDate);
+                        } catch (Exception e3) {
+                            try {
+                                // Try with short date format (d M yy for 2-digit year)
+                                searchDate = LocalDate.parse(departureDate, DateTimeFormatter.ofPattern("d M yy"));
+                            } catch (Exception e4) {
+                                try {
+                                    // Try with "dd/MM/yyyy" format
+                                    searchDate = LocalDate.parse(departureDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                                } catch (Exception e5) {
+                                    try {
+                                        // Try with "MM/dd/yyyy" format
+                                        searchDate = LocalDate.parse(departureDate, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+                                    } catch (Exception e6) {
+                                        // Log the error and ignore the date filter
+                                        System.err.println("Could not parse departure date: " + departureDate + ". Error: " + e6.getMessage());
+                                        searchDate = null;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
             
-            // Use enhanced search method
-            flights = flightService.searchFlights(fromAirportId, toAirportId, searchDate);
+            // Debug the parsed values
+            System.out.println("Parsed values:");
+            System.out.println("  From Airport ID: " + fromAirportId);
+            System.out.println("  To Airport ID: " + toAirportId);
+            System.out.println("  Search Date: " + searchDate);
+            
+            // Use enhanced search method with seat availability check
+            flights = flightService.searchFlightsWithAvailability(fromAirportId, toAirportId, searchDate, travelClass, requiredTravelers);
+            
+            System.out.println("Found " + (flights != null ? flights.size() : 0) + " flights matching criteria");
             
         } catch (Exception e) {
             // If there's an error, show all flights
+            System.err.println("Error in flight search: " + e.getMessage());
+            e.printStackTrace();
             flights = flightService.getAllFlights();
         }
         
         model.addAttribute("flights", flights);
         model.addAttribute("flightCount", flights != null ? flights.size() : 0);
+        
+        // Add airport names for display
+        if (fromAirportId != null) {
+            airportService.getAirportById(fromAirportId).ifPresent(airport -> 
+                model.addAttribute("searchFromName", airport.getCity() + ", " + airport.getCountry()));
+        }
+        if (toAirportId != null) {
+            airportService.getAirportById(toAirportId).ifPresent(airport -> 
+                model.addAttribute("searchToName", airport.getCity() + ", " + airport.getCountry()));
+        }
         
         return "flights/flight-list";
     }
