@@ -6,7 +6,7 @@
             <!-- Widget 1 START -->
             <div class="col-lg-3 d-flex justify-content-center flex-column align-items-center">
                 <!-- logo -->
-                <a href="index.html">
+                <a th:href="@{/}">
                     <img class="h-70px" th:src="@{/assets/images/logo-light.png}" alt="logo">
                 </a>
             </div>
@@ -23,9 +23,9 @@
             <div class="col-lg-3 ms-auto">
                 <h5 class="text-white mb-2 mb-md-4">Pages</h5>
                 <ul class="nav flex-column text-primary-hover">
-                    <li class="nav-item"><a class="nav-link text-body-secondary" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link text-body-secondary" href="about.html">About us</a></li>
-                    <li class="nav-item"><a class="nav-link text-body-secondary" href="contact.html">Contact us</a></li>
+                    <li class="nav-item"><a class="nav-link text-body-secondary" th:href="@{/}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-body-secondary" th:href="@{/about}">About us</a></li>
+                    <li class="nav-item"><a class="nav-link text-body-secondary" th:href="@{/contact}">Contact us</a></li>
                 </ul>
             </div>
             <!-- Widget 2 END -->
