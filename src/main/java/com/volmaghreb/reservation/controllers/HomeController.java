@@ -18,4 +18,16 @@ public class HomeController {
         model.addAttribute("airports", airportService.getAllAirports());
         return "flights/index";
     }
+    
+    @GetMapping("/about")
+    public String about(Model model) {
+        model.addAttribute("pageTitle", "About Us - Volmaghreb");
+        return "about";
+    }
+    
+    @GetMapping("/contact")
+    public String contact(Model model) {
+        model.addAttribute("pageTitle", "Contact Us - Volmaghreb");
+        return "contact";
+    }
 }

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Mirrored from stackbros.in/bookinga/landing/about.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 Apr 2025 18:38:12 GMT -->
+<head>
+	<title th:text="${pageTitle}">About Us - Volmaghreb</title>
+
+	<!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="author" content="Volmaghreb">
+	<meta name="description" content="About Volmaghreb - Your Way to Morocco">
+
+	<!-- Dark mode -->
+	<script>
+		const storedTheme = localStorage.getItem('theme')
+ 
+		const getPreferredTheme = () => {
+			if (storedTheme) {
+				return storedTheme
+			}
+			return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+		}
+
+		const setTheme = function (theme) {
+			if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				document.documentElement.setAttribute('data-bs-theme', 'dark')
+			} else {
+				document.documentElement.setAttribute('data-bs-theme', theme)
+			}
+		}
+
+		setTheme(getPreferredTheme())
+
+		window.addEventListener('DOMContentLoaded', () => {
+		    var el = document.querySelector('.theme-icon-active');
+			if(el != 'undefined' && el != null) {
+				const showActiveTheme = theme => {
+				const activeThemeIcon = document.querySelector('.theme-icon-active use')
+				const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+				const svgOfActiveBtn = btnToActive.querySelector('.mode-switch use').getAttribute('href')
+
+				document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+					element.classList.remove('active')
+				})
+
+				btnToActive.classList.add('active')
+				activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+			}
+
+			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+				if (storedTheme !== 'light' || storedTheme !== 'dark') {
+					setTheme(getPreferredTheme())
+				}
+			})
+
+			showActiveTheme(getPreferredTheme())
+
+			document.querySelectorAll('[data-bs-theme-value]')
+				.forEach(toggle => {
+					toggle.addEventListener('click', () => {
+						const theme = toggle.getAttribute('data-bs-theme-value')
+						localStorage.setItem('theme', theme)
+						setTheme(theme)
+						showActiveTheme(theme)
+					})
+				})
+
+			}
+		})
+		
+	</script>
+
+ 	<!-- Favicon -->
+	<link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}">
+
+	<!-- Google Font -->
+	<link rel="preconnect" href="https://fonts.googleapis.com/">
+	<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=Poppins:wght@400;500;700&amp;display=swap">
+
+	<!-- Plugins CSS -->
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/font-awesome/css/all.min.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}">
+
+	<!-- Theme CSS -->
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/css/style.css}">
+	<style>
+		.header-sticky-on {
+		background-color: #fff !important; /* Optional: adds a white background when sticky */
+		transition: all 0.3s ease;
+		}
+
+		.navbar-dark-off .nav-link,
+		.navbar-dark-off .dropdown-item {
+			color: #000 !important; /* Changes text to black */
+		}
+
+		.navbar-dark-off .nav-notification {
+			color: #000 !important; /* Changes notification icon to black */
+		}
+
+		/* Ensure initial state for light logo */
+		.navbar-dark .logo-light {
+			display: block;
+		}
+
+		.navbar-dark .logo-dark {
+			display: none;
+		}
+	</style>
+</head>
+
+<body>
+
+<!-- Header START -->
+<header class="navbar-light header-sticky">
+	<!-- Logo Nav START -->
+	<nav class="navbar navbar-expand-xl">
+		<div class="container">
+			<!-- Logo START -->
+			<a class="navbar-brand" th:href="@{/}">
+				<img class="light-mode-item navbar-brand-item h-70px" th:src="@{/assets/images/logo-dark.png}" alt="logo">
+				<img class="dark-mode-item navbar-brand-item h-70px" th:src="@{/assets/images/logo-light.png}" alt="logo">
+			</a>
+			<!-- Logo END -->
+			
+			<!-- Responsive navbar toggler -->
+			<button class="navbar-toggler ms-auto mx-3 p-0 p-sm-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-animation">
+					<span></span>
+					<span></span>
+					<span></span>
+				</span>
+			</button>
+
+			<!-- Main navbar START -->
+			<div class="navbar-collapse collapse" id="navbarCollapse">
+				<ul class="navbar-nav navbar-nav-scroll mx-auto">
+					<!-- Nav item Flights -->
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/}" id="flightsMenu">Home</a>
+					</li>
+
+					<!-- Nav item About -->
+					<li class="nav-item"><a class="nav-link active" th:href="@{/about}">About Us</a></li>
+
+					<!-- Nav item Contact -->
+					<li class="nav-item"><a class="nav-link" th:href="@{/contact}">Contact Us</a></li>
+				</ul>
+			</div>
+			<!-- Main navbar END -->
+
+			<!-- Profile and Notification START -->
+			<ul class="nav flex-row align-items-center list-unstyled ms-xl-auto">
+
+				<!-- Sign In button -->
+				<li class="nav-item ms-2 d-none d-sm-block">
+					<a th:href="@{/auth/sign-in}" id="sign-in-btn" class="btn btn-light mb-0">
+						<i class="fa-solid fa-right-to-bracket me-2"></i>Sign In
+					</a>
+				</li>
+
+				<!-- Dark mode options START -->
+				<li class="nav-item dropdown ms-3">
+					<button class="nav-notification btn btn-light lh-0 p-0 mb-0" id="bd-theme"
+					type="button"
+					aria-expanded="false"
+					data-bs-toggle="dropdown"
+					data-bs-display="static">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-half fa-fw theme-icon-active" viewBox="0 0 16 16">
+							<path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+							<use href="#"></use>
+						</svg>
+					</button>
+
+					<ul class="dropdown-menu min-w-auto dropdown-menu-end" aria-labelledby="bd-theme">
+						<li class="mb-1">
+							<button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
+								<svg width="16" height="16" fill="currentColor" class="bi bi-brightness-high-fill fa-fw mode-switch me-1" viewBox="0 0 16 16">
+									<path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+									<use href="#"></use>
+								</svg>Light
+							</button>
+						</li>
+						<li class="mb-1">
+							<button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-stars-fill fa-fw mode-switch me-1" viewBox="0 0 16 16">
+									<path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+									<path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
+									<use href="#"></use>
+								</svg>Dark
+							</button>
+						</li>
+						<li>
+							<button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-half fa-fw mode-switch" viewBox="0 0 16 16">
+									<path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+									<use href="#"></use>
+								</svg>Auto
+							</button>
+						</li>
+					</ul>
+				</li>
+				<!-- Dark mode options END -->
+			</ul>
+			<!-- Profile and Notification START -->
+
+		</div>
+	</nav>
+	<!-- Logo Nav END -->
+</header>
+<!-- Header END -->
+
+<!-- **************** MAIN CONTENT START **************** -->
+<main>
+
+<!-- =======================
+Main banner START -->
+<section>
+	<div class="container">
+		<div class="row mb-5">
+			<div class="col-xl-10 mx-auto text-center">
+				<!-- Title -->
+				<h1>About US</h1>
+				<p class="lead">Your trusted partner for booking flights to Morocco – simple, affordable, and reliable.</p>
+			</div>
+		</div> <!-- Row END -->
+
+		<!-- Image START -->
+		<div class="row g-4 align-items-center">
+			<!-- Image -->
+			<div class="col-md-6">
+				<img th:src="@{/assets/images/about/01.jpg}" class="rounded-2" alt="">
+			</div>
+
+			<div class="col-md-6">
+				<div class="row g-4">
+					<!-- Image -->
+					<div class="col-md-8">
+						<img th:src="@{/assets/images/about/02.jpg}" class="rounded-2" alt="">
+					</div>
+
+					<!-- Image -->
+					<div class="col-12">
+						<img th:src="@{/assets/images/about/03.jpg}" class="rounded-2" alt="">
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Image END -->
+	</div>
+</section>
+<!-- =======================
+Main banner START -->
+
+<!-- =======================
+About content START -->
+<section class="pt-0 pt-lg-5">
+	<div class="container">
+		<!-- Content START -->
+		<div class="row mb-4 mb-md-5">
+			<div class="col-md-10 mx-auto">
+				<h3 class="mb-4">Our Mission</h3>
+				<p class="fw-bold">At Volmaghreb, we make traveling to Morocco easy and enjoyable. Founded with a passion for connecting people to the beauty of Morocco, we offer a simple platform to book flights at great prices. Whether you're visiting vibrant cities like Marrakech or exploring the Atlas Mountains, we’re here to help you every step of the way.</p>
+				<p class="mb-0">We believe travel should be stress-free. That’s why we focus on secure payments, friendly support, and a smooth booking experience. Let Volmaghreb be your gateway to Morocco’s wonders!</p>
+			</div>
+		</div>
+		<!-- Content END -->
+	</div>
+</section>
+<!-- =======================
+About content END -->
+
+</main>
+<!-- **************** MAIN CONTENT END **************** -->
+
+<!-- =======================
+Footer END -->
+<footer class="bg-dark pt-5">
+	<div class="container">
+		<!-- Row START -->
+		<div class="row g-4">
+
+			<!-- Widget 1 START -->
+			<div class="col-lg-3 d-flex justify-content-center flex-column align-items-center">
+				<!-- logo -->
+				<a th:href="@{/}">
+					<img class="h-70px" th:src="@{/assets/images/logo-light.png}" alt="logo">
+				</a>
+			</div>
+			<!-- Widget 1 END -->
+
+			<!-- Widget 3 START -->
+			<div class="col-lg-6 ms-auto col-lg-3 d-flex justify-content-center flex-column align-items-center">
+			<!-- Link block -->
+				<p class="my-3 text-body-secondary">Your Way to Morocco – Book Flights Easily and Safely. Explore Morocco’s Wonders with Volmaghreb, Your Travel Friend. Enjoy Simple Booking, Great Prices, and a Smooth Journey to Morocco’s Beautiful Cities and Amazing Places.</p>
+			</div>
+			<!-- Widget 3 END -->
+
+			<!-- Widget 2 START -->
+			<div class="col-lg-3 ms-auto">
+				<h5 class="text-white mb-2 mb-md-4">Pages</h5>
+				<ul class="nav flex-column text-primary-hover">
+					<li class="nav-item"><a class="nav-link text-body-secondary" th:href="@{/}">Home</a></li>
+					<li class="nav-item"><a class="nav-link text-body-secondary" th:href="@{/about}">About us</a></li>
+					<li class="nav-item"><a class="nav-link text-body-secondary" th:href="@{/contact}">Contact us</a></li>
+				</ul>
+			</div>
+			<!-- Widget 2 END -->
+
+		</div><!-- Row END -->
+
+
+		<!-- Payment and card -->
+		<div class="row g-4 justify-content-between mt-0 mt-md-2">
+
+			<!-- Payment card -->
+			<div class="col-sm-7 col-md-6 col-lg-4">
+				<h5 class="text-white mb-2">Payment & Security</h5>
+				<ul class="list-inline mb-0 mt-3">
+					<li class="list-inline-item"> <a href="#"><img th:src="@{/assets/images/element/paypal.svg}" class="h-30px" alt=""></a></li>
+					<li class="list-inline-item"> <a href="#"><img th:src="@{/assets/images/element/visa.svg}" class="h-30px" alt=""></a></li>
+					<li class="list-inline-item"> <a href="#"><img th:src="@{/assets/images/element/mastercard.svg}" class="h-30px" alt=""></a></li>
+					<li class="list-inline-item"> <a href="#"><img th:src="@{/assets/images/element/expresscard.svg}" class="h-30px" alt=""></a></li>
+				</ul>
+			</div>
+
+			<!-- Social media icon -->
+			<div class="col-sm-5 col-md-6 col-lg-3 text-sm-end">
+				<h5 class="text-white mb-2">Follow us on</h5>
+				<ul class="list-inline mb-0 mt-3">
+					<li class="list-inline-item"> <a class="btn btn-sm px-2 bg-facebook mb-0" href="#"><i class="fab fa-fw fa-facebook-f"></i></a> </li>
+					<li class="list-inline-item"> <a class="btn btn-sm shadow px-2 bg-instagram mb-0" href="#"><i class="fab fa-fw fa-instagram"></i></a> </li>
+					<li class="list-inline-item"> <a class="btn btn-sm shadow px-2 bg-twitter mb-0" href="#"><i class="fab fa-fw fa-twitter"></i></a> </li>
+					<li class="list-inline-item"> <a class="btn btn-sm shadow px-2 bg-linkedin mb-0" href="#"><i class="fab fa-fw fa-linkedin-in"></i></a> </li>
+				</ul>	
+			</div>
+		</div>
+
+		<!-- Divider -->
+		<hr class="mt-4 mb-0">
+
+		<!-- Bottom footer -->
+		<div class="row">
+			<div class="container">
+				<div class="d-lg-flex justify-content-between align-items-center py-3 text-center text-lg-start">
+					<!-- copyright text -->
+					<div class="text-body-secondary text-primary-hover"> Copyrights ©2025 By Volmaghreb.</div>
+					<!-- copyright links-->
+					<div class="nav mt-2 mt-lg-0">
+						<ul class="list-inline text-primary-hover mx-auto mb-0">
+							<li class="list-inline-item me-0"><a class="nav-link text-body-secondary py-1" href="#">Privacy policy</a></li>
+							<li class="list-inline-item me-0"><a class="nav-link text-body-secondary py-1" href="#">Terms and conditions</a></li>
+							<li class="list-inline-item me-0"><a class="nav-link text-body-secondary py-1 pe-0" href="#">Refund policy</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
+<!-- =======================
+Footer END -->
+
+<!-- Back to top -->
+<div class="back-top"></div>
+
+<!-- Bootstrap JS -->
+<script th:src="@{/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+
+<!-- ThemeFunctions -->
+<script th:src="@{/assets/js/functions.js}"></script>
+
+</body>
+
+<!-- Mirrored from stackbros.in/bookinga/landing/about.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 Apr 2025 18:38:15 GMT -->
+</html>
