@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -83,6 +84,33 @@ public class Flight {
     
     public void setAvailableSeats(Integer seats) {
         this.classSpecificAvailableSeats = seats;
+    }
+
+    // Calculate flight duration in a human-readable format
+    public String getFlightDuration() {
+        if (departureDateTime == null || arrivalDateTime == null) {
+            return "N/A";
+        }
+        
+        Duration duration = Duration.between(departureDateTime, arrivalDateTime);
+        long hours = duration.toHours();
+        long minutes = duration.toMinutesPart();
+        
+        if (hours > 0) {
+            return String.format("%dh %02dm", hours, minutes);
+        } else {
+            return String.format("%dm", minutes);
+        }
+    }
+    
+    // Calculate flight duration in minutes (for calculations)
+    public long getFlightDurationInMinutes() {
+        if (departureDateTime == null || arrivalDateTime == null) {
+            return 0;
+        }
+        
+        Duration duration = Duration.between(departureDateTime, arrivalDateTime);
+        return duration.toMinutes();
     }
 
 
