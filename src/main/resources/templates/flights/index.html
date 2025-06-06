@@ -262,17 +262,38 @@ Main banner START -->
 
 				<div class="row g-4 position-relative">
 
-					<!-- Flight Search Header -->
-					<div class="col-lg-6">
-						<h4 class="text-white mb-0">Search Flights</h4>
-					</div>
-
           <!-- Flight Search Form -->
           <div class="col-12 mt-4">
             <form th:action="@{/flights/search}" method="get">
+            <!-- First Row: Class and Travelers Dropdowns -->
+            <div class="row g-4 mb-3">
+              <!-- Class Selection -->
+              <div class="col-md-6">
+                  <select name="travelClass" class="form-select js-choice" required style="border: 1px solid #545454;">
+                    <option value="">Select Class</option>
+                    <option value="ECONOMY">Economy</option>
+                    <option value="BUSINESS">Business</option>
+                    <option value="FIRST_CLASS">First Class</option>
+                  </select>
+              </div>
+
+              <!-- Travelers Count -->
+              <div class="col-md-6">
+                  <select name="travelers" class="form-select js-choice" required style="border: 1px solid #545454;">
+                    <option value="">Select Travelers</option>
+                    <option value="1">1 Traveler</option>
+                    <option value="2">2 Travelers</option>
+                    <option value="3">3 Travelers</option>
+                    <option value="4">4 Travelers</option>
+                    <option value="5">5 Travelers</option>
+                  </select>
+              </div>
+            </div>
+
+            <!-- Second Row: Location and Date Fields -->
             <div class="row g-4">
               <!-- Leaving From -->
-              <div class="col-md-6 col-lg-3 position-relative">
+              <div class="col-md-6 col-lg-4 position-relative">
                 <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                   <!-- Input field -->
                   <label class="mb-1"><i class="bi bi-geo-alt me-2"></i>From</label>
@@ -292,7 +313,7 @@ Main banner START -->
               </div>
 
               <!-- Going To -->
-              <div class="col-md-6 col-lg-3">
+              <div class="col-md-6 col-lg-4">
                 <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                   <!-- Input field -->
                   <label class="mb-1"><i class="bi bi-send me-2"></i>To</label>
@@ -307,38 +328,10 @@ Main banner START -->
               </div>
 
               <!-- Departure -->
-              <div class="col-lg-2">
+              <div class="col-lg-4">
                 <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                   <label class="mb-1"><i class="bi bi-calendar me-2"></i>Departure</label>
                   <input name="departureDate" type="text" class="form-control flatpickr" data-date-format="d M Y" placeholder="Select date" required>
-                </div>
-              </div>
-
-              <!-- Class Selection -->
-              <div class="col-lg-2">
-                <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                  <label class="mb-1"><i class="bi bi-award me-2"></i>Class</label>
-                  <select name="travelClass" class="form-select js-choice" required>
-                    <option value="">Select Class</option>
-                    <option value="ECONOMY">Economy</option>
-                    <option value="BUSINESS">Business</option>
-                    <option value="FIRST_CLASS">First Class</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Travelers Count -->
-              <div class="col-lg-2">
-                <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                  <label class="mb-1"><i class="bi bi-people me-2"></i>Travelers</label>
-                  <select name="travelers" class="form-select js-choice" required>
-                    <option value="">Select Travelers</option>
-                    <option value="1">1 Traveler</option>
-                    <option value="2">2 Travelers</option>
-                    <option value="3">3 Travelers</option>
-                    <option value="4">4 Travelers</option>
-                    <option value="5">5 Travelers</option>
-                  </select>
                 </div>
               </div>
 
