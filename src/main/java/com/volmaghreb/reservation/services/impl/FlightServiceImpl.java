@@ -1,8 +1,11 @@
 package com.volmaghreb.reservation.services.impl;
 
+import com.volmaghreb.reservation.entities.Airplane;
 import com.volmaghreb.reservation.entities.Flight;
+import com.volmaghreb.reservation.entities.Seat;
 import com.volmaghreb.reservation.enums.FlightStatus;
 import com.volmaghreb.reservation.enums.SeatClass;
+import com.volmaghreb.reservation.repositories.AirplaneRepository;
 import com.volmaghreb.reservation.repositories.FlightRepository;
 import com.volmaghreb.reservation.services.FlightService;
 import com.volmaghreb.reservation.services.SeatService;
@@ -12,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -22,6 +26,9 @@ public class FlightServiceImpl implements FlightService {
     
     @Autowired
     private FlightRepository flightRepository;
+
+    @Autowired
+    AirplaneRepository airplaneRepository;
     
     @Autowired
     private SeatService seatService;
@@ -51,11 +58,29 @@ public class FlightServiceImpl implements FlightService {
         
         // Save the flight first
         Flight savedFlight = flightRepository.save(flight);
-        
-        // Create seats for the flight
-        seatService.createSeatsForFlight(savedFlight);
-        
-        return savedFlight;
+
+        Airplane airplane = airplaneRepository.findById(savedFlight.getAirplane().getId()).orElseThrow(() -> new RuntimeException("Airplane not found"));
+
+        List<Seat> seats = new ArrayList<>();
+
+        for (int i = 1; i <= airplane.getFirstClassCapacity(); i++) {
+            Seat seat = seatService.createSeat(SeatClass.FIRST_CLASS, i, savedFlight);
+            seats.add(seat);
+        }
+
+        for (int i = 1; i <= airplane.getBusinessClassCapacity(); i++) {
+            Seat seat = seatService.createSeat(SeatClass.BUSINESS_CLASS, i, savedFlight);
+            seats.add(seat);
+        }
+
+        for (int i = 1; i <= airplane.getEconomyClassCapacity(); i++) {
+            Seat seat = seatService.createSeat(SeatClass.ECONOMY_CLASS, i, savedFlight);
+            seats.add(seat);
+        }
+
+        savedFlight.setSeats(seats);
+
+        return flightRepository.save(savedFlight);
     }
     
     @Override

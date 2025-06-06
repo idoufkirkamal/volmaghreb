@@ -37,7 +37,9 @@ public class FlightController {
     @PostMapping
     public Flight createFlight(@RequestBody Flight flight) {
         return flightService.saveFlight(flight);
-    }    @PutMapping("/{id}")
+    }
+
+    @PutMapping("/{id}")
     public ResponseEntity<Flight> updateFlight(@PathVariable Long id, @RequestBody Flight flight) {
         try {
             // Don't modify the reservations collection to avoid Hibernate cascade issues
