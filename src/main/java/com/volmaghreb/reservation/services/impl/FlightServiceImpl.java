@@ -2,6 +2,7 @@ package com.volmaghreb.reservation.services.impl;
 
 import com.volmaghreb.reservation.entities.Flight;
 import com.volmaghreb.reservation.enums.FlightStatus;
+import com.volmaghreb.reservation.enums.SeatClass;
 import com.volmaghreb.reservation.repositories.FlightRepository;
 import com.volmaghreb.reservation.services.FlightService;
 import com.volmaghreb.reservation.services.SeatService;
@@ -9,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class FlightServiceImpl implements FlightService {
@@ -71,6 +74,21 @@ public class FlightServiceImpl implements FlightService {
     }
     
     @Override
+    public List<Flight> searchFlights(Long originId, Long destinationId, LocalDate departureDate) {
+        LocalDateTime startDate = null;
+        LocalDateTime endDate = null;
+        
+        // If departure date is provided, create a range for the entire day
+        if (departureDate != null) {
+            startDate = departureDate.atStartOfDay(); // 00:00:00
+            endDate = departureDate.atTime(23, 59, 59); // 23:59:59
+        }
+        
+        // Use the optimized repository query
+        return flightRepository.findFlightsBySearchCriteria(originId, destinationId, startDate, endDate);
+    }
+    
+    @Override
     public List<Flight> getFlightsByRoute(Long originId, Long destinationId) {
         return flightRepository.findByOriginAndDestination(originId, destinationId);
     }
@@ -122,5 +140,53 @@ public class FlightServiceImpl implements FlightService {
         existingFlight.setStatus(flightData.getStatus());
 
         return flightRepository.save(existingFlight);
+    }
+    
+    @Override
+    public List<Flight> searchFlightsWithAvailability(Long originId, Long destinationId, LocalDate departureDate, String travelClass, Integer requiredSeats) {
+        List<Flight> flights = searchFlights(originId, destinationId, departureDate);
+        
+        if (travelClass == null || requiredSeats == null) {
+            return flights;
+        }
+        
+        // Filter flights based on seat availability for the specified class
+        return flights.stream()
+            .filter(flight -> hasAvailableSeats(flight, travelClass, requiredSeats))
+            .collect(Collectors.toList());
+    }
+    
+    private boolean hasAvailableSeats(Flight flight, String travelClass, Integer requiredSeats) {
+        if (flight.getAirplane() == null) {
+            return false;
+        }
+        
+        int availableSeats = 0;
+        
+        switch (travelClass.toUpperCase()) {
+            case "FIRST_CLASS":
+                availableSeats = flight.getAirplane().getFirstClassCapacity() - getBookedSeats(flight, SeatClass.FIRST_CLASS);
+                break;
+            case "BUSINESS":
+            case "BUSINESS_CLASS":
+                availableSeats = flight.getAirplane().getBusinessClassCapacity() - getBookedSeats(flight, SeatClass.BUSINESS_CLASS);
+                break;
+            case "ECONOMY":
+            case "ECONOMY_CLASS":
+                availableSeats = flight.getAirplane().getEconomyClassCapacity() - getBookedSeats(flight, SeatClass.ECONOMY_CLASS);
+                break;
+            default:
+                return false;
+        }
+        
+        return availableSeats >= requiredSeats;
+    }
+    
+    private int getBookedSeats(Flight flight, SeatClass seatClass) {
+        // Count actual booked seats by querying reservations for this flight and seat class
+        return (int) flight.getReservations().stream()
+            .filter(reservation -> reservation.getSeat() != null && 
+                                 reservation.getSeat().getSeatClass() == seatClass)
+            .count();
     }
 }

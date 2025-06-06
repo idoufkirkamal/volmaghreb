@@ -58,4 +58,48 @@ public class Flight {
     @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("flight-reservations")
     private List<Reservation> reservations;
+
+    // Transient field for displaying class-specific available seats
+    @Transient
+    private Integer classSpecificAvailableSeats;
+
+    // Utility methods
+    public int getAvailableSeats() {
+        // If class-specific seats are set, return those; otherwise return total available seats
+        if (classSpecificAvailableSeats != null) {
+            return classSpecificAvailableSeats;
+        }
+        
+        if (airplane == null) return 0;
+        int totalSeats = airplane.getFirstClassCapacity() + 
+                        airplane.getBusinessClassCapacity() + 
+                        airplane.getEconomyClassCapacity();
+        int bookedSeats = reservations != null ? reservations.size() : 0;
+        return totalSeats - bookedSeats;
+    }
+    
+    public void setAvailableSeats(Integer seats) {
+        this.classSpecificAvailableSeats = seats;
+    }
+
+    public BigDecimal getPrice() {
+        // Return economy class price as default
+        return economyClassPrice;
+    }
+
+    public String getFlightDuration() {
+        if (departureDateTime == null || arrivalDateTime == null) {
+            return "N/A";
+        }
+        
+        java.time.Duration duration = java.time.Duration.between(departureDateTime, arrivalDateTime);
+        long hours = duration.toHours();
+        long minutes = duration.minusHours(hours).toMinutes();
+        
+        if (hours > 0) {
+            return String.format("%dh %02dm", hours, minutes);
+        } else {
+            return String.format("%dm", minutes);
+        }
+    }
 }

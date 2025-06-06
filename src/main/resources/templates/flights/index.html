@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from stackbros.in/bookinga/landing/index-directory.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 Apr 2025 18:37:57 GMT -->
+<head>
+	<title>Volmaghreb - Morocco Flight Reservations</title>
+
+	<!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="author" content="Volmaghreb Team">
+	<meta name="description" content="Book flights to and from Morocco with Volmaghreb - Your trusted flight reservation system.">
+
+	<!-- Dark mode -->
+	<script>
+		const storedTheme = localStorage.getItem('theme')
+ 
+		const getPreferredTheme = () => {
+			if (storedTheme) {
+				return storedTheme
+			}
+			return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+		}
+
+		const setTheme = function (theme) {
+			if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				document.documentElement.setAttribute('data-bs-theme', 'dark')
+			} else {
+				document.documentElement.setAttribute('data-bs-theme', theme)
+			}
+		}
+
+		setTheme(getPreferredTheme())
+
+		window.addEventListener('DOMContentLoaded', () => {
+		    var el = document.querySelector('.theme-icon-active');
+			if(el != 'undefined' && el != null) {
+				const showActiveTheme = theme => {
+				const activeThemeIcon = document.querySelector('.theme-icon-active use')
+				const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+				const svgOfActiveBtn = btnToActive.querySelector('.mode-switch use').getAttribute('href')
+
+				document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+					element.classList.remove('active')
+				})
+
+				btnToActive.classList.add('active')
+				activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+			}
+
+			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+				if (storedTheme !== 'light' || storedTheme !== 'dark') {
+					setTheme(getPreferredTheme())
+				}
+			})
+
+			showActiveTheme(getPreferredTheme())
+
+			document.querySelectorAll('[data-bs-theme-value]')
+				.forEach(toggle => {
+					toggle.addEventListener('click', () => {
+						const theme = toggle.getAttribute('data-bs-theme-value')
+						localStorage.setItem('theme', theme)
+						setTheme(theme)
+						showActiveTheme(theme)
+					})
+				})
+
+			}
+		})
+		
+	</script>
+
+	<!-- Favicon -->
+	<link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}">
+
+	<!-- Google Font -->
+	<link rel="preconnect" href="https://fonts.googleapis.com/">
+	<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=Poppins:wght@400;500;700&amp;display=swap">
+
+	<!-- Plugins CSS -->
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/font-awesome/css/all.min.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/tiny-slider/tiny-slider.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/choices/css/choices.min.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/flatpickr/css/flatpickr.min.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/glightbox/css/glightbox.css}">
+
+	<!-- Theme CSS -->
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/css/style.css}">
+
+	<style>
+		.header-sticky-on {
+		background-color: #fff !important; /* Optional: adds a white background when sticky */
+		transition: all 0.3s ease;
+		}
+
+		.navbar-dark-off .nav-link,
+		.navbar-dark-off .dropdown-item {
+			color: #000 !important; /* Changes text to black */
+		}
+
+		.navbar-dark-off .nav-notification {
+			color: #000 !important; /* Changes notification icon to black */
+		}
+
+		/* Ensure initial state for light logo */
+		.navbar-dark .logo-light {
+			display: block;
+		}
+
+		.navbar-dark .logo-dark {
+			display: none;
+		}
+	</style>
+</head>
+
+<body>
+
+<!-- Header START -->
+<header class="header-transparent">
+	<!-- Logo Nav START -->
+	<nav class="navbar navbar-dark navbar-expand-xl">
+		<div class="container">
+			<!-- Logo START -->
+				<a class="navbar-brand" th:href="@{/}">
+					<img class="navbar-brand-item logo-light h-70px" th:src="@{/assets/images/logo-light.png}" alt="logo" >
+					<img class="navbar-brand-item logo-dark h-70px" th:src="@{/assets/images/logo-dark.png}" alt="logo" style="display: none;">
+				</a>
+			<!-- Logo END -->
+
+      <!-- Responsive navbar toggler -->
+			<button class="navbar-toggler ms-auto me-3 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-animation">
+					<span></span>
+					<span></span>
+					<span></span>
+				</span>
+			</button>
+
+			<!-- Main navbar START -->
+			<div class="navbar-collapse collapse" id="navbarCollapse">
+				<ul class="navbar-nav navbar-nav-scroll mx-auto">
+					<!-- Nav item Flights -->
+					<li class="nav-item">
+						<a class="nav-link active" th:href="@{/}">Home</a>
+					</li>
+
+					<!-- Nav item About -->
+					<li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+
+					<!-- Nav item Contact -->
+					<li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+				</ul>
+			</div>
+			<!-- Main navbar END -->
+
+			<!-- Profile and Notification START -->
+			<ul class="nav flex-row align-items-center list-unstyled ms-xl-auto">
+
+				<!-- Sign In button -->
+				<li class="nav-item ms-2 d-none d-sm-block">
+					<a href="sign-in.html" id="sign-in-btn" class="btn btn-light-soft mb-0">
+						<i class="fa-solid fa-right-to-bracket me-2"></i>Sign In
+					</a>
+				</li>
+
+				<!-- Dark mode options START -->
+				<li class="nav-item dropdown ms-3">
+					<button class="nav-notification btn btn-light lh-0 p-0 mb-0" id="bd-theme"
+					type="button"
+					aria-expanded="false"
+					data-bs-toggle="dropdown"
+					data-bs-display="static">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-half fa-fw theme-icon-active" viewBox="0 0 16 16">
+							<path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+							<use href="#"></use>
+						</svg>
+					</button>
+
+					<ul class="dropdown-menu min-w-auto dropdown-menu-end" aria-labelledby="bd-theme">
+						<li class="mb-1">
+							<button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
+								<svg width="16" height="16" fill="currentColor" class="bi bi-brightness-high-fill fa-fw mode-switch me-1" viewBox="0 0 16 16">
+									<path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+									<use href="#"></use>
+								</svg>Light
+							</button>
+						</li>
+						<li class="mb-1">
+							<button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-stars-fill fa-fw mode-switch me-1" viewBox="0 0 16 16">
+									<path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+									<path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
+									<use href="#"></use>
+								</svg>Dark
+							</button>
+						</li>
+						<li>
+							<button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-half fa-fw mode-switch" viewBox="0 0 16 16">
+									<path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+									<use href="#"></use>
+								</svg>Auto
+							</button>
+						</li>
+					</ul>
+				</li>
+				<!-- Dark mode options END -->
+
+			</ul>
+			<!-- Profile and Notification START -->
+
+		</div>
+	</nav>
+	<!-- Logo Nav END -->
+</header>
+<!-- Header END -->
+
+<!-- **************** MAIN CONTENT START **************** -->
+<main>
+
+<!-- =======================
+Main banner START -->
+<section class="position-relative py-8 py-lg-9" th:style="'background-image:url(' + @{/assets/images/bg/1.png} + '); background-position: center left; background-size: cover;'">
+	<!-- Background dark overlay -->
+	<div class="bg-overlay bg-dark opacity-7"></div>
+	<div class="container z-index-9 position-relative">
+		<div class="row py-sm-5">
+			<!-- Title -->
+			<div class="col-xl-8 m-auto text-center">
+				<h6 class="text-white fw-normal mb-3">Explore Morocco with Volmaghreb – Where Every Flight Takes You Closer to the Heart of Morocco!</h6>
+				<h1 class="display-4 text-white mb-6">
+					<span class="position-relative z-index-9 d-block">Ready to take off?
+							<!-- SVG START -->
+							<span class="position-absolute top-50 start-50 translate-middle z-index-n1 d-none d-md-block mt-4">
+								<svg width="390.5px" height="21.5px" viewBox="0 0 445.5 21.5">
+									<path class="fill-primary opacity-7" d="M409.9,2.6c-9.7-0.6-19.5-1-29.2-1.5c-3.2-0.2-6.4-0.2-9.7-0.3c-7-0.2-14-0.4-20.9-0.5 c-3.9-0.1-7.8-0.2-11.7-0.3c-1.1,0-2.3,0-3.4,0c-2.5,0-5.1,0-7.6,0c-11.5,0-23,0-34.5,0c-2.7,0-5.5,0.1-8.2,0.1 c-6.8,0.1-13.6,0.2-20.3,0.3c-7.7,0.1-15.3,0.1-23,0.3c-12.4,0.3-24.8,0.6-37.1,0.9c-7.2,0.2-14.3,0.3-21.5,0.6 c-12.3,0.5-24.7,1-37,1.5c-6.7,0.3-13.5,0.5-20.2,0.9C112.7,5.3,99.9,6,87.1,6.7C80.3,7.1,73.5,7.4,66.7,8 C54,9.1,41.3,10.1,28.5,11.2c-2.7,0.2-5.5,0.5-8.2,0.7c-5.5,0.5-11,1.2-16.4,1.8c-0.3,0-0.7,0.1-1,0.1c-0.7,0.2-1.2,0.5-1.7,1 C0.4,15.6,0,16.6,0,17.6c0,1,0.4,2,1.1,2.7c0.7,0.7,1.8,1.2,2.7,1.1c6.6-0.7,13.2-1.5,19.8-2.1c6.1-0.5,12.3-1,18.4-1.6 c6.7-0.6,13.4-1.1,20.1-1.7c2.7-0.2,5.4-0.5,8.1-0.7c10.4-0.6,20.9-1.1,31.3-1.7c6.5-0.4,13-0.7,19.5-1.1c2.7-0.1,5.4-0.3,8.1-0.4 c10.3-0.4,20.7-0.8,31-1.2c6.3-0.2,12.5-0.5,18.8-0.7c2.1-0.1,4.2-0.2,6.3-0.2c11.2-0.3,22.3-0.5,33.5-0.8 c6.2-0.1,12.5-0.3,18.7-0.4c2.2-0.1,4.4-0.1,6.7-0.1c11.5-0.1,23-0.2,34.6-0.4c7.2-0.1,14.4-0.1,21.6-0.1c12.2,0,24.5,0.1,36.7,0.1 c2.4,0,4.8,0.1,7.2,0.2c6.8,0.2,13.5,0.4,20.3,0.6c5.1,0.2,10.1,0.3,15.2,0.4c3.6,0.1,7.2,0.4,10.8,0.6c10.6,0.6,21.1,1.2,31.7,1.8 c2.7,0.2,5.4,0.4,8,0.6c2.9,0.2,5.8,0.4,8.6,0.7c0.4,0.1,0.9,0.2,1.3,0.3c1.1,0.2,2.2,0.2,3.2-0.4c0.9-0.5,1.6-1.5,1.9-2.5 c0.6-2.2-0.7-4.5-2.9-5.2c-1.9-0.5-3.9-0.7-5.9-0.9c-1.4-0.1-2.7-0.3-4.1-0.4c-2.6-0.3-5.2-0.4-7.9-0.6 C419.7,3.1,414.8,2.9,409.9,2.6z"/>
+								</svg>
+							</span>
+							<!-- SVG END -->
+						</span>
+				</h1>
+			</div>
+
+			<!-- Booking from START -->
+			<div class="bg-mode position-relative px-3 px-sm-4 pt-4 mb-4 mb-sm-0">
+				<!-- Svg decoration -->
+				<figure class="position-absolute top-0 start-0 h-100 ms-n2 ms-sm-n1">
+					<svg class="h-100" viewBox="0 0 12.9 324" style="enable-background:new 0 0 12.9 324;">
+						<path class="fill-mode" d="M9.8,316.4c1.1-26.8,2-53.4,1.9-80.2c-0.1-18.2-0.8-36.4-1.2-54.6c-0.2-8.9-0.2-17.7,0.8-26.6 c0.5-4.5,1.1-9,1.4-13.6c0.1-1.9,0.1-3.7,0.1-5.6c-0.2-0.2-0.6-1.5-0.2-3.1c-0.3-1.8-0.4-3.7-0.4-5.5c-1.2-3-1.8-6.3-1.7-9.6 c0.9-19,0.5-38.1,0.8-57.2c0.3-17.1,0.6-34.2,0.2-51.3c-0.1-0.6-0.1-1.2-0.1-1.7c0-0.8,0-1.6,0-2.4c0-0.5,0-1.1,0-1.6 c0-1.2,0-2.3,0.2-3.5H0v11.8c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1V31c3.3,0,6.1,2.7,6.1,6.1S3.3,43.3,0,43.3v6.9 c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1 s-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9 c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1 c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.7,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9 c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.7,6.1,6.1 c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1V324h9.5C9.6,321.4,9.7,318.8,9.8,316.4z"/>
+					</svg>
+				</figure>
+
+				<!-- Svg decoration -->
+				<figure class="position-absolute top-0 end-0 h-100 rotate-180 me-n2 me-sm-n1">
+					<svg class="h-100" viewBox="0 0 21 324" style="enable-background:new 0 0 21 324;">
+						<path class="fill-mode" d="M9.8,316.4c1.1-26.8,2-53.4,1.9-80.2c-0.1-18.2-0.8-36.4-1.2-54.6c-0.2-8.9-0.2-17.7,0.8-26.6 c0.5-4.5,1.1-9,1.4-13.6c0.1-1.9,0.1-3.7,0.1-5.6c-0.2-0.2-0.6-1.5-0.2-3.1c-0.3-1.8-0.4-3.7-0.4-5.5c-1.2-3-1.8-6.3-1.7-9.6 c0.9-19,0.5-38.1,0.8-57.2c0.3-17.1,0.6-34.2,0.2-51.3c-0.1-0.6-0.1-1.2-0.1-1.7c0-0.8,0-1.6,0-2.4c0-0.5,0-1.1,0-1.6 c0-1.2,0-2.3,0.2-3.5H0v11.8c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1V31c3.3,0,6.1,2.7,6.1,6.1S3.3,43.3,0,43.3v6.9 c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1 s-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9 c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1 c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.7,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9 c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.7,6.1,6.1 c0,3.4-2.8,6.1-6.1,6.1v6.9c3.3,0,6.1,2.8,6.1,6.1c0,3.4-2.8,6.1-6.1,6.1V324h9.5C9.6,321.4,9.7,318.8,9.8,316.4z"/>
+					</svg>
+				</figure>
+
+				<div class="row g-4 position-relative">
+
+          <!-- Flight Search Form -->
+          <div class="col-12 mt-4">
+            <form th:action="@{/flights/search}" method="get">
+            <!-- First Row: Class and Travelers Dropdowns -->
+            <div class="row g-4 mb-3">
+              <!-- Class Selection -->
+              <div class="col-md-6">
+                  <select name="travelClass" class="form-select js-choice" required style="border: 1px solid #545454;">
+                    <option value="">Select Class</option>
+                    <option value="ECONOMY">Economy</option>
+                    <option value="BUSINESS">Business</option>
+                    <option value="FIRST_CLASS">First Class</option>
+                  </select>
+              </div>
+
+              <!-- Travelers Count -->
+              <div class="col-md-6">
+                  <select name="travelers" class="form-select js-choice" required style="border: 1px solid #545454;">
+                    <option value="">Select Travelers</option>
+                    <option value="1">1 Traveler</option>
+                    <option value="2">2 Travelers</option>
+                    <option value="3">3 Travelers</option>
+                    <option value="4">4 Travelers</option>
+                    <option value="5">5 Travelers</option>
+                  </select>
+              </div>
+            </div>
+
+            <!-- Second Row: Location and Date Fields -->
+            <div class="row g-4">
+              <!-- Leaving From -->
+              <div class="col-md-6 col-lg-4 position-relative">
+                <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+                  <!-- Input field -->
+                  <label class="mb-1"><i class="bi bi-geo-alt me-2"></i>From</label>
+                  <select name="from" class="form-select js-choice" data-search-enabled="true" required>
+                    <option value="">Select location</option>
+                    <option th:each="airport : ${airports}" 
+                            th:value="${airport.id}" 
+                            th:text="${airport.city + ', ' + airport.country}">
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Auto fill button -->
+                <div class="btn-flip-icon mt-3 mt-md-0">
+                  <button type="button" class="btn btn-white shadow btn-round mb-0"><i class="fa-solid fa-right-left"></i></button>
+                </div>
+              </div>
+
+              <!-- Going To -->
+              <div class="col-md-6 col-lg-4">
+                <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+                  <!-- Input field -->
+                  <label class="mb-1"><i class="bi bi-send me-2"></i>To</label>
+                  <select name="to" class="form-select js-choice" data-search-enabled="true" required>
+                    <option value="">Select location</option>
+                    <option th:each="airport : ${airports}" 
+                            th:value="${airport.id}" 
+                            th:text="${airport.city + ', ' + airport.country}">
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Departure -->
+              <div class="col-lg-4">
+                <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+                  <label class="mb-1"><i class="bi bi-calendar me-2"></i>Departure</label>
+                  <input name="departureDate" type="text" class="form-control flatpickr" data-date-format="d M Y" placeholder="Select date" required>
+                </div>
+              </div>
+
+              <div class="col-12 text-end pt-0">
+                <button type="submit" class="btn btn-primary mb-n4">Find ticket <i class="bi bi-arrow-right ps-3"></i></button>
+              </div>
+            </div>
+          </form>
+          </div>
+        </div>
+			</div>
+			<!-- Booking from END -->
+
+		</div> <!-- Row END -->
+	</div>
+</section>
+<!-- =======================
+Main banner END -->
+
+
+</main>
+<!-- **************** MAIN CONTENT END **************** -->
+
+
+<!-- Back to top -->
+<div class="back-top"></div>
+
+<!-- Bootstrap JS -->
+<script th:src="@{/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Vendors -->
+<script th:src="@{/assets/vendor/choices/js/choices.min.js}"></script>
+<script th:src="@{/assets/vendor/tiny-slider/tiny-slider.js}"></script>
+<script th:src="@{/assets/vendor/flatpickr/js/flatpickr.min.js}"></script>
+<script th:src="@{/assets/vendor/glightbox/js/glightbox.js}"></script>
+
+<!-- ThemeFunctions -->
+<script th:src="@{/assets/js/functions.js}"></script>
+<script>
+// START: 03 Sticky Header
+  var stickyNav = e.select('.header-transparent');
+  if (e.isVariableDefined(stickyNav)) {
+	  var stickyHeight = stickyNav.offsetHeight;
+	  stickyNav.insertAdjacentHTML('afterend', '<div id="sticky-space"></div>');
+	  var stickySpace = e.select('#sticky-space');
+	  var signInBtn = e.select('#sign-in-btn'); // Target the button by ID
+
+	  if (e.isVariableDefined(stickySpace)) {
+		  document.addEventListener('scroll', function (event) {
+			  var scTop = window.pageYOffset || document.documentElement.scrollTop;
+			  if (scTop >= 260) {
+				  stickySpace.addClass('active');
+				  e.select("#sticky-space.active").style.height = stickyHeight + 'px';
+				  stickyNav.addClass('header-sticky-on');
+
+				  // Change text to black and switch logos
+				  stickyNav.classList.add('navbar-dark-off');
+				  stickyNav.classList.remove('navbar-dark');
+				  e.select('.logo-light').style.display = 'none';
+				  e.select('.logo-dark').style.display = 'block';
+
+				  // Change Sign In button color
+				  signInBtn.classList.remove('btn-light-soft');
+				  signInBtn.classList.add('btn-light'); // Switch to solid primary color
+
+			  } else {
+				  stickySpace.removeClass('active');
+				  stickySpace.style.height = '0px';
+				  stickyNav.removeClass('header-sticky-on');
+
+				  // Revert to light theme
+				  stickyNav.classList.remove('navbar-dark-off');
+				  stickyNav.classList.add('navbar-dark');
+				  e.select('.logo-light').style.display = 'block';
+				  e.select('.logo-dark').style.display = 'none';
+
+				  // Revert Sign In button color
+				  signInBtn.classList.remove('btn-light');
+				  signInBtn.classList.add('btn-light-soft'); // Back to soft primary
+			  }
+		  });
+	  }
+  }
+
+// END: Sticky Header
+</script>
+</body>
+
+<!-- Mirrored from stackbros.in/bookinga/landing/index-directory.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 Apr 2025 18:38:00 GMT -->
+</html>

@@ -3,6 +3,7 @@ package com.volmaghreb.reservation.services;
 import com.volmaghreb.reservation.entities.Flight;
 import com.volmaghreb.reservation.enums.FlightStatus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -23,10 +24,17 @@ public interface FlightService {
     
     List<Flight> searchFlights(String searchTerm);
     
+    // Enhanced search method for web interface
+    List<Flight> searchFlights(Long originId, Long destinationId, LocalDate departureDate);
+    
+    // Enhanced search method with seat availability check
+    List<Flight> searchFlightsWithAvailability(Long originId, Long destinationId, LocalDate departureDate, String travelClass, Integer requiredSeats);
+    
     List<Flight> getFlightsByRoute(Long originId, Long destinationId);
     
     List<Flight> getFlightsByDateRange(LocalDateTime startDate, LocalDateTime endDate);
-      String generateFlightNumber();
+    
+    String generateFlightNumber();
     
     boolean isFlightNumberUnique(String flightNumber);
     
