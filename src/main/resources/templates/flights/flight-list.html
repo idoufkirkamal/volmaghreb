@@ -286,8 +286,7 @@ Flight list START -->
 							<div class="card-header d-sm-flex justify-content-sm-between align-items-center">
 								<!-- Airline Name -->
 								<div class="d-flex align-items-center mb-2 mb-sm-0">
-									<img class="light-mode-item w-40px me-2" th:src="@{/assets/images/logo-dark.png}" alt="Volmaghreb Logo">
-									<img class="dark-mode-item w-40px me-2" th:src="@{/assets/images/logo-light.png}" alt="Volmaghreb Logo">
+									<img th:src="@{/assets/images/element/13.svg}" class="w-30px me-2" alt="">
 									<h6 class="fw-normal mb-0">Volmaghreb Airlines</h6>
 								</div>
 								<h6 class="fw-normal mb-0">
@@ -383,7 +382,7 @@ Flight list START -->
 										<span class="text-danger" th:if="${flight.availableSeats <= 0}">
 											<i class="bi bi-x-circle me-1"></i>Sold Out
 											<span th:if="${searchTravelClass != null and searchTravelClass != ''}" 
-												  th:text="'(' + ${searchTravelClassFormatted ?: #strings.toLowerCase(searchTravelClass)} + ' class)'">
+												  th:text="'(' + ${#strings.toLowerCase(searchTravelClass)} + ' class)'">
 												(economy class)
 											</span>
 										</span>
