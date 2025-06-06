@@ -46,6 +46,12 @@ public class FlightWebController {
         model.addAttribute("searchTravelClass", travelClass);
         model.addAttribute("searchTravelers", travelers);
         
+        // Add formatted travel class for display
+        if (travelClass != null && !travelClass.isEmpty()) {
+            String formattedTravelClass = formatTravelClass(travelClass);
+            model.addAttribute("searchTravelClassFormatted", formattedTravelClass);
+        }
+        
         List<Flight> flights = null;
         Long fromAirportId = null;
         Long toAirportId = null;
@@ -197,5 +203,31 @@ public class FlightWebController {
             .filter(reservation -> reservation.getSeat() != null && 
                                  reservation.getSeat().getSeatClass().name().equals(seatClass))
             .count();
+    }
+    
+    /**
+     * Formats travel class for display purposes
+     * @param travelClass the raw travel class (e.g., "FIRST_CLASS", "BUSINESS", "ECONOMY")
+     * @return formatted travel class (e.g., "First class", "Business", "Economy")
+     */
+    private String formatTravelClass(String travelClass) {
+        if (travelClass == null || travelClass.isEmpty()) {
+            return "";
+        }
+        
+        switch (travelClass.toUpperCase()) {
+            case "FIRST_CLASS":
+                return "First class";
+            case "BUSINESS":
+            case "BUSINESS_CLASS":
+                return "Business class";
+            case "ECONOMY":
+            case "ECONOMY_CLASS":
+                return "Economy class";
+            default:
+                // For any other values, just capitalize first letter and lowercase the rest
+                return travelClass.substring(0, 1).toUpperCase() + 
+                       travelClass.substring(1).toLowerCase().replace("_", " ");
+        }
     }
 }

@@ -272,7 +272,7 @@ Flight list START -->
 										Route: <span th:text="${searchFromName}">From</span> → <span th:text="${searchToName}">To</span>
 									</span>
 									<span th:if="${searchDepartureDate != null}" th:text="(searchFromName != null and searchToName != null ? ' on ' : 'Departure: ') + ${searchDepartureDate}"></span>
-									<span th:if="${searchTravelClass != null and searchTravelClass != ''}" th:text="' | Class: ' + ${searchTravelClass}"></span>
+									<span th:if="${searchTravelClass != null and searchTravelClass != ''}" th:text="' | Class: ' + ${searchTravelClassFormatted ?: searchTravelClass}"></span>
 									<span th:if="${searchTravelers != null}" th:text="' | Travelers: ' + ${searchTravelers}"></span>
 								</small>
 							</div>
@@ -302,15 +302,15 @@ Flight list START -->
 									<!-- Departure Airport detail -->
 									<div class="col-sm-4 col-md-3">
 										<h4 th:text="${#temporals.format(flight.departureDateTime, 'HH:mm')}">14:50</h4>
-										<p class="mb-0" th:text="${flight.originAirport.iataCode + ' - ' + flight.originAirport.name + ' - ' + flight.originAirport.city + ', ' + flight.originAirport.country}">
+										<p class="mb-1 fw-bold" th:text="${#temporals.format(flight.departureDateTime, 'dd MMM yyyy')}">25 Jun 2025</p>
+										<p class="mb-0 small text-muted" th:text="${flight.originAirport.iataCode + ' - ' + flight.originAirport.name + ' - ' + flight.originAirport.city + ', ' + flight.originAirport.country}">
 											Origin Airport
 										</p>
 									</div>
 
 									<!-- Flight Duration -->
 									<div class="col-sm-4 col-md-3 my-sm-auto text-center">
-										<!-- Duration calculation would require custom method or JS -->
-										<h5>Flight Duration</h5>
+										<h5 th:text="${flight.flightDuration}">2h 45m</h5>
 										<div class="position-relative my-4">
 											<!-- Line -->
 											<hr class="bg-primary opacity-5 position-relative">
@@ -324,7 +324,8 @@ Flight list START -->
 									<!-- Arrival Airport detail -->
 									<div class="col-sm-4 col-md-3">
 										<h4 th:text="${#temporals.format(flight.arrivalDateTime, 'HH:mm')}">07:35</h4>
-										<p class="mb-0" th:text="${flight.destinationAirport.iataCode + ' - ' + flight.destinationAirport.name + ' - ' + flight.destinationAirport.city + ', ' + flight.destinationAirport.country}">
+										<p class="mb-1 fw-bold" th:text="${#temporals.format(flight.arrivalDateTime, 'dd MMM yyyy')}">25 Jun 2025</p>
+										<p class="mb-0 small text-muted" th:text="${flight.destinationAirport.iataCode + ' - ' + flight.destinationAirport.name + ' - ' + flight.destinationAirport.city + ', ' + flight.destinationAirport.country}">
 											Destination Airport
 										</p>
 									</div>
@@ -341,7 +342,7 @@ Flight list START -->
 										</div>
 										<div class="mt-2">
 											<small class="text-muted" th:if="${searchTravelClass != null and searchTravelClass != ''}" 
-												   th:text="'Price per person (' + ${#strings.toLowerCase(searchTravelClass)} + ' class)'">
+												   th:text="'Price per person (' + ${searchTravelClassFormatted ?: #strings.toLowerCase(searchTravelClass)} + ')'">
 												Price per person (economy class)
 											</small>
 											<small class="text-muted" th:if="${searchTravelClass == null or searchTravelClass == ''}" 
@@ -364,14 +365,14 @@ Flight list START -->
 										<span class="text-success" th:if="${flight.availableSeats > 10}">
 											<i class="bi bi-check-circle me-1"></i>Available
 											<span th:if="${searchTravelClass != null and searchTravelClass != ''}" 
-												  th:text="'(' + ${flight.availableSeats} + ' ' + ${#strings.toLowerCase(searchTravelClass)} + ' seats)'">
+												  th:text="'(' + ${flight.availableSeats} + ' ' + ${searchTravelClassFormatted ?: #strings.toLowerCase(searchTravelClass)} + ' seats)'">
 												(25 economy seats)
 											</span>
 										</span>
 										<span class="text-warning" th:if="${flight.availableSeats <= 10 and flight.availableSeats > 0}">
 											<i class="bi bi-exclamation-triangle me-1"></i>Only <span th:text="${flight.availableSeats}">5</span> 
 											<span th:if="${searchTravelClass != null and searchTravelClass != ''}" 
-												  th:text="${#strings.toLowerCase(searchTravelClass)} + ' seats left'">
+												  th:text="${searchTravelClassFormatted ?: #strings.toLowerCase(searchTravelClass)} + ' seats left'">
 												economy seats left
 											</span>
 											<span th:if="${searchTravelClass == null or searchTravelClass == ''}" th:text="'seats left'">
@@ -381,7 +382,7 @@ Flight list START -->
 										<span class="text-danger" th:if="${flight.availableSeats <= 0}">
 											<i class="bi bi-x-circle me-1"></i>Sold Out
 											<span th:if="${searchTravelClass != null and searchTravelClass != ''}" 
-												  th:text="'(' + ${#strings.toLowerCase(searchTravelClass)} + ' class)'">
+												  th:text="'(' + ${searchTravelClassFormatted ?: #strings.toLowerCase(searchTravelClass)} + ' class)'">
 												(economy class)
 											</span>
 										</span>

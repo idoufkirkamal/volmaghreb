@@ -86,4 +86,20 @@ public class Flight {
         // Return economy class price as default
         return economyClassPrice;
     }
+
+    public String getFlightDuration() {
+        if (departureDateTime == null || arrivalDateTime == null) {
+            return "N/A";
+        }
+        
+        java.time.Duration duration = java.time.Duration.between(departureDateTime, arrivalDateTime);
+        long hours = duration.toHours();
+        long minutes = duration.minusHours(hours).toMinutes();
+        
+        if (hours > 0) {
+            return String.format("%dh %02dm", hours, minutes);
+        } else {
+            return String.format("%dm", minutes);
+        }
+    }
 }
