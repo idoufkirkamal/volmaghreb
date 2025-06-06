@@ -67,13 +67,9 @@ public class AdminController {
 
     @GetMapping("/flights")
     public String adminFlights(Model model, HttpServletRequest request) {
-        List<Flight> flights = flightService.getAllFlights();
-        List<Airport> airports = airportService.getAllAirports();
-        List<Airplane> airplanes = airplaneService.getAllAirplanes();
-        
-        model.addAttribute("flights", flights);
-        model.addAttribute("airports", airports);
-        model.addAttribute("airplanes", airplanes);
+        model.addAttribute("flights", flightService.getAllFlights());
+        model.addAttribute("airports", airportService.getAllAirports());
+        model.addAttribute("airplanes", airplaneService.getAllAirplanes());
         model.addAttribute("contextPath", request.getContextPath());
         model.addAttribute("pageTitle", "Flight Management - Volmaghreb");
         return "admin/flights";
