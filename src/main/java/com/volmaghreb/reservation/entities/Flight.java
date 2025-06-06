@@ -59,14 +59,27 @@ public class Flight {
     @JsonManagedReference("flight-reservations")
     private List<Reservation> reservations;
 
+    // Transient field for displaying class-specific available seats
+    @Transient
+    private Integer classSpecificAvailableSeats;
+
     // Utility methods
     public int getAvailableSeats() {
+        // If class-specific seats are set, return those; otherwise return total available seats
+        if (classSpecificAvailableSeats != null) {
+            return classSpecificAvailableSeats;
+        }
+        
         if (airplane == null) return 0;
         int totalSeats = airplane.getFirstClassCapacity() + 
                         airplane.getBusinessClassCapacity() + 
                         airplane.getEconomyClassCapacity();
         int bookedSeats = reservations != null ? reservations.size() : 0;
         return totalSeats - bookedSeats;
+    }
+    
+    public void setAvailableSeats(Integer seats) {
+        this.classSpecificAvailableSeats = seats;
     }
 
     public BigDecimal getPrice() {

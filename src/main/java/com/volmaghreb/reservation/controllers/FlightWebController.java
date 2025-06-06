@@ -124,6 +124,20 @@ public class FlightWebController {
             flights = flightService.getAllFlights();
         }
         
+        // Calculate available seats for each flight based on selected travel class
+        System.out.println("Travel class parameter: '" + travelClass + "'");
+        if (flights != null && travelClass != null && !travelClass.isEmpty()) {
+            System.out.println("Calculating class-specific seats for travel class: " + travelClass);
+            for (Flight flight : flights) {
+                int availableSeats = getAvailableSeatsForClass(flight, travelClass);
+                System.out.println("Flight " + flight.getFlightNumber() + " - Total seats for " + travelClass + ": " + availableSeats);
+                // Store the available seats in a transient field for display
+                flight.setAvailableSeats(availableSeats);
+            }
+        } else {
+            System.out.println("No travel class specified, flights will show total available seats");
+        }
+        
         model.addAttribute("flights", flights);
         model.addAttribute("flightCount", flights != null ? flights.size() : 0);
         
@@ -138,5 +152,50 @@ public class FlightWebController {
         }
         
         return "flights/flight-list";
+    }
+    
+    private int getAvailableSeatsForClass(Flight flight, String travelClass) {
+        System.out.println("Getting available seats for flight " + flight.getFlightNumber() + " in class: " + travelClass);
+        if (flight.getAirplane() == null) {
+            return 0;
+        }
+        
+        int totalSeats = 0;
+        int bookedSeats = 0;
+        
+        switch (travelClass.toUpperCase()) {
+            case "FIRST_CLASS":
+                totalSeats = flight.getAirplane().getFirstClassCapacity();
+                bookedSeats = getBookedSeatsForClass(flight, "FIRST_CLASS");
+                break;
+            case "BUSINESS":
+            case "BUSINESS_CLASS":
+                totalSeats = flight.getAirplane().getBusinessClassCapacity();
+                bookedSeats = getBookedSeatsForClass(flight, "BUSINESS_CLASS");
+                break;
+            case "ECONOMY":
+            case "ECONOMY_CLASS":
+                totalSeats = flight.getAirplane().getEconomyClassCapacity();
+                bookedSeats = getBookedSeatsForClass(flight, "ECONOMY_CLASS");
+                break;
+            default:
+                System.out.println("Unrecognized travel class: " + travelClass + ", returning total available seats");
+                return flight.getAvailableSeats(); // Return total available seats if class not recognized
+        }
+        
+        int availableSeats = Math.max(0, totalSeats - bookedSeats);
+        System.out.println("Class " + travelClass + " - Total: " + totalSeats + ", Booked: " + bookedSeats + ", Available: " + availableSeats);
+        return availableSeats;
+    }
+    
+    private int getBookedSeatsForClass(Flight flight, String seatClass) {
+        if (flight.getReservations() == null) {
+            return 0;
+        }
+        
+        return (int) flight.getReservations().stream()
+            .filter(reservation -> reservation.getSeat() != null && 
+                                 reservation.getSeat().getSeatClass().name().equals(seatClass))
+            .count();
     }
 }
