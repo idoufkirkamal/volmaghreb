@@ -227,7 +227,7 @@ Main banner START -->
 	<!-- Background dark overlay -->
 	<div class="bg-overlay bg-dark opacity-7"></div>
 	<div class="container z-index-9 position-relative">
-		<div class="row py-sm-5">
+		<div class="row">
 			<!-- Title -->
 			<div class="col-xl-8 m-auto text-center">
 				<h6 class="text-white fw-normal mb-3">Explore Morocco with Volmaghreb – Where Every Flight Takes You Closer to the Heart of Morocco!</h6>
@@ -261,86 +261,85 @@ Main banner START -->
 				</figure>
 
 				<div class="row g-4 position-relative">
+				<!-- Flight Search Form -->
+				<div class="col-12 mt-5">
+					<form th:action="@{/flights/search}" method="get">
+						<!-- First row with Class and Travelers -->
+						<div class="row g-4 mb-4">
+							<!-- Class Selection -->
+							<div class="col-4">
+								<select name="travelClass" class="form-select js-choice" required>
+								<option value="">Select Class</option>
+								<option value="ECONOMY">Economy</option>
+								<option value="BUSINESS">Business</option>
+								<option value="FIRST_CLASS">First Class</option>
+								</select>
+							</div>
+							<div class="col-4"></div>
+							<!-- Travelers Count -->
+							<div class="col-4">
+								<select name="travelers" class="form-select js-choice" required>
+								<option value="">Select Travelers</option>
+								<option value="1">1 Traveler</option>
+								<option value="2">2 Travelers</option>
+								<option value="3">3 Travelers</option>
+								<option value="4">4 Travelers</option>
+								<option value="5">5 Travelers</option>
+								</select>
+							</div>
+						</div>
 
-          <!-- Flight Search Form -->
-          <div class="col-12 mt-4">
-            <form th:action="@{/flights/search}" method="get">
-            <!-- First Row: Class and Travelers Dropdowns -->
-            <div class="row g-4 mb-3">
-              <!-- Class Selection -->
-              <div class="col-md-6">
-                  <select name="travelClass" class="form-select js-choice" required style="border: 1px solid #545454;">
-                    <option value="">Select Class</option>
-                    <option value="ECONOMY">Economy</option>
-                    <option value="BUSINESS">Business</option>
-                    <option value="FIRST_CLASS">First Class</option>
-                  </select>
-              </div>
+						<!-- Second row with From, To, and Departure -->
+						<div class="row g-4">
+							<!-- Leaving From -->
+							<div class="col-md-6 col-lg-4 position-relative">
+							<div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+								<!-- Input field -->
+								<label class="mb-1"><i class="bi bi-geo-alt me-2"></i>From</label>
+								<select name="from" class="form-select js-choice" data-search-enabled="true" required>
+								<option value="">Select location</option>
+								<option th:each="airport : ${airports}" 
+										th:value="${airport.id}" 
+										th:text="${airport.city + ', ' + airport.country}">
+								</option>
+								</select>
+							</div>
 
-              <!-- Travelers Count -->
-              <div class="col-md-6">
-                  <select name="travelers" class="form-select js-choice" required style="border: 1px solid #545454;">
-                    <option value="">Select Travelers</option>
-                    <option value="1">1 Traveler</option>
-                    <option value="2">2 Travelers</option>
-                    <option value="3">3 Travelers</option>
-                    <option value="4">4 Travelers</option>
-                    <option value="5">5 Travelers</option>
-                  </select>
-              </div>
-            </div>
+							<!-- Auto fill button -->
+							<div class="btn-flip-icon mt-3 mt-md-0">
+								<button type="button" class="btn btn-white shadow btn-round mb-0"><i class="fa-solid fa-right-left"></i></button>
+							</div>
+							</div>
 
-            <!-- Second Row: Location and Date Fields -->
-            <div class="row g-4">
-              <!-- Leaving From -->
-              <div class="col-md-6 col-lg-4 position-relative">
-                <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                  <!-- Input field -->
-                  <label class="mb-1"><i class="bi bi-geo-alt me-2"></i>From</label>
-                  <select name="from" class="form-select js-choice" data-search-enabled="true" required>
-                    <option value="">Select location</option>
-                    <option th:each="airport : ${airports}" 
-                            th:value="${airport.id}" 
-                            th:text="${airport.city + ', ' + airport.country}">
-                    </option>
-                  </select>
-                </div>
+							<!-- Going To -->
+							<div class="col-md-6 col-lg-4">
+							<div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+								<!-- Input field -->
+								<label class="mb-1"><i class="bi bi-send me-2"></i>To</label>
+								<select name="to" class="form-select js-choice" data-search-enabled="true" required>
+								<option value="">Select location</option>
+								<option th:each="airport : ${airports}" 
+										th:value="${airport.id}" 
+										th:text="${airport.city + ', ' + airport.country}">
+								</option>
+								</select>
+							</div>
+							</div>
 
-                <!-- Auto fill button -->
-                <div class="btn-flip-icon mt-3 mt-md-0">
-                  <button type="button" class="btn btn-white shadow btn-round mb-0"><i class="fa-solid fa-right-left"></i></button>
-                </div>
-              </div>
+							<!-- Departure -->
+							<div class="col-lg-4">
+							<div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+								<label class="mb-1"><i class="bi bi-calendar me-2"></i>Departure</label>
+								<input name="departureDate" type="text" class="form-control flatpickr" data-date-format="d M Y" placeholder="Select date" required>
+							</div>
+							</div>
 
-              <!-- Going To -->
-              <div class="col-md-6 col-lg-4">
-                <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                  <!-- Input field -->
-                  <label class="mb-1"><i class="bi bi-send me-2"></i>To</label>
-                  <select name="to" class="form-select js-choice" data-search-enabled="true" required>
-                    <option value="">Select location</option>
-                    <option th:each="airport : ${airports}" 
-                            th:value="${airport.id}" 
-                            th:text="${airport.city + ', ' + airport.country}">
-                    </option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Departure -->
-              <div class="col-lg-4">
-                <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                  <label class="mb-1"><i class="bi bi-calendar me-2"></i>Departure</label>
-                  <input name="departureDate" type="text" class="form-control flatpickr" data-date-format="d M Y" placeholder="Select date" required>
-                </div>
-              </div>
-
-              <div class="col-12 text-end pt-0">
-                <button type="submit" class="btn btn-primary mb-n4">Find ticket <i class="bi bi-arrow-right ps-3"></i></button>
-              </div>
-            </div>
-          </form>
-          </div>
+							<div class="col-12 text-end pt-0">
+							<button type="submit" class="btn btn-primary mb-n4">Find ticket <i class="bi bi-arrow-right ps-3"></i></button>
+							</div>
+						</div>
+					</form>
+				</div>
         </div>
 			</div>
 			<!-- Booking from END -->
