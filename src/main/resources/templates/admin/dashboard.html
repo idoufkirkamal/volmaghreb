@@ -1,212 +1,118 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VolMaghreb - Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="admin/fragments/head :: admin-head(${pageTitle})"></head>
+
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
-                <div class="position-sticky pt-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active text-white" href="#">
-                                <i class='bx bxs-dashboard'></i>
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#flights">
-                                <i class='bx bxs-plane'></i>
-                                Flights
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#users">
-                                <i class='bx bxs-user'></i>
-                                Users
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#bookings">
-                                <i class='bx bxs-book'></i>
-                                Bookings
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#reports">
-                                <i class='bx bxs-report'></i>
-                                Reports
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
 
-            <!-- Main content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Dashboard</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span sec:authentication="name">Username</span>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="userMenu">
-                                <li><a class="dropdown-item" href="#profile">Profile</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form th:action="@{/logout}" method="post">
-                                        <button type="submit" class="dropdown-item">Logout</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+<!-- **************** MAIN CONTENT START **************** -->
+<main>
+	
+	<!-- Sidebar START -->
+	<nav th:replace="admin/fragments/sidebar :: admin-sidebar"></nav>
+	<!-- Sidebar END -->
+	
+	<!-- Page content START -->
+	<div class="page-content">
+	
+		<!-- Top bar START -->
+		<nav th:replace="admin/fragments/navbar :: admin-navbar"></nav>
+		<!-- Top bar END -->
+	
+		<!-- Page main content START -->
+		<div class="page-content-wrapper p-xxl-4">
+	
+			<!-- Title -->
+			<div class="row">
+				<div class="col-12 mb-4 mb-sm-5">
+					<div class="d-sm-flex justify-content-between align-items-center">
+						<h1 class="h3 mb-2 mb-sm-0"><i class="bi bi-house-door fa-fw me-1"></i>Dashboard</h1>			
+					</div>
+				</div>
+			</div>
 
-                <!-- Statistics Cards -->
-                <div class="row">
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-primary shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            Total Flights</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">215</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class='bx bxs-plane bx-lg text-gray-300'></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+			<!-- Counter boxes START -->
+			<div class="row g-4 mb-5">
+				<!-- Counter item -->
+				<div class="col-md-6 col-xxl-3">
+					<div class="card card-body bg-warning bg-opacity-10 border border-warning border-opacity-25 p-4 h-100">
+						<div class="d-flex justify-content-between align-items-center">
+							<!-- Digit -->
+							<div>
+								<h4 class="mb-0" th:text="${totalFlights}">56</h4>
+								<span class="h6 fw-light mb-0">Total flights</span>
+							</div>
+							<!-- Icon -->
+							<div class="icon-lg rounded-circle bg-warning text-white mb-0"><i class="fa-solid fa-plane fa-fw"></i></div>
+						</div>
+					</div>
+				</div>
 
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Active Bookings</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">64</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class='bx bxs-book bx-lg text-gray-300'></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+				<!-- Counter item -->
+				<div class="col-md-6 col-xxl-3">
+					<div class="card card-body bg-success bg-opacity-10 border border-success border-opacity-25 p-4 h-100">
+						<div class="d-flex justify-content-between align-items-center">
+							<!-- Digit -->
+							<div>
+								<h4 class="mb-0" th:text="${activeFlights}">48</h4>
+								<span class="h6 fw-light mb-0">Active flights</span>
+							</div>
+							<!-- Icon -->
+							<div class="icon-lg rounded-circle bg-success text-white mb-0"><i class="fa-solid fa-plane fa-fw"></i></div>
+						</div>
+					</div>
+				</div>
 
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-info shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                            Total Users</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">156</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class='bx bxs-user bx-lg text-gray-300'></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+				<!-- Counter item -->
+				<div class="col-md-6 col-xxl-3">
+					<div class="card card-body bg-primary bg-opacity-10 border border-primary border-opacity-25 p-4 h-100">
+						<div class="d-flex justify-content-between align-items-center">
+							<!-- Digit -->
+							<div>
+								<h4 class="mb-0" th:text="${totalReservations}">12</h4>
+								<span class="h6 fw-light mb-0">Active reservations</span>
+							</div>
+							<!-- Icon -->
+							<div class="icon-lg rounded-circle bg-primary text-white mb-0"><i class="fa-solid fa-ticket fa-fw"></i></div>
+						</div>
+					</div>
+				</div>
 
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-warning shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                            Revenue</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$45,000</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class='bx bxs-dollar-circle bx-lg text-gray-300'></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+				<!-- Counter item -->
+				<div class="col-md-6 col-xxl-3">
+					<div class="card card-body bg-info bg-opacity-10 border border-info border-opacity-25 p-4 h-100">
+						<div class="d-flex justify-content-between align-items-center">
+							<!-- Digit -->
+							<div>
+								<h4 class="mb-0" th:text="${registeredUsers}">147</h4>
+								<span class="h6 fw-light mb-0">Registered users</span>
+							</div>
+							<!-- Icon -->
+							<div class="icon-lg rounded-circle bg-info text-white mb-0"><i class="fa-solid fa-user fa-fw"></i></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Counter boxes END -->
 
-                <!-- Recent Bookings Table -->
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Recent Bookings</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>Booking ID</th>
-                                        <th>Passenger</th>
-                                        <th>Flight</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>#12345</td>
-                                        <td>John Doe</td>
-                                        <td>CMN-PAR</td>
-                                        <td>2024-03-15</td>
-                                        <td><span class="badge bg-success">Confirmed</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary">View</button>
-                                            <button class="btn btn-sm btn-danger">Cancel</button>
-                                        </td>
-                                    </tr>
-                                    <!-- Add more rows as needed -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
+		</div>
+		<!-- Page main content END -->
+	</div>
+	<!-- Page content END -->
+	
+	</main>
+<!-- **************** MAIN CONTENT END **************** -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        .sidebar {
-            min-height: 100vh;
-            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-        }
-        .sidebar .nav-link {
-            font-weight: 500;
-            padding: 1rem;
-        }
-        .sidebar .nav-link i {
-            margin-right: 0.5rem;
-        }
-        .border-left-primary {
-            border-left: .25rem solid #4e73df!important;
-        }
-        .border-left-success {
-            border-left: .25rem solid #1cc88a!important;
-        }
-        .border-left-info {
-            border-left: .25rem solid #36b9cc!important;
-        }
-        .border-left-warning {
-            border-left: .25rem solid #f6c23e!important;
-        }
-    </style>
+<!-- Bootstrap JS -->
+<script th:src="@{/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Vendor -->
+<script th:src="@{/assets/vendor/overlay-scrollbar/js/overlayscrollbars.min.js}"></script>
+<script th:src="@{/assets/vendor/apexcharts/js/apexcharts.min.js}"></script>
+
+<!-- ThemeFunctions -->
+<script th:src="@{/assets/js/functions.js}"></script>
+
 </body>
-</html> 
+
+</html>
