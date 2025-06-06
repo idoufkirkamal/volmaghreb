@@ -3,7 +3,7 @@
     <nav class="navbar navbar-expand-xl">
         <div class="container">
             <!-- Logo START -->
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" th:href="@{/}">
                 <img class="light-mode-item navbar-brand-item h-70px" th:src="@{/assets/images/logo-dark.png}" alt="logo">
                 <img class="dark-mode-item navbar-brand-item h-70px" th:src="@{/assets/images/logo-light.png}" alt="logo">
             </a>
@@ -23,14 +23,14 @@
                 <ul class="navbar-nav navbar-nav-scroll mx-auto">
                     <!-- Nav item Flights -->
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html" id="flightsMenu">Home</a>
+                        <a class="nav-link" th:href="@{/}" id="flightsMenu" th:classappend="${currentPage == 'home'} ? 'active' : ''">Home</a>
                     </li>
 
                     <!-- Nav item About -->
-                    <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/about}" th:classappend="${currentPage == 'about'} ? 'active' : ''">About Us</a></li>
 
                     <!-- Nav item Contact -->
-                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/contact}" th:classappend="${currentPage == 'contact'} ? 'active' : ''">Contact Us</a></li>
                 </ul>
             </div>
             <!-- Main navbar END -->
@@ -81,8 +81,15 @@
                 </li>
                 <!-- Dark mode options END -->
 
-                <!-- Profile dropdown START -->
-                <li class="nav-item ms-3 dropdown">
+                <!-- Sign In button (shown when user is not logged in) -->
+                <li class="nav-item ms-2 d-none d-sm-block" th:if="${user == null}">
+                    <a th:href="@{/auth/sign-in}" id="sign-in-btn" class="btn btn-light mb-0">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i>Sign In
+                    </a>
+                </li>
+
+                <!-- Profile dropdown START (shown when user is logged in) -->
+                <li class="nav-item ms-3 dropdown" th:if="${user != null}">
                     <!-- Avatar -->
                     <a class="avatar avatar-sm p-0" href="#" id="profileDropdown" role="button" data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown" aria-expanded="false">
                         <img class="avatar-img rounded-2" th:src="@{/assets/images/avatar/01.jpg}" alt="avatar">
@@ -105,7 +112,7 @@
 
                         <!-- Links -->
                         <li> <hr class="dropdown-divider"></li>
-                        <li th:if="${user.getRole().name() == 'ROLE_CLIENT'}"><a class="dropdown-item" href="account-bookings.html"><i class="bi bi-bookmark-check fa-fw me-2"></i>My Bookings</a></li>
+                        <li th:if="${user != null and user.getRole().name() == 'ROLE_CLIENT'}"><a class="dropdown-item" href="account-bookings.html"><i class="bi bi-bookmark-check fa-fw me-2"></i>My Bookings</a></li>
                         <li><a class="dropdown-item" th:href="${user.role.name() == 'ROLE_ADMIN'} ? @{/admin/profile} : @{/users/profile}"><i class="bi bi-person fa-fw me-2"></i>My Profile</a></li>
                         <li><a class="dropdown-item bg-danger-soft-hover" href="#"><i class="bi bi-power fa-fw me-2"></i>Sign Out</a></li>
                     </ul>
