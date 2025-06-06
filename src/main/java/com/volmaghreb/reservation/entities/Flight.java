@@ -58,4 +58,19 @@ public class Flight {
     @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("flight-reservations")
     private List<Reservation> reservations;
+
+    // Utility methods
+    public int getAvailableSeats() {
+        if (airplane == null) return 0;
+        int totalSeats = airplane.getFirstClassCapacity() + 
+                        airplane.getBusinessClassCapacity() + 
+                        airplane.getEconomyClassCapacity();
+        int bookedSeats = reservations != null ? reservations.size() : 0;
+        return totalSeats - bookedSeats;
+    }
+
+    public BigDecimal getPrice() {
+        // Return economy class price as default
+        return economyClassPrice;
+    }
 }
