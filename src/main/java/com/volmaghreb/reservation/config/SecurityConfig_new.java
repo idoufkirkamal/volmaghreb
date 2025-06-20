@@ -30,7 +30,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(authz -> authz
                 // Public resources
-                .requestMatchers("/assets/**", "/webjars/**", "/", "/auth/**", "/register", "/error/**", "/about", "/contact").permitAll()
+                .requestMatchers("/assets/**", "/webjars/**", "/", "/auth/**", "/register", "/error/**").permitAll()
                 
                 // Admin routes
                 .requestMatchers("/admin/**", "/dashboard/**").hasRole("ADMIN")
