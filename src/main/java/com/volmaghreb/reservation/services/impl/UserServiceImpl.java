@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public PaginatedResponse<UserManagementDTO> getAllClients(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<User> userPage = userRepository.findByRole(Role.ROLE_CLIENT, pageable);
+        Page<User> userPage = userRepository.findByRole(Role.USER, pageable);
 
         List<UserManagementDTO> userDTO = userPage.getContent()
                 .stream()
