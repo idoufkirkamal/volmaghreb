@@ -3,7 +3,9 @@ package com.volmaghreb.reservation.controllers;
 import com.volmaghreb.reservation.entities.Flight;
 import com.volmaghreb.reservation.services.AirportService;
 import com.volmaghreb.reservation.services.FlightService;
+import com.volmaghreb.reservation.services.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +23,26 @@ public class FlightWebController {
     
     @Autowired
     private AirportService airportService;
+    
+    @Autowired
+    private UserServiceImpl userService;
 
     @GetMapping("")
-    public String flightIndex(Model model) {
+    public String flightIndex(Model model, Authentication authentication) {
         model.addAttribute("pageTitle", "Flight Search - Volmaghreb");
         model.addAttribute("airports", airportService.getAllAirports());
+        
+        // Add user information if authenticated
+        if (authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser")) {
+            try {
+                model.addAttribute("user", userService.findByEmail(authentication.getName()));
+            } catch (Exception e) {
+                model.addAttribute("user", null);
+            }
+        } else {
+            model.addAttribute("user", null);
+        }
+        
         return "flights/index";
     }    @GetMapping("/search")
     public String searchFlights(
@@ -34,10 +51,22 @@ public class FlightWebController {
             @RequestParam(required = false) String departureDate,
             @RequestParam(required = false) String travelClass,
             @RequestParam(required = false) Integer travelers,
-            Model model) {
+            Model model,
+            Authentication authentication) {
         
         model.addAttribute("pageTitle", "Flight Results - Volmaghreb");
         model.addAttribute("airports", airportService.getAllAirports());
+        
+        // Add user information if authenticated
+        if (authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser")) {
+            try {
+                model.addAttribute("user", userService.findByEmail(authentication.getName()));
+            } catch (Exception e) {
+                model.addAttribute("user", null);
+            }
+        } else {
+            model.addAttribute("user", null);
+        }
         
         // Add search parameters to model for form persistence
         model.addAttribute("searchFrom", from);

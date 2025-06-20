@@ -105,8 +105,8 @@
                             <img class="avatar-img rounded-circle shadow" th:src="@{/assets/images/avatar/01.jpg}" alt="avatar">
                         </div>
                         <div>
-                            <a class="h6 mt-2 mt-sm-0" href="#">Admin User</a>
-                            <p class="small m-0">admin@volmaghreb.com</p>
+                            <a class="h6 mt-2 mt-sm-0" href="#" th:text="${user != null} ? ${user.firstname + ' ' + user.lastname} : 'Admin User'">Admin User</a>
+                            <p class="small m-0" th:text="${user != null} ? ${user.email} : 'admin@volmaghreb.com'">admin@volmaghreb.com</p>
                         </div>
                     </div>
                 </li>

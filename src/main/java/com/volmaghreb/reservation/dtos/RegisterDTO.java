@@ -8,22 +8,22 @@ import lombok.Data;
 @Data
 public class RegisterDTO {
     
-    @NotEmpty(message = "Le prénom est obligatoire")
+    @NotEmpty(message = "First name is required")
     private String firstname;
     
-    @NotEmpty(message = "Le nom est obligatoire")
+    @NotEmpty(message = "Last name is required")
     private String lastname;
     
-    @NotEmpty(message = "L'email est obligatoire")
-    @Email(message = "Veuillez fournir une adresse email valide")
+    @NotEmpty(message = "Email is required")
+    @Email(message = "Please provide a valid email address")
     private String email;
     
     private String phone;
     
-    @NotEmpty(message = "Le mot de passe est obligatoire")
-    @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
+    @NotEmpty(message = "Password is required")
+    @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
     
-    @NotEmpty(message = "La confirmation du mot de passe est obligatoire")
+    @NotEmpty(message = "Password confirmation is required")
     private String confirmPassword;
 } 
