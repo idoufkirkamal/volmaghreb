@@ -5,6 +5,7 @@ import com.volmaghreb.reservation.entities.Airport;
 import com.volmaghreb.reservation.entities.Flight;
 import com.volmaghreb.reservation.services.AirplaneService;
 import com.volmaghreb.reservation.services.AirportService;
+import com.volmaghreb.reservation.services.DashboardService;
 import com.volmaghreb.reservation.services.FlightService;
 import com.volmaghreb.reservation.services.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,19 @@ public class AdminController {
     @Autowired
     private UserServiceImpl userService;
 
+    @Autowired
+    private DashboardService dashboardService;
+
     @GetMapping("/dashboard")
     public String adminDashboard(Model model) {
         model.addAttribute("pageTitle", "Admin Dashboard - Volmaghreb");
+        
+        // Add dashboard statistics
+        model.addAttribute("totalFlights", dashboardService.getTotalFlightsCount());
+        model.addAttribute("activeFlights", dashboardService.getActiveFlightsCount());
+        model.addAttribute("totalReservations", dashboardService.getTotalReservationsCount());
+        model.addAttribute("registeredUsers", dashboardService.getRegisteredUsersCount());
+        
         return "admin/dashboard";
     }
 
@@ -56,13 +67,9 @@ public class AdminController {
 
     @GetMapping("/flights")
     public String adminFlights(Model model, HttpServletRequest request) {
-        List<Flight> flights = flightService.getAllFlights();
-        List<Airport> airports = airportService.getAllAirports();
-        List<Airplane> airplanes = airplaneService.getAllAirplanes();
-        
-        model.addAttribute("flights", flights);
-        model.addAttribute("airports", airports);
-        model.addAttribute("airplanes", airplanes);
+        model.addAttribute("flights", flightService.getAllFlights());
+        model.addAttribute("airports", airportService.getAllAirports());
+        model.addAttribute("airplanes", airplaneService.getAllAirplanes());
         model.addAttribute("contextPath", request.getContextPath());
         model.addAttribute("pageTitle", "Flight Management - Volmaghreb");
         return "admin/flights";

@@ -27,7 +27,7 @@ public class DataInitializationService {
             adminUser.setPassword(passwordEncoder.encode("admin123")); // Mot de passe: admin123
             adminUser.setFirstname("Admin");
             adminUser.setLastname("User");
-            adminUser.setRole(Role.ADMIN);
+            adminUser.setRole(Role.ROLE_ADMIN);
             
             userRepository.save(adminUser);
             System.out.println("Admin user created successfully!");

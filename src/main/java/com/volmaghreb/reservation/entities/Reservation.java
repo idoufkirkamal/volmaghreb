@@ -1,12 +1,12 @@
 package com.volmaghreb.reservation.entities;
 
-import com.volmaghreb.reservation.enums.SeatClass;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.volmaghreb.reservation.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,27 +19,33 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String reservationNumber;
+
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status;
+
+    @Column(nullable = false)
+    private LocalDateTime reservationTime;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference("user-reservations")
     private User user;
+
+    @OneToOne
+    @JoinColumn(name = "seat_id", nullable=false)
+    private Seat seat;
 
     @ManyToOne
     @JoinColumn(name = "flight_id", nullable = false)
+    @JsonBackReference("flight-reservations")
     private Flight flight;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private SeatClass seatClass;
+   @OneToOne
+   @JoinColumn(name = "traveler_id", nullable = false)
+   private Traveler traveler;
 
-    @Column(nullable = false)
-    private String seatNumber;
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalPrice;
-
-    @Column(nullable = false)
-    private LocalDateTime reservationDateTime;
-
-    @Column(nullable = false)
-    private String status = "CONFIRMED"; // Could be made into an enum later
+   @OneToOne
+   @JoinColumn(name = "payment_id", nullable = false)
+   private Payment payment;
 }

@@ -102,36 +102,37 @@
                                                         <p class="text-muted">Start by adding your first flight</p>
                                                     </div>
                                                 </td>
-                                            </tr>                                            <tr th:each="flight, iterStat : ${flights}" th:unless="${#lists.isEmpty(flights)}">
+                                            </tr>
+                                            <tr th:each="flight, iterStat : ${flights}" th:unless="${#lists.isEmpty(flights)}">
                                                 <td>
-                                                    <h6 class="mb-0" th:text="${flight.id}">01</h6>
+                                                    <h6 class="mb-0" th:text="${flight.getId()}">01</h6>
                                                 </td>
                                                 <td>
                                                     <h6 class="mb-0">
-                                                        <a href="#" th:text="${flight.flightNumber}" 
-                                                           th:data-flight-id="${flight.id}"
+                                                        <a href="#" th:text="${flight.getFlightNumber()}"
+                                                           th:data-flight-id="${flight.getId()}"
                                                            class="flight-link">VOL5682</a>
                                                     </h6>
                                                 </td>
-                                                <td th:text="${flight.originAirport.iataCode + ' (' + flight.originAirport.city + ') to ' + flight.destinationAirport.iataCode + ' (' + flight.destinationAirport.city + ')'}">
+                                                <td th:text="${flight.getOriginAirport().getIataCode() + ' (' + flight.getOriginAirport().getCity() + ') to ' + flight.getDestinationAirport().getIataCode() + ' (' + flight.getDestinationAirport().getCity() + ')'}">
                                                     AGA (Agadir) to CMN (Casablanca)
                                                 </td>
                                                 <td>
                                                     <h6 class="mb-0 fw-light" 
-                                                        th:text="${#temporals.format(flight.departureDateTime, 'MMM dd, yyyy HH:mm')}">
+                                                        th:text="${#temporals.format(flight.getDepartureDateTime(), 'MMM dd, yyyy HH:mm')}">
                                                         May 10, 2025 14:00
                                                     </h6>
                                                 </td>
                                                 <td>
-                                                    <span th:text="${flight.price + ' MAD'}">5000.00 MAD</span>
+                                                    <span th:text="'From ' + ${flight.getEconomyClassPrice()} + ' MAD'">From 5000.00 MAD</span>
                                                 </td>
                                                 <td>
-                                                    <div th:class="${flight.status.name() == 'ACTIVE' ? 'badge text-bg-success' : 'badge text-bg-danger'}"
-                                                         th:text="${flight.status.name()}">Active</div>
+                                                    <div th:class="${flight.getStatus().name() == 'ACTIVE' ? 'badge text-bg-success' : 'badge text-bg-danger'}"
+                                                         th:text="${flight.getStatus().name()}">Active</div>
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-sm btn-light mb-0 view-flight-btn" 
-                                                            th:data-flight-id="${flight.id}"
+                                                            th:data-flight-id="${flight.getId()}"
                                                             data-bs-toggle="modal" 
                                                             data-bs-target="#viewModal">
                                                         <i class="bi bi-eye fa-fw me-1"></i>View
@@ -184,19 +185,30 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="flightForm">                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label for="price" class="form-label">Price (MAD)</label>
-                                    <input type="number" class="form-control" id="price" name="price" 
+                        <form id="flightForm">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="firstClassPrice" class="form-label">First Class Price (MAD)</label>
+                                    <input type="number" class="form-control" id="firstClassPrice" name="firstClassPrice" 
                                            step="0.01" min="0" required>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <label for="businessClassPrice" class="form-label">Business Class Price (MAD)</label>
+                                    <input type="number" class="form-control" id="businessClassPrice" name="businessClassPrice" 
+                                           step="0.01" min="0" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="economyClassPrice" class="form-label">Economy Class Price (MAD)</label>
+                                    <input type="number" class="form-control" id="economyClassPrice" name="economyClassPrice" 
+                                           step="0.01" min="0" required>
+                                </div>
+                                <div class="col-12">
                                     <label for="airplane" class="form-label">Airplane</label>
                                     <select class="form-select" id="airplane" name="airplane.id" required>
                                         <option value="">Select Airplane</option>
                                         <option th:each="airplane : ${airplanes}" 
-                                                th:value="${airplane.id}" 
-                                                th:text="${airplane.model}">
+                                                th:value="${airplane.getId()}"
+                                                th:text="${airplane.getModel()}">
                                             Boeing 737-800
                                         </option>
                                     </select>
@@ -206,8 +218,8 @@
                                     <select class="form-select" id="origin" name="originAirport.id" required>
                                         <option value="">Select Origin</option>
                                         <option th:each="airport : ${airports}" 
-                                                th:value="${airport.id}" 
-                                                th:text="${airport.city + ', ' + airport.country + ' (' + airport.iataCode + ')'}">
+                                                th:value="${airport.getId()}"
+                                                th:text="${airport.getCity() + ', ' + airport.getCountry() + ' (' + airport.getIataCode() + ')'}">
                                             Agadir, Morocco (AGA)
                                         </option>
                                     </select>
@@ -217,8 +229,8 @@
                                     <select class="form-select" id="destination" name="destinationAirport.id" required>
                                         <option value="">Select Destination</option>
                                         <option th:each="airport : ${airports}" 
-                                                th:value="${airport.id}" 
-                                                th:text="${airport.city + ', ' + airport.country + ' (' + airport.iataCode + ')'}">
+                                                th:value="${airport.getId()}"
+                                                th:text="${airport.getCity() + ', ' + airport.getCountry() + ' (' + airport.getIataCode() + ')'}">
                                             Casablanca, Morocco (CMN)
                                         </option>
                                     </select>
@@ -309,7 +321,12 @@
                         <p><strong>Departure:</strong> <span id="addFlightDeparture"></span></p>
                         <p><strong>Arrival:</strong> <span id="addFlightArrival"></span></p>
                         <p><strong>Airplane:</strong> <span id="addFlightAirplane"></span></p>
-                        <p><strong>Price:</strong> <span id="addFlightPrice"></span> MAD</p>
+                        <p><strong>Pricing:</strong></p>
+                        <ul class="ms-3">
+                            <li>First Class: <span id="addFlightFirstClassPrice"></span> MAD</li>
+                            <li>Business Class: <span id="addFlightBusinessClassPrice"></span> MAD</li>
+                            <li>Economy Class: <span id="addFlightEconomyClassPrice"></span> MAD</li>
+                        </ul>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -335,7 +352,12 @@
                         <p><strong>Departure:</strong> <span id="editFlightDeparture"></span></p>
                         <p><strong>Arrival:</strong> <span id="editFlightArrival"></span></p>
                         <p><strong>Airplane:</strong> <span id="editFlightAirplane"></span></p>
-                        <p><strong>Price:</strong> <span id="editFlightPrice"></span> MAD</p>
+                        <p><strong>Pricing:</strong></p>
+                        <ul class="ms-3">
+                            <li>First Class: <span id="editFlightFirstClassPrice"></span> MAD</li>
+                            <li>Business Class: <span id="editFlightBusinessClassPrice"></span> MAD</li>
+                            <li>Economy Class: <span id="editFlightEconomyClassPrice"></span> MAD</li>
+                        </ul>
                         <p><strong>Status:</strong> <span id="editFlightStatus"></span></p>
                     </div>
                     <div class="modal-footer">
@@ -406,36 +428,37 @@ document.addEventListener('DOMContentLoaded', function() {
         var button = event.relatedTarget;
         currentMode = button.getAttribute('data-bs-mode') || 'add';
         currentFlightId = button.getAttribute('data-bs-flight-id');
-        
+
         console.log('Modal opened in mode:', currentMode);
           if (currentMode === 'add') {
             flightFormModalLabel.textContent = 'New Flight';
             flightForm.reset();
             currentFlightData = null; // Clear stored flight data for new flights
-            
+
             // Clear flight number field and show placeholder for auto-generation
             if (flightNumberInput) {
                 flightNumberInput.value = '';
                 flightNumberInput.placeholder = 'Auto-generated';
                 flightNumberInput.setAttribute('readonly', true);
             }
-            
+
             // Reset all select elements
             document.getElementById('origin').value = '';
             document.getElementById('destination').value = '';
             document.getElementById('airplane').value = '';
-            
+
             saveFlightBtn.textContent = 'Save';
-            statusField.style.display = 'none';        } else if (currentMode === 'edit') {
+            statusField.style.display = 'none';
+          } else if (currentMode === 'edit') {
             loadFlightData(currentFlightId);
             saveFlightBtn.textContent = 'Update';
             statusField.style.display = 'block';
-            
+
             // Make flight number readonly for edit mode too (to prevent manual changes)
             if (flightNumberInput) {
                 flightNumberInput.setAttribute('readonly', true);
             }
-        }
+          }
     });    // Handle form submission
     flightForm.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -449,7 +472,9 @@ document.addEventListener('DOMContentLoaded', function() {
             airplane: { id: parseInt(formData.get('airplane.id')) },
             departureDateTime: formData.get('departureDateTime'),
             arrivalDateTime: formData.get('arrivalDateTime'),
-            price: parseFloat(formData.get('price')),
+            firstClassPrice: parseFloat(formData.get('firstClassPrice')),
+            businessClassPrice: parseFloat(formData.get('businessClassPrice')),
+            economyClassPrice: parseFloat(formData.get('economyClassPrice')),
             status: formData.get('status') || 'ACTIVE'
         };
         
@@ -483,7 +508,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('editFlightDeparture').textContent = departureDate;
             document.getElementById('editFlightArrival').textContent = arrivalDate;
             document.getElementById('editFlightAirplane').textContent = airplaneText;
-            document.getElementById('editFlightPrice').textContent = flightData.price;
+            document.getElementById('editFlightFirstClassPrice').textContent = flightData.firstClassPrice;
+            document.getElementById('editFlightBusinessClassPrice').textContent = flightData.businessClassPrice;
+            document.getElementById('editFlightEconomyClassPrice').textContent = flightData.economyClassPrice;
             document.getElementById('editFlightStatus').textContent = flightData.status;
             
             bootstrap.Modal.getInstance(flightFormModal).hide();
@@ -495,7 +522,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('addFlightDeparture').textContent = departureDate;
             document.getElementById('addFlightArrival').textContent = arrivalDate;
             document.getElementById('addFlightAirplane').textContent = airplaneText;
-            document.getElementById('addFlightPrice').textContent = flightData.price;
+            document.getElementById('addFlightFirstClassPrice').textContent = flightData.firstClassPrice;
+            document.getElementById('addFlightBusinessClassPrice').textContent = flightData.businessClassPrice;
+            document.getElementById('addFlightEconomyClassPrice').textContent = flightData.economyClassPrice;
             
             bootstrap.Modal.getInstance(flightFormModal).hide();
             bootstrap.Modal.getOrCreateInstance(confirmAddModal).show();
@@ -689,7 +718,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             var departureInput = document.getElementById('departureDate');
             var arrivalInput = document.getElementById('arrivalDate');
-            var priceInput = document.getElementById('price');
+            var firstClassPriceInput = document.getElementById('firstClassPrice');
+            var businessClassPriceInput = document.getElementById('businessClassPrice');
+            var economyClassPriceInput = document.getElementById('economyClassPrice');
             var statusSelect = document.getElementById('status');
             
             // Format dates for datetime-local input (YYYY-MM-DDTHH:MM)
@@ -709,7 +740,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     String(arrDate.getHours()).padStart(2, '0') + ':' + 
                     String(arrDate.getMinutes()).padStart(2, '0');
             }
-            if (priceInput) priceInput.value = flight.price;
+            if (firstClassPriceInput) firstClassPriceInput.value = flight.firstClassPrice;
+            if (businessClassPriceInput) businessClassPriceInput.value = flight.businessClassPrice;
+            if (economyClassPriceInput) economyClassPriceInput.value = flight.economyClassPrice;
             if (statusSelect) statusSelect.value = flight.status;
         }).catch(function(error) {
             console.error('Error loading flight data:', error);
@@ -732,8 +765,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         '<p><strong>Route:</strong> ' + flight.originAirport.iataCode + ' - ' + flight.originAirport.name + ' (' + flight.originAirport.city + ', ' + flight.originAirport.country + ') to ' + flight.destinationAirport.iataCode + ' - ' + flight.destinationAirport.name + ' (' + flight.destinationAirport.city + ', ' + flight.destinationAirport.country + ')</p>' +
                         '<p><strong>Departure:</strong> ' + departureDate + '</p>' +
                         '<p><strong>Arrival:</strong> ' + arrivalDate + '</p>' +
+                        '<p><strong>Duration:</strong> ' + flight.flightDuration + '</p>' +
                         '<p><strong>Airplane:</strong> ' + flight.airplane.model + '</p>' +
-                        '<p><strong>Price:</strong> ' + flight.price + ' MAD</p>' +
+                        '<p><strong>Pricing:</strong></p>' +
+                        '<ul class="ms-3">' +
+                            '<li>First Class: ' + flight.firstClassPrice + ' MAD</li>' +
+                            '<li>Business Class: ' + flight.businessClassPrice + ' MAD</li>' +
+                            '<li>Economy Class: ' + flight.economyClassPrice + ' MAD</li>' +
+                        '</ul>' +
                         '<p><strong>Status:</strong> <span class="badge ' + (flight.status === 'ACTIVE' ? 'text-bg-success' : 'text-bg-danger') + '">' + flight.status + '</span></p>' +
                     '</div>' +
                     '<div class="col-12">' +
@@ -840,7 +879,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 '<td><h6 class="mb-0"><a href="#" class="flight-link" data-flight-id="' + flight.id + '">' + flight.flightNumber + '</a></h6></td>' +
                 '<td>' + flight.originAirport.iataCode + ' (' + flight.originAirport.city + ') to ' + flight.destinationAirport.iataCode + ' (' + flight.destinationAirport.city + ')</td>' +
                 '<td><h6 class="mb-0 fw-light">' + new Date(flight.departureDateTime).toLocaleString() + '</h6></td>' +
-                '<td>' + flight.price + ' MAD</td>' +
+                '<td>From ' + flight.economyClassPrice + ' MAD</td>' +
                 '<td><div class="badge ' + (flight.status === 'ACTIVE' ? 'text-bg-success' : 'text-bg-danger') + '">' + flight.status + '</div></td>' +
                 '<td>' +
                     '<button class="btn btn-sm btn-light mb-0 view-flight-btn" data-flight-id="' + flight.id + '" data-bs-toggle="modal" data-bs-target="#viewModal">' +

@@ -1,6 +1,6 @@
 package com.volmaghreb.reservation.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.volmaghreb.reservation.enums.FlightStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -38,6 +38,9 @@ public class Flight {
     @JoinColumn(name = "airplane_id", nullable = false)
     private Airplane airplane;
 
+    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Seat> seats;
+
     @Column(nullable = false)
     private LocalDateTime departureDateTime;
 
@@ -45,65 +48,70 @@ public class Flight {
     private LocalDateTime arrivalDateTime;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    private BigDecimal firstClassPrice;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal businessClassPrice;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal economyClassPrice;
 
     @Enumerated(EnumType.STRING)
     private FlightStatus status = FlightStatus.ACTIVE;
 
-    // Calculated properties for available seats
-    @Transient
-    public int getAvailableFirstClassSeats() {
-        int reserved = 0; // No reservations, so no seats are reserved
-        return airplane.getFirstClassCapacity() - reserved;
-    }
-
-    @Transient
-    public int getAvailableBusinessClassSeats() {
-        int reserved = 0; // No reservations, so no seats are reserved
-        return airplane.getBusinessClassCapacity() - reserved;
-    }
-
-    @Transient
-    public int getAvailableEconomyClassSeats() {
-        int reserved = 0; // No reservations, so no seats are reserved
-        return airplane.getEconomyClassCapacity() - reserved;
-    }
-
     @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<Reservation> reservations = new ArrayList<>();
+    @JsonManagedReference("flight-reservations")
+    private List<Reservation> reservations;
 
-    // Custom getter for reservations
-    public List<Reservation> getReservations() {
-        if (reservations == null) {
-            reservations = new ArrayList<>();
+    // Transient field for displaying class-specific available seats
+    @Transient
+    private Integer classSpecificAvailableSeats;
+
+    // Utility methods
+    public int getAvailableSeats() {
+        // If class-specific seats are set, return those; otherwise return total available seats
+        if (classSpecificAvailableSeats != null) {
+            return classSpecificAvailableSeats;
         }
-        return reservations;
-    }    // Custom setter for reservations
-    public void setReservations(List<Reservation> reservations) {
-        // Don't replace the existing collection during updates to avoid Hibernate cascade issues
-        // Only initialize if null, otherwise keep the existing managed collection
-        if (this.reservations == null) {
-            this.reservations = new ArrayList<>();
-        }
-        // Don't clear and replace during entity updates to avoid orphan removal issues
-        // The reservations should be managed through proper service methods
+        
+        if (airplane == null) return 0;
+        int totalSeats = airplane.getFirstClassCapacity() + 
+                        airplane.getBusinessClassCapacity() + 
+                        airplane.getEconomyClassCapacity();
+        int bookedSeats = reservations != null ? reservations.size() : 0;
+        return totalSeats - bookedSeats;
+    }
+    
+    public void setAvailableSeats(Integer seats) {
+        this.classSpecificAvailableSeats = seats;
     }
 
-    // Helper method to add a reservation
-    public void addReservation(Reservation reservation) {
-        if (reservations == null) {
-            reservations = new ArrayList<>();
+    // Calculate flight duration in a human-readable format
+    public String getFlightDuration() {
+        if (departureDateTime == null || arrivalDateTime == null) {
+            return "N/A";
         }
-        reservations.add(reservation);
-        reservation.setFlight(this);
+        
+        Duration duration = Duration.between(departureDateTime, arrivalDateTime);
+        long hours = duration.toHours();
+        long minutes = duration.toMinutesPart();
+        
+        if (hours > 0) {
+            return String.format("%dh %02dm", hours, minutes);
+        } else {
+            return String.format("%dm", minutes);
+        }
+    }
+    
+    // Calculate flight duration in minutes (for calculations)
+    public long getFlightDurationInMinutes() {
+        if (departureDateTime == null || arrivalDateTime == null) {
+            return 0;
+        }
+        
+        Duration duration = Duration.between(departureDateTime, arrivalDateTime);
+        return duration.toMinutes();
     }
 
-    // Helper method to remove a reservation
-    public void removeReservation(Reservation reservation) {
-        if (reservations != null) {
-            reservations.remove(reservation);
-            reservation.setFlight(null);
-        }
-    }
+
 }

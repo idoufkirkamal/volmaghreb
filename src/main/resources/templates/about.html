@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Mirrored from stackbros.in/bookinga/landing/about.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 Apr 2025 18:38:12 GMT -->
+<!-- Include head fragment -->
+<div th:replace="~{fragments/head :: head}"></div>
+</head>
+
+<body>
+
+<!-- Include navbar fragment -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<!-- **************** MAIN CONTENT START **************** -->
+<main>
+
+<!-- =======================
+Main banner START -->
+<section>
+	<div class="container">
+		<div class="row mb-5">
+			<div class="col-xl-10 mx-auto text-center">
+				<!-- Title -->
+				<h1>About US</h1>
+				<p class="lead">Your trusted partner for booking flights to Morocco – simple, affordable, and reliable.</p>
+			</div>
+		</div> <!-- Row END -->
+
+		<!-- Image START -->
+		<div class="row g-4 align-items-center">
+			<!-- Image -->
+			<div class="col-md-6">
+				<img th:src="@{/assets/images/about/01.jpg}" class="rounded-2" alt="">
+			</div>
+
+			<div class="col-md-6">
+				<div class="row g-4">
+					<!-- Image -->
+					<div class="col-md-8">
+						<img th:src="@{/assets/images/about/02.jpg}" class="rounded-2" alt="">
+					</div>
+
+					<!-- Image -->
+					<div class="col-12">
+						<img th:src="@{/assets/images/about/03.jpg}" class="rounded-2" alt="">
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Image END -->
+	</div>
+</section>
+<!-- =======================
+Main banner START -->
+
+<!-- =======================
+About content START -->
+<section class="pt-0 pt-lg-5">
+	<div class="container">
+		<!-- Content START -->
+		<div class="row mb-4 mb-md-5">
+			<div class="col-md-10 mx-auto">
+				<h3 class="mb-4">Our Mission</h3>
+				<p class="fw-bold">At Volmaghreb, we make traveling to Morocco easy and enjoyable. Founded with a passion for connecting people to the beauty of Morocco, we offer a simple platform to book flights at great prices. Whether you're visiting vibrant cities like Marrakech or exploring the Atlas Mountains, we’re here to help you every step of the way.</p>
+				<p class="mb-0">We believe travel should be stress-free. That’s why we focus on secure payments, friendly support, and a smooth booking experience. Let Volmaghreb be your gateway to Morocco’s wonders!</p>
+			</div>
+		</div>
+		<!-- Content END -->
+	</div>
+</section>
+<!-- =======================
+About content END -->
+
+</main>
+<!-- **************** MAIN CONTENT END **************** -->
+
+<!-- Include footer fragment -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Back to top -->
+<div class="back-top"></div>
+
+<!-- Bootstrap JS -->
+<script th:src="@{/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+
+<!-- ThemeFunctions -->
+<script th:src="@{/assets/js/functions.js}"></script>
+
+</body>
+
+<!-- Mirrored from stackbros.in/bookinga/landing/about.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 Apr 2025 18:38:15 GMT -->
+</html>
