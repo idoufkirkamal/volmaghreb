@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>VolMaghreb - Inscription</title>
+	<title>VolMaghreb - Sign Up</title>
 
 	<!-- Meta Tags -->
 	<meta charset="utf-8">
@@ -115,83 +115,76 @@ Main Content START -->
 									<img class="h-50px mb-4" th:src="@{/assets/images/logo-dark.png}" alt="logo">
 								</a>
 								<!-- Title -->
-								<h1 class="mb-2 h3">Créer un compte</h1>
-								<p class="mb-0">Déjà inscrit? <a th:href="@{/auth/sign-in}">Connectez-vous</a></p>
+								<h1 class="mb-2 h3">Create Account</h1>
+								<p class="mb-0">Already have an account? <a th:href="@{/auth/sign-in}">Sign In</a></p>
 		
 								<!-- Form START -->
-								<form class="mt-4 text-start" th:action="@{/register}" method="post">
+								<form class="mt-4 text-start" th:action="@{/register}" method="post" th:object="${registerDTO}">
                                     <!-- CSRF Token -->
                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                     
-                                    <!-- Affichage des erreurs -->
+                                    <!-- Display errors -->
                                     <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
                                     <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
                                     
-                                    <!-- Informations personnelles -->
+                                    <!-- Personal Information -->
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <!-- Prénom -->
+                                            <!-- First Name -->
                                             <div class="mb-3">
-                                                <label class="form-label">Prénom</label>
-                                                <input type="text" name="firstname" class="form-control" required>
+                                                <label class="form-label">First Name *</label>
+                                                <input type="text" th:field="*{firstname}" class="form-control" th:classappend="${#fields.hasErrors('firstname')} ? 'is-invalid' : ''" required>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"></div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <!-- Nom -->
+                                            <!-- Last Name -->
                                             <div class="mb-3">
-                                                <label class="form-label">Nom</label>
-                                                <input type="text" name="lastname" class="form-control" required>
+                                                <label class="form-label">Last Name *</label>
+                                                <input type="text" th:field="*{lastname}" class="form-control" th:classappend="${#fields.hasErrors('lastname')} ? 'is-invalid' : ''" required>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></div>
                                             </div>
                                         </div>
                                     </div>
 									
                                     <!-- Email -->
 									<div class="mb-3">
-										<label class="form-label">Adresse email</label>
-										<input type="email" name="email" class="form-control" required>
+										<label class="form-label">Email Address *</label>
+										<input type="email" th:field="*{email}" class="form-control" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''" required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
 									</div>
                                     
-                                    <!-- Téléphone -->
+                                    <!-- Phone -->
 									<div class="mb-3">
-										<label class="form-label">Téléphone</label>
-										<input type="text" name="phone" class="form-control">
+										<label class="form-label">Phone</label>
+										<input type="text" th:field="*{phone}" class="form-control">
 									</div>
 									
                                     <!-- Password -->
 									<div class="mb-3 position-relative">
-										<label class="form-label">Mot de passe</label>
-										<input class="form-control fakepassword" type="password" name="password" id="psw-input" required>
+										<label class="form-label">Password *</label>
+										<input class="form-control fakepassword" type="password" th:field="*{password}" id="psw-input" th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''" required>
 										<span class="position-absolute top-50 end-0 translate-middle-y p-0 mt-3">
 											<i class="fakepasswordicon fas fa-eye-slash cursor-pointer p-2"></i>
 										</span>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
 									</div>
                                     
                                     <!-- Confirm Password -->
 									<div class="mb-3">
-										<label class="form-label">Confirmer le mot de passe</label>
-										<input type="password" name="confirmPassword" class="form-control" required>
+										<label class="form-label">Confirm Password *</label>
+										<input type="password" th:field="*{confirmPassword}" class="form-control" th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid' : ''" required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
 									</div>
 									
                                     <!-- Checkbox -->
 									<div class="mb-3">
 										<input type="checkbox" class="form-check-input" id="termsCheck" required>
-										<label class="form-check-label" for="termsCheck">J'accepte les <a href="#">termes et conditions</a> *</label>
+										<label class="form-check-label" for="termsCheck">I accept the <a href="#">terms and conditions</a> *</label>
 									</div>
 									
                                     <!-- Button -->
-									<div><button type="submit" class="btn btn-primary w-100 mb-0">S'inscrire</button></div>
-		
-									<!-- Divider -->
-									<div class="position-relative my-4">
-										<hr>
-										<p class="small position-absolute top-50 start-50 translate-middle bg-mode px-2">Ou inscrivez-vous avec</p>
-									</div>
-		
-									<!-- Google and facebook button -->
-									<div class="vstack gap-3">
-										<a href="#" class="btn btn-light mb-0"><i class="fab fa-fw fa-google text-google-icon me-2"></i>Google</a>
-										<a href="#" class="btn btn-light mb-0"><i class="fab fa-fw fa-facebook-f text-facebook me-2"></i>Facebook</a>
-									</div>
+									<div><button type="submit" class="btn btn-primary w-100 mb-0">Sign Up</button></div>
 		
 									<!-- Copyright -->
 									<div class="text-primary-hover text-body mt-3 text-center">©2024 VolMaghreb.</div>
