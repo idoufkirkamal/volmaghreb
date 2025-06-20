@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil - VolMaghreb</title>
+    
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=Poppins:wght@400;500;700&amp;display=swap">
+
+    <!-- Plugins CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/font-awesome/css/all.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}">
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/css/style.css}">
+</head>
+<body>
+    <header class="navbar-light header-sticky">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <!-- Logo -->
+                <a class="navbar-brand" th:href="@{/home}">
+                    <img class="light-mode-item navbar-brand-item" th:src="@{/assets/images/logo-dark.png}" alt="logo">
+                    <img class="dark-mode-item navbar-brand-item" th:src="@{/assets/images/logo-light.png}" alt="logo">
+                </a>
+                
+                <!-- Responsive navbar toggler -->
+                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Main navbar -->
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav navbar-nav-scroll mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" th:href="@{/home}">Accueil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/flights}">Rechercher un vol</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/reservations}">Mes réservations</a>
+                        </li>
+                    </ul>
+
+                    <!-- User dropdown START -->
+                    <div class="dropdown ms-1 ms-lg-0">
+                        <a class="avatar avatar-sm p-0" href="#" id="profileDropdown" role="button" data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img class="avatar-img rounded-circle" th:src="@{/assets/images/avatar/01.jpg}" alt="avatar">
+                        </a>
+                        <ul class="dropdown-menu dropdown-animation dropdown-menu-end shadow pt-3" aria-labelledby="profileDropdown">
+                            <!-- Profile info -->
+                            <li class="px-3">
+                                <div class="d-flex align-items-center">
+                                    <!-- Avatar -->
+                                    <div class="avatar me-3">
+                                        <img class="avatar-img rounded-circle shadow" th:src="@{/assets/images/avatar/01.jpg}" alt="avatar">
+                                    </div>
+                                    <div>
+                                        <a class="h6 mt-2 mt-sm-0" th:text="${#authentication.principal.username}">Bienvenue</a>
+                                    </div>
+                                </div>
+                                <hr>
+                            </li>
+                            <!-- Links -->
+                            <li><a class="dropdown-item" th:href="@{/profile}"><i class="bi bi-person fa-fw me-2"></i>Mon profil</a></li>
+                            <li><a class="dropdown-item" th:href="@{/reservations}"><i class="bi bi-ticket-perforated fa-fw me-2"></i>Mes réservations</a></li>
+                            <li><a class="dropdown-item bg-danger-soft-hover" th:href="@{/logout}"><i class="bi bi-power fa-fw me-2"></i>Déconnexion</a></li>
+                        </ul>
+                    </div>
+                    <!-- User dropdown END -->
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section START -->
+        <section class="pt-0 position-relative overflow-hidden">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h1 class="display-1 text-primary">Bienvenue sur VolMaghreb</h1>
+                        <h2 class="display-6 mb-4">Votre passerelle vers le Maroc</h2>
+                        <p class="lead mb-5">Réservez facilement et en toute sécurité votre prochain vol</p>
+                        <a th:href="@{/flights}" class="btn btn-primary mb-0">Rechercher un vol</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Hero Section END -->
+
+        <!-- Features Section START -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row g-4">
+                    <!-- Feature item -->
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center p-4">
+                                <i class="bi bi-search fs-1 text-primary mb-3"></i>
+                                <h5>Recherchez vos vols</h5>
+                                <p class="mb-0">Trouvez facilement des vols vers et depuis le Maroc selon vos critères.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature item -->
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center p-4">
+                                <i class="bi bi-credit-card fs-1 text-primary mb-3"></i>
+                                <h5>Réservez en toute sécurité</h5>
+                                <p class="mb-0">Processus de réservation simple et paiement 100% sécurisé.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature item -->
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center p-4">
+                                <i class="bi bi-ticket-perforated fs-1 text-primary mb-3"></i>
+                                <h5>Gérez vos réservations</h5>
+                                <p class="mb-0">Consultez, modifiez ou annulez vos réservations à tout moment.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Features Section END -->
+    </main>
+
+    <!-- Footer START -->
+    <footer class="bg-dark pt-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-3">
+                    <a href="index.html">
+                        <img class="h-40px" th:src="@{/assets/images/logo-light.png}" alt="logo">
+                    </a>
+                    <p class="my-3 text-body-secondary">VolMaghreb - Votre passerelle vers le Maroc</p>
+                </div>
+                
+                <div class="col-lg-3">
+                    <h5 class="text-white mb-3">Quick Links</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link pt-0" href="#">À propos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Conditions générales</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="bg-dark-accent p-2 rounded-3">
+                        <div class="d-sm-flex justify-content-sm-between align-items-center text-center text-sm-start">
+                            <div class="text-body-secondary">©2024 <a href="#" class="text-reset">VolMaghreb</a>. Tous droits réservés.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer END -->
+
+    <!-- Bootstrap JS -->
+    <script th:src="@{/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+    <!-- ThemeFunctions -->
+    <script th:src="@{/assets/js/functions.js}"></script>
+</body>
+</html> 

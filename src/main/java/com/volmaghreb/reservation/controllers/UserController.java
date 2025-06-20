@@ -29,7 +29,7 @@ public class UserController {
 
         model.addAttribute("user", profile);
         model.addAttribute("passwordUpdate", new PasswordUpdateDTO());
-        return profile.getRole().equals(Role.ROLE_CLIENT) ? "user/profile" : "admin/profile";
+        return profile.getRole().equals(Role.USER) ? "user/profile" : "admin/profile";
     }
 
     @PostMapping("/users")
