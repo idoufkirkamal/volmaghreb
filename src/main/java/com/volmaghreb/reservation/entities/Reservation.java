@@ -24,28 +24,15 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
-    @Column(nullable = false)
-    private LocalDateTime reservationTime;
+    private LocalDateTime reservationDate;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference("user-reservations")
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
-    @OneToOne
-    @JoinColumn(name = "seat_id", nullable=false)
-    private Seat seat;
-
     @ManyToOne
-    @JoinColumn(name = "flight_id", nullable = false)
-    @JsonBackReference("flight-reservations")
+    @JoinColumn(name = "flight_id")
+    @JsonBackReference
     private Flight flight;
-
-   @OneToOne
-   @JoinColumn(name = "traveler_id", nullable = false)
-   private Traveler traveler;
-
-   @OneToOne
-   @JoinColumn(name = "payment_id", nullable = false)
-   private Payment payment;
 }
