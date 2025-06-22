@@ -1,4 +1,4 @@
-package com.volmaghreb.reservation.services.impl;
+package com.volmaghreb.reservation.services;
 
 import com.volmaghreb.reservation.dtos.ReservationDto;
 import com.volmaghreb.reservation.entities.Flight;
