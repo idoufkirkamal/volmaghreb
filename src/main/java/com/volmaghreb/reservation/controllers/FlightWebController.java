@@ -44,7 +44,9 @@ public class FlightWebController {
         }
         
         return "flights/index";
-    }    @GetMapping("/search")
+    }
+
+    @GetMapping("/search")
     public String searchFlights(
             @RequestParam(required = false) String from,
             @RequestParam(required = false) String to,
@@ -181,6 +183,11 @@ public class FlightWebController {
         }
         
         return "flights/flight-list";
+    }
+    
+    @GetMapping("/book/{flightId}")
+    public String showBookingForm(@PathVariable Long flightId, Model model) {
+        return "redirect:/reservations/book?flightId=" + flightId;
     }
     
     private int getAvailableSeatsForClass(Flight flight, String travelClass) {

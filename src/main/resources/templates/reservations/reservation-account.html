@@ -305,232 +305,65 @@ Content START -->
 					</div>
 
 					<!-- Card body START -->
-					<div class="card-body">
-						<!-- Table head -->
-						<div class="bg-light rounded p-3 d-none d-lg-block">
-							<div class="row row-cols-7 g-4">
-								<div class="col"><h6 class="mb-0">Airline</h6></div>
-								<div class="col"><h6 class="mb-0">Departure</h6></div>
-								<div class="col"><h6 class="mb-0">Arrival</h6></div>
-								<div class="col"><h6 class="mb-0">Trip</h6></div>
-								<div class="col"><h6 class="mb-0">Booking date</h6></div>
-								<div class="col"><h6 class="mb-0">Amount</h6></div>
-								<div class="col"><h6 class="mb-0">Action</h6></div>
+					<div class="card-body p-0">
+							<!-- Table -->
+							<div class="table-responsive">
+								<table class="table table-invoice table-borderless mb-0">
+									<thead class="table-light">
+										<tr>
+											<th scope="col" class="text-start">Booking Details</th>
+											<th scope="col" class="text-start">Booking ID</th>
+											<th scope="col" class="text-start">Date</th>
+											<th scope="col" class="text-start">Amount</th>
+											<th scope="col" class="text-start">Status</th>
+											<th scope="col" class="text-center">Action</th>
+										</tr>
+									</thead>
+									<!-- Table body START -->
+									<tbody class="border-top">
+										<!-- Table item -->
+										<tr th:each="reservation : ${reservations}">
+											<!-- Table data -->
+											<td>
+												<div class="d-flex align-items-center">
+													<!-- Info -->
+													<div class="ms-2">
+														<h6 class="mb-0"><a href="#" th:text="${reservation.flight.departureAirport.name} + ' to ' + ${reservation.flight.arrivalAirport.name}"></a></h6>
+														<small><i class="fa-solid fa-plane me-1"></i><span th:text="${reservation.flight.flightNumber}"></span></small>
+													</div>
+												</div>
+											</td>
+
+											<!-- Table data -->
+											<td>
+												<h6 class="mb-0">Booking ID</h6>
+												<small th:text="${reservation.reservationNumber}"></small>
+											</td>
+
+											<!-- Table data -->
+											<td>
+												<h6 class="mb-0">Booking Date</h6>
+												<small th:text="${#temporals.format(reservation.reservationTime, 'dd MMM yyyy')}"></small>
+											</td>
+
+											<!-- Table data -->
+											<td>
+												<h6 class="mb-0">Amount</h6>
+												<small th:text="${reservation.flight.economyClassPrice}"></small>
+											</td>
+
+											<!-- Table data -->
+											<td> <span class="badge bg-success bg-opacity-10 text-success" th:text="${reservation.status}"></span> </td>
+
+											<!-- Table data -->
+											<td class="text-center">
+												<a href="#" class="btn btn-sm btn-light mb-0">View</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
-
-						<!-- Table data -->
-						<div class="row row-cols-xl-7 align-items-center g-4 mt-0">
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Airline</small>
-								<div class="d-flex align-items-center">
-									<!-- Logo -->
-									<div class="w-40px flex-shrink-0">
-										<img th:src="@{/assets/images/airline/01.png}" class="rounded-circle" alt="">
-									</div>
-									<!-- Info -->
-									<div class="ms-2">
-										<h6 class="mb-0 fw-normal">American Airline</h6>
-									</div>
-								</div>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Departure</small>
-								<h6 class="mb-0 fw-normal">New York</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Arrival</small>
-								<h6 class="mb-0 fw-normal">San Francisco</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Trip</small>
-								<h6 class="mb-0 fw-normal">One way</h6>
-							</div>
-
--							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Booking date</small>
-								<h6 class="mb-0 fw-normal">16 Nov 2022</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Amount</small>
-								<h6 class="mb-0 fw-normal">$350</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<a href="#" class="btn btn-sm btn-light mb-0">View</a>
-							</div>
-						</div>
-
-						<!-- Table data -->
-						<div class="row row-cols-xl-7 align-items-center g-4 mt-2">
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Airline</small>
-								<div class="d-flex align-items-center">
-									<!-- Logo -->
-									<div class="w-40px flex-shrink-0">
-										<img th:src="@{/assets/images/airline/02.png}" class="rounded-circle" alt="">
-									</div>
-									<!-- Info -->
-									<div class="ms-2">
-										<h6 class="mb-0 fw-normal">United Airline</h6>
-									</div>
-								</div>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Departure</small>
-								<h6 class="mb-0 fw-normal">New York</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Arrival</small>
-								<h6 class="mb-0 fw-normal">San Francisco</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Trip</small>
-								<h6 class="mb-0 fw-normal">Round-trip</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Booking date</small>
-								<h6 class="mb-0 fw-normal">25 Nov 2022</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Amount</small>
-								<h6 class="mb-0 fw-normal">$580</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<a href="#" class="btn btn-sm btn-light mb-0">View</a>
-							</div>
-						</div>
-
-						<!-- Table data -->
-						<div class="row row-cols-xl-7 align-items-center g-4 mt-2">
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Airline</small>
-								<div class="d-flex align-items-center">
-									<!-- Logo -->
-									<div class="w-40px flex-shrink-0">
-										<img th:src="@{/assets/images/airline/03.png}" class="rounded-circle" alt="">
-									</div>
-									<!-- Info -->
-									<div class="ms-2">
-										<h6 class="mb-0 fw-normal">Vistara Airline</h6>
-									</div>
-								</div>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Departure</small>
-								<h6 class="mb-0 fw-normal">New York</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Arrival</small>
-								<h6 class="mb-0 fw-normal">San Francisco</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Trip</small>
-								<h6 class="mb-0 fw-normal">One way</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Booking date</small>
-								<h6 class="mb-0 fw-normal">05 Dec 2022</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Amount</small>
-								<h6 class="mb-0 fw-normal">$425</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<a href="#" class="btn btn-sm btn-light mb-0">View</a>
-							</div>
-						</div>
-
-						<!-- Table data -->
-						<div class="row row-cols-xl-7 align-items-center g-4 mt-2">
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Airline</small>
-								<div class="d-flex align-items-center">
-									<!-- Logo -->
-									<div class="w-40px flex-shrink-0">
-										<img th:src="@{/assets/images/airline/04.png}" class="rounded-circle" alt="">
-									</div>
-									<!-- Info -->
-									<div class="ms-2">
-										<h6 class="mb-0 fw-normal">Delta Airline</h6>
-									</div>
-								</div>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Departure</small>
-								<h6 class="mb-0 fw-normal">New York</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Arrival</small>
-								<h6 class="mb-0 fw-normal">San Francisco</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Trip</small>
-								<h6 class="mb-0 fw-normal">Round-trip</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Booking date</small>
-								<h6 class="mb-0 fw-normal">12 Dec 2022</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<small class="d-block d-lg-none">Amount</small>
-								<h6 class="mb-0 fw-normal">$650</h6>
-							</div>
-
-							<!-- Data item -->
-							<div class="col">
-								<a href="#" class="btn btn-sm btn-light mb-0">View</a>
-							</div>
-						</div>
-					</div>
 					<!-- Card body END -->
 
 					<!-- Card footer START -->

@@ -1,10 +1,12 @@
 package com.volmaghreb.reservation.services.impl;
 
+import com.volmaghreb.reservation.dtos.FlightDto;
 import com.volmaghreb.reservation.entities.Airplane;
 import com.volmaghreb.reservation.entities.Flight;
 import com.volmaghreb.reservation.entities.Seat;
 import com.volmaghreb.reservation.enums.FlightStatus;
 import com.volmaghreb.reservation.enums.SeatClass;
+import com.volmaghreb.reservation.mappers.FlightMapper;
 import com.volmaghreb.reservation.repositories.AirplaneRepository;
 import com.volmaghreb.reservation.repositories.FlightRepository;
 import com.volmaghreb.reservation.services.FlightService;
@@ -28,6 +30,9 @@ public class FlightServiceImpl implements FlightService {
     private FlightRepository flightRepository;
 
     @Autowired
+    private FlightMapper flightMapper;
+
+    @Autowired
     AirplaneRepository airplaneRepository;
     
     @Autowired
@@ -41,6 +46,11 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public Optional<Flight> getFlightById(Long id) {
         return flightRepository.findById(id);
+    }
+
+    @Override
+    public Optional<FlightDto> getFlightDtoById(Long id) {
+        return flightRepository.findById(id).map(flightMapper::toDto);
     }
     
     @Override

@@ -15,6 +15,9 @@ public class Traveler {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
+    private String email;
+    private String phone;
     private String firstname;
     private String lastname;
     private LocalDate dateOfBirth;
