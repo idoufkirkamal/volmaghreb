@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/reservations")
 @RequiredArgsConstructor
@@ -19,8 +21,8 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationService.createReservation(reservationRequest);
-        return new ResponseEntity<>(reservation, HttpStatus.CREATED);
+    public ResponseEntity<List<Reservation>> createReservation(@RequestBody ReservationRequest reservationRequest) {
+        List<Reservation> reservations = reservationService.createReservation(reservationRequest);
+        return new ResponseEntity<>(reservations, HttpStatus.CREATED);
     }
 }

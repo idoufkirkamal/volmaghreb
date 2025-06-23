@@ -53,7 +53,7 @@ public class ReservationViewController {
     }
 
     @PostMapping("/book")
-    public String createReservation(@ModelAttribute("reservation") ReservationRequest reservationRequest) {
+    public String createReservation(@ModelAttribute("reservationDto") ReservationRequest reservationRequest) {
         reservationService.createReservation(reservationRequest);
         return "redirect:/reservations/my-reservations";
     }
