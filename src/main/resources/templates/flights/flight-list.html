@@ -146,8 +146,8 @@ Flight list START -->
 											</small>
 										</div>
 										<div class="mt-3">
-											<a th:href="@{/flights/book/{id}(id=${flight.id})}" class="btn btn-dark mb-0 mb-sm-2" style="width: 150px;">Book Now</a>
-										</div>
+							<a th:href="@{/reservations/book(flightId=${flight.id}, travelers=${searchTravelers != null ? searchTravelers : 1})}" class="btn btn-dark mb-0 mb-sm-2" style="width: 150px;">Book Now</a>
+						</div>
 									</div>
 								</div>
 								<!-- Ticket item END -->

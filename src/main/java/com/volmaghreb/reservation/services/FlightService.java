@@ -1,5 +1,6 @@
 package com.volmaghreb.reservation.services;
 
+import com.volmaghreb.reservation.dtos.FlightDto;
 import com.volmaghreb.reservation.entities.Flight;
 import com.volmaghreb.reservation.enums.FlightStatus;
 
@@ -13,6 +14,8 @@ public interface FlightService {
     List<Flight> getAllFlights();
     
     Optional<Flight> getFlightById(Long id);
+
+    Optional<FlightDto> getFlightDtoById(Long id);
     
     Optional<Flight> getFlightByFlightNumber(String flightNumber);
     

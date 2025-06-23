@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface SeatRepository extends JpaRepository<Seat, Long> {
+    List<Seat> findByFlightAndIsAvailable(Flight flight, boolean isAvailable);
     boolean existsByFlight(Flight flight);
     List<Seat> findByFlight(Flight flight);
     long countByFlight(Flight flight);

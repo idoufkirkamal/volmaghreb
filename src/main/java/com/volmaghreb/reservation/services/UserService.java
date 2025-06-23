@@ -6,7 +6,6 @@ import com.volmaghreb.reservation.dtos.UserProfileDTO;
 import com.volmaghreb.reservation.utilities.PaginatedResponse;
 import org.springframework.validation.BindingResult;
 
-import java.util.List;
 
 public interface UserService {
     PaginatedResponse<UserManagementDTO> getAllClients(int page, int size);
