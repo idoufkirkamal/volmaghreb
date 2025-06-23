@@ -3,6 +3,7 @@ package com.volmaghreb.reservation.controllers;
 import com.volmaghreb.reservation.dtos.FlightDto;
 import com.volmaghreb.reservation.dtos.ReservationDto;
 import com.volmaghreb.reservation.dtos.ReservationRequest;
+import com.volmaghreb.reservation.dtos.TravelerInfo;
 import com.volmaghreb.reservation.services.FlightService;
 import com.volmaghreb.reservation.services.ReservationService;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -32,12 +34,22 @@ public class ReservationViewController {
         return "reservations/reservation-list";
     }
     @GetMapping("/book")
-    public String showBookingForm(Model model, @RequestParam Long flightId) {
+    public String showBookingForm(Model model, @RequestParam Long flightId, @RequestParam(defaultValue = "1") int travelers) {
         FlightDto flight = flightService.getFlightDtoById(flightId)
                 .orElseThrow(() -> new RuntimeException("Flight not found"));
         model.addAttribute("flight", flight);
-        model.addAttribute("reservation", new ReservationRequest());
-        return "reservations/reservation-booking";
+
+        ReservationRequest reservationRequest = new ReservationRequest();
+        List<TravelerInfo> travelerList = new ArrayList<>();
+        for (int i = 0; i < travelers; i++) {
+            travelerList.add(new TravelerInfo());
+        }
+        reservationRequest.setTravelers(travelerList);
+        reservationRequest.setFlightId(flightId);
+
+        model.addAttribute("reservationDto", reservationRequest);
+        model.addAttribute("travelers", travelers);
+        return "reservations/reservation-detail";
     }
 
     @PostMapping("/book")

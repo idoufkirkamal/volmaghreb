@@ -2,10 +2,10 @@ package com.volmaghreb.reservation.dtos;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ReservationRequest {
     private Long flightId;
-    private String passengerName;
-    private String passengerEmail;
-    private String passengerPhone;
+    private List<TravelerInfo> travelers;
 }
