@@ -4,6 +4,7 @@ import com.volmaghreb.reservation.dtos.FlightDto;
 import com.volmaghreb.reservation.dtos.ReservationDto;
 import com.volmaghreb.reservation.dtos.ReservationRequest;
 import com.volmaghreb.reservation.dtos.TravelerInfo;
+import com.volmaghreb.reservation.entities.Reservation;
 import com.volmaghreb.reservation.services.FlightService;
 import com.volmaghreb.reservation.services.ReservationService;
 import lombok.AllArgsConstructor;
@@ -31,10 +32,10 @@ public class ReservationViewController {
     public String getReservations(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Page<ReservationDto> reservations = reservationService.getReservations(page, size);
         model.addAttribute("reservations", reservations);
-        return "reservations/reservation-list";
+        return "reservations/flight-list";
     }
     @GetMapping("/book")
-    public String showBookingForm(Model model, @RequestParam Long flightId, @RequestParam(defaultValue = "1") int travelers) {
+    public String showBookingForm(Model model, @RequestParam Long flightId, @RequestParam(defaultValue = "1") int travelers, @RequestParam(required=false) String travelClass) {
         FlightDto flight = flightService.getFlightDtoById(flightId)
                 .orElseThrow(() -> new RuntimeException("Flight not found"));
         model.addAttribute("flight", flight);
@@ -49,13 +50,25 @@ public class ReservationViewController {
 
         model.addAttribute("reservationDto", reservationRequest);
         model.addAttribute("travelers", travelers);
+        model.addAttribute("travelClass", travelClass);
         return "reservations/reservation-detail";
-    }
-
-    @PostMapping("/book")
-    public String createReservation(@ModelAttribute("reservationDto") ReservationRequest reservationRequest) {
-        reservationService.createReservation(reservationRequest);
-        return "redirect:/reservations/my-reservations";
+    }    @PostMapping("/book")
+    public String createReservation(@ModelAttribute("reservationDto") ReservationRequest reservationRequest, Model model) {
+        try {
+            List<Reservation> reservations = reservationService.createReservation(reservationRequest);
+            model.addAttribute("reservations", reservations);
+            model.addAttribute("bookingSuccess", true);
+            return "reservations/reservation-booking";
+        } catch (Exception e) {
+            // When there's an error, we need to reload the flight data for the template
+            FlightDto flight = flightService.getFlightDtoById(reservationRequest.getFlightId())
+                    .orElseThrow(() -> new RuntimeException("Flight not found"));
+            model.addAttribute("flight", flight);
+            model.addAttribute("reservationDto", reservationRequest);
+            model.addAttribute("travelers", reservationRequest.getTravelers().size());
+            model.addAttribute("error", e.getMessage());
+            return "reservations/reservation-detail";
+        }
     }
     
 

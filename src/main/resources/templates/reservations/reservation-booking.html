@@ -175,8 +175,18 @@
 						<i class="bi bi-check-circle-fill text-success display-1"></i>
 						<h1 class="mt-3">Booking Confirmed!</h1>
 						<p class="lead">Your flight has been successfully reserved.</p>
-						<p><strong>Booking Reference:</strong> #VOL123456</p>
-						<p><strong>Booking details have been sent to your email!</p>
+						<div th:if="${reservations != null and !reservations.empty}">
+							<div th:each="reservation, iterStat : ${reservations}">
+								<p><strong>Booking Reference [[${iterStat.count}]]:</strong> [[${reservation.reservationNumber}]]</p>
+								<p><strong>Traveler:</strong> [[${reservation.traveler.name}]]</p>
+								<p><strong>Seat:</strong> [[${reservation.seat.seatNumber}]]</p>
+							</div>
+							<p><strong>Total Reservations:</strong> [[${reservations.size()}]]</p>
+						</div>
+						<div th:unless="${reservations != null and !reservations.empty}">
+							<p><strong>Booking Reference:</strong> #VOL123456</p>
+						</div>
+						<p><strong>Booking details have been sent to your email!</strong></p>
 					</div>
 				</div>
 

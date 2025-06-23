@@ -275,6 +275,9 @@ Main Content START -->
 					<!-- Ticket END -->
 					<!-- Booking form START -->
 					<form class="card border" th:action="@{/reservations/book}" th:object="${reservationDto}" method="post">
+						<!-- Hidden field for flight ID -->
+						<input type="hidden" th:field="*{flightId}">
+						
 						<!-- Card header -->
 						<div class="card-header border-bottom px-4">
 							<h3 class="card-title mb-0">Traveler Details</h3>
@@ -284,14 +287,20 @@ Main Content START -->
 							<!-- Accordion START -->
 							<div class="accordion accordion-icon accordion-bg-light" id="accordionExample2">
 								<!-- Item -->
-								<div class="accordion-item mb-3">
-									<h6 class="accordion-header font-base" id="heading-1">
-										<button class="accordion-button fw-bold rounded collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
-											Adult 1
+								<div class="accordion-item mb-3" th:each="traveler, iterStat : *{travelers}">
+									<h6 class="accordion-header font-base" th:id="'heading-' + ${iterStat.index + 1}">
+										<button class="accordion-button fw-bold rounded collapsed" type="button" 
+												th:data-bs-target="'#collapse-' + ${iterStat.index + 1}" 
+												th:aria-controls="'collapse-' + ${iterStat.index + 1}"
+												data-bs-toggle="collapse" aria-expanded="true">
+											<span th:text="'Adult ' + ${iterStat.index + 1}">Adult 1</span>
 										</button>
 									</h6>
 									<!-- Accordion Body START -->
-									<div id="collapse-1" class="accordion-collapse collapse show" aria-labelledby="heading-1" data-bs-parent="#accordionExample2">
+									<div th:id="'collapse-' + ${iterStat.index + 1}" 
+										 class="accordion-collapse collapse show" 
+										 th:aria-labelledby="'heading-' + ${iterStat.index + 1}" 
+										 data-bs-parent="#accordionExample2">
 										<div class="accordion-body mt-3">
 											<!-- Form START -->
 											<div class="row g-4">
@@ -299,46 +308,61 @@ Main Content START -->
 												<div class="col-md-12">
 													<label class="form-label">Full name</label>
 													<div class="input-group">
-														<input type="text" class="form-control" placeholder="First name" th:field="*{firstName}">
-														<input type="text" class="form-control" placeholder="Last name" th:field="*{lastName}">
+														<input type="text" class="form-control" placeholder="First name" 
+															   th:field="*{travelers[__${iterStat.index}__].firstName}">
+														<input type="text" class="form-control" placeholder="Last name" 
+															   th:field="*{travelers[__${iterStat.index}__].lastName}">
 													</div>
 												</div>
 												<!-- Date Of Birth with Flatpickr -->
 												<div class="col-md-6">
 													<label class="form-label">Date Of Birth</label>
-													<input type="text" class="form-control flatpickr" id="dateOfBirth" placeholder="Select date of birth" data-date-format="d M Y" th:field="*{dateOfBirth}">
+													<input type="date" class="form-control" 
+														   placeholder="Select date of birth" 
+														   th:field="*{travelers[__${iterStat.index}__].dateOfBirth}">
 												</div>
 												<!-- Select item -->
 												<div class="col-md-6">
 													<label class="form-label">Nationality</label>
-													<select class="form-select js-choice" th:field="*{nationality}">
+													<select class="form-select js-choice" 
+															th:field="*{travelers[__${iterStat.index}__].nationality}">
 														<option value="">Select Nationality</option>
-														<option>Indian</option>
-														<option>Mali</option>
-														<option>Japan</option>
-														<option>Jordan</option>
+														<option value="Moroccan">Moroccan</option>
+														<option value="French">French</option>
+														<option value="Spanish">Spanish</option>
+														<option value="German">German</option>
+														<option value="American">American</option>
+														<option value="British">British</option>
+														<option value="Other">Other</option>
 													</select>
 												</div>
 												<!-- Input item -->
 												<div class="col-md-6">
 													<label class="form-label">Passport Number</label>
-													<input type="text" class="form-control" placeholder="Enter passport number" th:field="*{passportNumber}">
+													<input type="text" class="form-control" placeholder="Enter passport number" 
+														   th:field="*{travelers[__${iterStat.index}__].passportNumber}">
 												</div>
 												<!-- Select item -->
 												<div class="col-md-6">
 													<label class="form-label">Passport Issuing Country</label>
-													<select class="form-select js-choice" th:field="*{passportIssuingCountry}">
+													<select class="form-select js-choice" 
+															th:field="*{travelers[__${iterStat.index}__].passportIssuingCountry}">
 														<option value="">Select Country</option>
-														<option>India</option>
-														<option>Canada</option>
-														<option>Japan</option>
-														<option>China</option>
+														<option value="Morocco">Morocco</option>
+														<option value="France">France</option>
+														<option value="Spain">Spain</option>
+														<option value="Germany">Germany</option>
+														<option value="USA">USA</option>
+														<option value="UK">UK</option>
+														<option value="Other">Other</option>
 													</select>
 												</div>
 												<!-- Select group -->
 												<div class="col-md-6">
 													<label class="form-label">Passport Expiry</label>
-													<input type="text" class="form-control flatpickr" placeholder="Enter passport date" data-date-format="d M y" th:field="*{passportExpiry}">
+													<input type="date" class="form-control" 
+														   placeholder="Enter passport date" 
+														   th:field="*{travelers[__${iterStat.index}__].passportExpiry}">
 												</div>
 											</div>
 											<!-- Form END -->
@@ -354,8 +378,8 @@ Main Content START -->
 							<div class="d-grid gap-2 mt-4">
 								<!-- PayPal Button -->
 								<div id="paypal-button-container"></div>
-								<!-- Other Payment Button -->
-								<a href="flight-booking.html" class="btn btn-primary mb-0">Book Now</a>
+								<!-- Submit Button -->
+								<button type="submit" class="btn btn-primary mb-0">Book Now</button>
 							</div>
 						</div>
 						<!-- Card body END -->

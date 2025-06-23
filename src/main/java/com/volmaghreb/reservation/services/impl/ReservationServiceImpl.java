@@ -56,14 +56,10 @@ public class ReservationServiceImpl implements ReservationService {
         payment.setTotalAmount(flight.getEconomyClassPrice().floatValue() * numberOfTravelers);
         payment.setTransactionDate(LocalDate.now());
         payment.setStatus(PaymentStatus.PENDING);
-        payment = paymentRepository.save(payment);
-
-        List<Reservation> reservations = new ArrayList<>();
+        payment = paymentRepository.save(payment);        List<Reservation> reservations = new ArrayList<>();
         for (int i = 0; i < numberOfTravelers; i++) {
             TravelerInfo travelerInfo = travelers.get(i);
             Seat seat = availableSeats.get(i);
-            seat.setAvailable(false);
-            seatRepository.save(seat);
 
             Traveler traveler = new Traveler();
             traveler.setFirstname(travelerInfo.getFirstName());
@@ -88,7 +84,14 @@ public class ReservationServiceImpl implements ReservationService {
             reservation.setSeat(seat);
             reservation.setPayment(payment);
 
-            reservations.add(reservationRepository.save(reservation));
+            // Save the reservation first
+            reservation = reservationRepository.save(reservation);
+            reservations.add(reservation);
+            
+            // Now update the seat availability and save
+            seat.setAvailable(false);
+            seat.setReservation(reservation);
+            seatRepository.save(seat);
         }
 
         return reservations;
