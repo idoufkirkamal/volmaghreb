@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<!-- Mirrored from stackbros.in/bookinga/landing/account-bookings.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 Apr 2025 18:38:23 GMT -->
+<!-- Mirrored from stackbros.in/bookinga/landing/reservation-booking.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 Apr 2025 18:38:23 GMT -->
 <head>
 	<title>Booking - Multipurpose Online Booking Theme</title>
 
@@ -198,7 +198,7 @@
 
 						<!-- Links -->
 						<li> <hr class="dropdown-divider"></li>
-						<li><a class="dropdown-item" href="account-bookings.html"><i class="fa-solid fa-ticket-alt fa-fw me-2"></i>My Bookings</a></li>
+						<li><a class="dropdown-item" href="reservation-booking.html"><i class="fa-solid fa-ticket-alt fa-fw me-2"></i>My Bookings</a></li>
 						<!-- Menu item -->
 						<li><a class="dropdown-item" href="account-profile.html"><i class="fa-solid fa-user-tie fa-fw me-2"></i>My Profile</a></li>
 						<!-- Menu item -->
@@ -282,9 +282,9 @@ Content START -->
 						<div class="bg-light border rounded-3 pb-0 p-3 w-100">
 							<!-- Dashboard menu -->
 							<div class="list-group list-group-borderless">
-								<a class="list-group-item active" href="account-bookings.html"><i class="fa-solid fa-ticket-alt fa-fw me-2"></i>My Bookings</a>
-								<a class="list-group-item" href="account-profile.html"><i class="fa-solid fa-user-tie fa-fw me-2"></i>My Profile</a>
-								<a class="list-group-item" href="account-settings.html"><i class="fa-solid fa-user-gear fa-fw me-2"></i>Account Settings</a>
+								<a class="list-group-item active" th:href="@{/reservations/my-reservations}"><i class="fa-solid fa-ticket-alt fa-fw me-2"></i>My Bookings</a>
+								<a class="list-group-item" th:href="@{/user/profile}"><i class="fa-solid fa-user-tie fa-fw me-2"></i>My Profile</a>
+								<a class="list-group-item" href="#"><i class="fa-solid fa-user-gear fa-fw me-2"></i>Account Settings</a>
 								<a class="list-group-item" href="#"><i class="fa-solid fa-life-ring fa-fw me-2"></i>Support</a>
 								<a class="list-group-item" href="#"><i class="fa-solid fa-power-off fa-fw me-2"></i>Sign Out</a>
 							</div>
@@ -442,5 +442,5 @@ Footer END -->
 
 </body>
 
-<!-- Mirrored from stackbros.in/bookinga/landing/account-bookings.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 Apr 2025 18:38:24 GMT -->
+<!-- Mirrored from stackbros.in/bookinga/landing/reservation-booking.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 Apr 2025 18:38:24 GMT -->
 </html>
