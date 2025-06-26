@@ -3,7 +3,7 @@
 
 <!-- Mirrored from stackbros.in/bookinga/landing/sign-in.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 Apr 2025 18:38:17 GMT -->
 <head>
-	<title>VolMaghreb - Connexion</title>
+	<title>VolMaghreb - Sign In</title>
 
 	<!-- Meta Tags -->
 	<meta charset="utf-8">
@@ -118,18 +118,18 @@ Main Content START -->
 									<img class="h-50px mb-4" th:src="@{/assets/images/logo-dark.png}" alt="logo">
 								</a>
 								<!-- Title -->
-								<h1 class="mb-2 h3">Bienvenue</h1>
-								<p class="mb-0">Nouveau ici ?<a th:href="@{/register}"> Créer un compte</a></p>
+								<h1 class="mb-2 h3">Welcome</h1>
+								<p class="mb-0">New here? <a th:href="@{/register}">Create an account</a></p>
 
                                 <!-- Show error message if present -->
                                 <div th:if="${param.error}" class="alert alert-danger mt-3">
-                                    Email ou mot de passe invalide.
+                                    Invalid email or password.
                                 </div>
                                 <div th:if="${param.logout}" class="alert alert-success mt-3">
-                                    Vous avez été déconnecté.
+                                    You have been logged out.
                                 </div>
                                 <div th:if="${param.expired}" class="alert alert-warning mt-3">
-                                    Votre session a expiré. Veuillez vous reconnecter.
+                                    Your session has expired. Please log in again.
                                 </div>
 		
 								<!-- Form START -->
@@ -138,12 +138,12 @@ Main Content START -->
                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 									<!-- Email -->
 									<div class="mb-3">
-										<label class="form-label">Adresse email</label>
+										<label class="form-label">Email Address</label>
 										<input type="email" name="username" class="form-control" required>
 									</div>
 									<!-- Password -->
 									<div class="mb-3 position-relative">
-										<label class="form-label">Mot de passe</label>
+										<label class="form-label">Password</label>
 										<input class="form-control fakepassword" type="password" name="password" id="psw-input" required>
 										<span class="position-absolute top-50 end-0 translate-middle-y p-0 mt-3">
 											<i class="fakepasswordicon fas fa-eye-slash cursor-pointer p-2"></i>
@@ -153,24 +153,12 @@ Main Content START -->
 									<div class="mb-3 d-sm-flex justify-content-between">
 										<div>
 											<input type="checkbox" name="remember-me" class="form-check-input" id="rememberCheck">
-											<label class="form-check-label" for="rememberCheck">Se souvenir de moi</label>
+											<label class="form-check-label" for="rememberCheck">Remember me</label>
 										</div>
-										<a th:href="@{/forgot-password}">Mot de passe oublié ?</a>
+										<a th:href="@{/forgot-password}">Forgot password?</a>
 									</div>
 									<!-- Button -->
-									<div><button type="submit" class="btn btn-primary w-100 mb-0">Se connecter</button></div>
-		
-									<!-- Divider -->
-									<div class="position-relative my-4">
-										<hr>
-										<p class="small bg-mode position-absolute top-50 start-50 translate-middle px-2">Ou connectez-vous avec</p>
-									</div>
-		
-									<!-- Google and facebook button -->
-									<div class="vstack gap-3">
-										<a href="#" class="btn btn-light mb-0"><i class="fab fa-fw fa-google text-google-icon me-2"></i>Google</a>
-										<a href="#" class="btn btn-light mb-0"><i class="fab fa-fw fa-facebook-f text-facebook me-2"></i>Facebook</a>
-									</div>
+									<div><button type="submit" class="btn btn-primary w-100 mb-0">Sign In</button></div>
 		
 									<!-- Copyright -->
 									<div class="text-primary-hover text-body mt-3 text-center">©2024 VolMaghreb.</div>

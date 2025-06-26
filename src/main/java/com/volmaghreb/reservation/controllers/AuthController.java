@@ -51,9 +51,9 @@ public class AuthController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
             if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-                return "redirect:/dashboard";
+                return "redirect:/admin/dashboard";
             } else {
-                return "redirect:/home";
+                return "redirect:/flights";
             }
         }
         
@@ -67,9 +67,9 @@ public class AuthController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
             if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-                return "redirect:/dashboard";
+                return "redirect:/admin/dashboard";
             } else {
-                return "redirect:/home";
+                return "redirect:/flights";
             }
         }
         
@@ -84,19 +84,22 @@ public class AuthController {
                               Model model) {
         // Validation des données
         if (result.hasErrors()) {
-            model.addAttribute("error", "Veuillez corriger les erreurs dans le formulaire");
+            model.addAttribute("error", "Please correct the errors in the form");
+            model.addAttribute("registerDTO", registerDTO);
             return "auth/sign-up";
         }
         
         // Vérifier si l'email existe déjà
         if (userRepository.findByEmail(registerDTO.getEmail()).isPresent()) {
-            model.addAttribute("error", "Cet email est déjà utilisé");
+            model.addAttribute("error", "This email is already in use");
+            model.addAttribute("registerDTO", registerDTO);
             return "auth/sign-up";
         }
         
         // Vérifier si les mots de passe correspondent
         if (!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())) {
-            model.addAttribute("error", "Les mots de passe ne correspondent pas");
+            model.addAttribute("error", "Passwords do not match");
+            model.addAttribute("registerDTO", registerDTO);
             return "auth/sign-up";
         }
         
@@ -107,19 +110,14 @@ public class AuthController {
         user.setEmail(registerDTO.getEmail());
         user.setPhone(registerDTO.getPhone());
         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        user.setRole(Role.USER);
+        user.setRole(Role.ROLE_CLIENT);
         
         // Enregistrer l'utilisateur
         userRepository.save(user);
         
         // Rediriger vers la page de connexion
-        redirectAttributes.addFlashAttribute("success", "Votre compte a été créé avec succès. Veuillez vous connecter.");
+        redirectAttributes.addFlashAttribute("success", "Your account has been created successfully. Please log in.");
         return "redirect:/auth/sign-in";
-    }
-
-    @GetMapping("/dashboard")
-    public String dashboard() {
-        return "admin/dashboard";
     }
     
     @GetMapping("/home")

@@ -29,30 +29,30 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authz -> authz
-                // Resources publiques
-                .requestMatchers("/assets/**", "/webjars/**", "/", "/auth/**", "/register", "/error/**").permitAll()
+                // Public resources
+                .requestMatchers("/assets/**", "/webjars/**", "/", "/auth/**", "/register", "/error/**", "/about", "/contact").permitAll()
                 
-                // Routes réservées aux administrateurs
+                // Admin routes
                 .requestMatchers("/admin/**", "/dashboard/**").hasRole("ADMIN")
                 
-                // Routes réservées aux utilisateurs
-                .requestMatchers("/user/**", "/home/**", "/reservations/**", "/flights/**", "/profile/**").hasRole("USER")
+                // Client routes
+                .requestMatchers("/user/**", "/home/**", "/reservations/**", "/flights/**", "/profile/**").hasRole("CLIENT")
                 
-                // Tout autre accès nécessite une authentification
+                // All other requests require authentication
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/auth/sign-in")
                 .loginProcessingUrl("/login")
-                .usernameParameter("username")  // Correspond au nom du champ dans le formulaire
-                .passwordParameter("password")  // Correspond au nom du champ dans le formulaire
+                .usernameParameter("username")
+                .passwordParameter("password")
                 .successHandler((request, response, authentication) -> {
-                    // Redirection basée sur le rôle
+                    // Redirect based on role
                     if (authentication.getAuthorities().stream()
                             .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-                        response.sendRedirect("/volmaghreb/dashboard");
+                        response.sendRedirect(request.getContextPath() + "/admin/dashboard");
                     } else {
-                        response.sendRedirect("/volmaghreb/home");
+                        response.sendRedirect(request.getContextPath() + "/flights");
                     }
                 })
                 .failureUrl("/auth/sign-in?error=true")
@@ -71,8 +71,8 @@ public class SecurityConfig {
             )
             .rememberMe(remember -> remember
                 .key("volmaghrebUniqueKey")
-                .tokenValiditySeconds(86400) // 1 jour
-                .rememberMeParameter("remember-me") // Correspond au nom du champ dans le formulaire
+                .tokenValiditySeconds(86400) // 1 day
+                .rememberMeParameter("remember-me")
             );
 
         return http.build();

@@ -36,10 +36,10 @@
 					</li>
 
 					<!-- Nav item About -->
-					<li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{/about}">About Us</a></li>
 
 					<!-- Nav item Contact -->
-					<li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{/contact}">Contact Us</a></li>
 				</ul>
 			</div>
 			<!-- Main navbar END -->
@@ -113,17 +113,17 @@
                                     <img class="avatar-img rounded-circle shadow" th:src="@{/assets/images/avatar/01.jpg}" alt="avatar">
                                 </div>
                                 <div>
-                                    <a class="h6 mt-2 mt-sm-0" href="#">Lori Ferguson</a>
-                                    <p class="small m-0">example@gmail.com</p>
+                                    <a class="h6 mt-2 mt-sm-0" href="#" th:text="${user != null} ? ${user.firstname + ' ' + user.lastname} : 'User'">User Name</a>
+                                    <p class="small m-0" th:text="${user != null} ? ${user.email} : 'user@example.com'">user@example.com</p>
                                 </div>
                             </div>
                         </li>
 
                         <!-- Links -->
                         <li> <hr class="dropdown-divider"></li>
-                        <li th:if="${user != null and user.getRole().name() == 'ROLE_CLIENT'}"><a class="dropdown-item" href="account-bookings.html"><i class="bi bi-bookmark-check fa-fw me-2"></i>My Bookings</a></li>
-                        <li><a class="dropdown-item" th:href="${user.role.name() == 'ROLE_ADMIN'} ? @{/admin/profile} : @{/users/profile}"><i class="bi bi-person fa-fw me-2"></i>My Profile</a></li>
-                        <li><a class="dropdown-item bg-danger-soft-hover" href="#"><i class="bi bi-power fa-fw me-2"></i>Sign Out</a></li>
+                        <li th:if="${user != null and user.getRole().name() == 'ROLE_CLIENT'}"><a class="dropdown-item" href="#"><i class="bi bi-bookmark-check fa-fw me-2"></i>My Bookings</a></li>
+                        <li><a class="dropdown-item" th:href="${user != null and user.role.name() == 'ROLE_ADMIN'} ? @{/admin/profile} : @{/users/profile}"><i class="bi bi-person fa-fw me-2"></i>My Profile</a></li>
+                        <li><a class="dropdown-item bg-danger-soft-hover" th:href="@{/logout}"><i class="bi bi-power fa-fw me-2"></i>Sign Out</a></li>
                     </ul>
                 </li>
                 <!-- Profile dropdown END -->
