@@ -2,6 +2,7 @@ package com.volmaghreb.reservation.services.impl;
 
 import com.volmaghreb.reservation.dtos.ReservationDto;
 import com.volmaghreb.reservation.dtos.ReservationRequest;
+import com.volmaghreb.reservation.dtos.TravelerInfo;
 import com.volmaghreb.reservation.entities.*;
 import com.volmaghreb.reservation.enums.PaymentStatus;
 import com.volmaghreb.reservation.enums.ReservationStatus;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,45 +37,64 @@ public class ReservationServiceImpl implements ReservationService {
 
 
     @Override
-    public Reservation createReservation(ReservationRequest reservationRequest) {
+    public List<Reservation> createReservation(ReservationRequest reservationRequest) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
 
         Flight flight = flightRepository.findById(reservationRequest.getFlightId())
                 .orElseThrow(() -> new RuntimeException("Flight not found"));
 
-        List<Seat> availableSeats = seatRepository.findByFlightAndIsAvailable(flight, true);
-        if (availableSeats.isEmpty()) {
-            throw new RuntimeException("No available seats on this flight.");
-        }
-        Seat seat = availableSeats.get(0);
-        seat.setAvailable(false);
-        seatRepository.save(seat);
+        List<TravelerInfo> travelers = reservationRequest.getTravelers();
+        int numberOfTravelers = travelers.size();
 
-        Traveler traveler = new Traveler();
-        traveler.setName(reservationRequest.getPassengerName());
-        traveler.setEmail(reservationRequest.getPassengerEmail());
-        traveler.setPhone(reservationRequest.getPassengerPhone());
-        traveler = travelerRepository.save(traveler);
+        List<Seat> availableSeats = seatRepository.findByFlightAndIsAvailable(flight, true);
+        if (availableSeats.size() < numberOfTravelers) {
+            throw new RuntimeException("Not enough available seats on this flight.");
+        }
 
         Payment payment = new Payment();
-        payment.setTotalAmount(flight.getEconomyClassPrice().floatValue());
+        payment.setTotalAmount(flight.getEconomyClassPrice().floatValue() * numberOfTravelers);
         payment.setTransactionDate(LocalDate.now());
         payment.setStatus(PaymentStatus.PENDING);
-        payment = paymentRepository.save(payment);
+        payment = paymentRepository.save(payment);        List<Reservation> reservations = new ArrayList<>();
+        for (int i = 0; i < numberOfTravelers; i++) {
+            TravelerInfo travelerInfo = travelers.get(i);
+            Seat seat = availableSeats.get(i);
 
+            Traveler traveler = new Traveler();
+            traveler.setFirstname(travelerInfo.getFirstName());
+            traveler.setLastname(travelerInfo.getLastName());
+            traveler.setName(travelerInfo.getFirstName() + " " + travelerInfo.getLastName());
+            traveler.setDateOfBirth(travelerInfo.getDateOfBirth());
+            traveler.setNationality(travelerInfo.getNationality());
+            traveler.setPassportNumber(travelerInfo.getPassportNumber());
+            traveler.setPassportIssuingCountry(travelerInfo.getPassportIssuingCountry());
+            if (travelerInfo.getPassportExpiry() != null) {
+                traveler.setPassportExpirationDate(travelerInfo.getPassportExpiry().atStartOfDay());
+            }
+            traveler = travelerRepository.save(traveler);
 
-        Reservation reservation = new Reservation();
-        reservation.setReservationNumber(UUID.randomUUID().toString());
-        reservation.setStatus(ReservationStatus.CONFIRMED);
-        reservation.setReservationTime(LocalDateTime.now());
-        reservation.setUser(user);
-        reservation.setFlight(flight);
-        reservation.setTraveler(traveler);
-        reservation.setSeat(seat);
-        reservation.setPayment(payment);
+            Reservation reservation = new Reservation();
+            reservation.setReservationNumber(UUID.randomUUID().toString());
+            reservation.setStatus(ReservationStatus.CONFIRMED);
+            reservation.setReservationTime(LocalDateTime.now());
+            reservation.setUser(user);
+            reservation.setFlight(flight);
+            reservation.setTraveler(traveler);
+            reservation.setSeat(seat);
+            reservation.setPayment(payment);
 
-        return reservationRepository.save(reservation);
+            // Save the reservation first
+            reservation = reservationRepository.save(reservation);
+            reservations.add(reservation);
+            
+            // Now update the seat availability and save
+            seat.setAvailable(false);
+            seat.setReservation(reservation);
+            seatRepository.save(seat);
+        }
+
+        return reservations;
     }
 
     @Override

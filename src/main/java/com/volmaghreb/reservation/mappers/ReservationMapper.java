@@ -8,7 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = {FlightMapper.class, UserMapper.class})
 public interface ReservationMapper {
 
-    @Mapping(source = "flight.id", target = "flightId")
     @Mapping(source = "user.id", target = "userId")
     ReservationDto toDto(Reservation reservation);
 
