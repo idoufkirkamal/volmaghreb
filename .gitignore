@@ -28,3 +28,7 @@ docker-compose.yml.bak
 *.tmp
 *.bak
 .env
+
+# Configuration files with credentials (prevent secrets from being committed)
+*credentials*
+RENDER_DEPLOYMENT_SECRETS.md
