@@ -1,6 +1,6 @@
 # VolMaghreb Flight Reservation System
 
-A comprehensive flight reservation system built with Spring Boot and modern web technologies, designed for managing flight bookings and airline operations.
+VolMaghreb is a reliable and user-friendly flight reservation platform built with Spring Boot and modern web technologies. It features a clean, modern design and enables efficient management of flight bookings and airline operations for both customers and administrators.
 
 ## 🚀 Features
 
@@ -19,35 +19,39 @@ A comprehensive flight reservation system built with Spring Boot and modern web 
 - **User Management**: View and manage user accounts
 - **Reservation Oversight**: Monitor all reservations in the system
 
-## � Screenshots
+## 📸 Images of the Website
 
 ### Customer Interface
 
 <table>
   <tr>
     <td align="center">
-      <img src="src/main/resources/static/assets/images/Screenshots/1.png" width="400px" alt="Flight Search"/>
+      <img src="src/main/resources/static/assets/images/Screenshots/1.png" width="400px" alt="Login Page"/>
+      <br><b>Login Page</b>
+    </td>
+    <td align="center">
+      <img src="src/main/resources/static/assets/images/Screenshots/2.png" width="400px" alt="Sign up Page"/>
+      <br><b>Sign up Page</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="src/main/resources/static/assets/images/Screenshots/3.png" width="400px" alt="Flight Search"/>
       <br><b>Flight Search</b>
     </td>
     <td align="center">
-      <img src="src/main/resources/static/assets/images/Screenshots/2.png" width="400px" alt="Flight Results"/>
+      <img src="src/main/resources/static/assets/images/Screenshots/4.png" width="400px" alt="Flight Results"/>
       <br><b>Flight Results</b>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="src/main/resources/static/assets/images/Screenshots/3.png" width="400px" alt="Flight Booking"/>
+      <img src="src/main/resources/static/assets/images/Screenshots/5.png" width="400px" alt="Flight Booking"/>
       <br><b>Flight Booking</b>
     </td>
     <td align="center">
-      <img src="src/main/resources/static/assets/images/Screenshots/4.png" width="400px" alt="User Reservations"/>
-      <br><b>User Reservations</b>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" colspan="2">
-      <img src="src/main/resources/static/assets/images/Screenshots/5.png" width="400px" alt="User Profile"/>
-      <br><b>User Profile</b>
+      <img src="src/main/resources/static/assets/images/Screenshots/6.png" width="400px" alt="My Reservations Page"/>
+      <br><b>My Reservations Page</b>
     </td>
   </tr>
 </table>
@@ -57,32 +61,38 @@ A comprehensive flight reservation system built with Spring Boot and modern web 
 <table>
   <tr>
     <td align="center">
-      <img src="src/main/resources/static/assets/images/Screenshots/6.png" width="400px" alt="Admin Dashboard"/>
+      <img src="src/main/resources/static/assets/images/Screenshots/7.png" width="400px" alt="Admin Dashboard"/>
       <br><b>Admin Dashboard</b>
     </td>
     <td align="center">
-      <img src="src/main/resources/static/assets/images/Screenshots/7.png" width="400px" alt="Flight Management"/>
+      <img src="src/main/resources/static/assets/images/Screenshots/8.png" width="400px" alt="Flight Management"/>
       <br><b>Flight Management</b>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="src/main/resources/static/assets/images/Screenshots/8.png" width="400px" alt="Airport Management"/>
-      <br><b>Airport Management</b>
+      <img src="src/main/resources/static/assets/images/Screenshots/9.png" width="400px" alt="Add New Flight"/>
+      <br><b>Add New Flight</b>
     </td>
     <td align="center">
-      <img src="src/main/resources/static/assets/images/Screenshots/9.png" width="400px" alt="User Management"/>
-      <br><b>User Management</b>
+      <img src="src/main/resources/static/assets/images/Screenshots/10.png" width="400px" alt="Flight Details"/>
+      <br><b>Flight Details</b>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="src/main/resources/static/assets/images/Screenshots/10.png" width="400px" alt="Airplane Management"/>
-      <br><b>Airplane Management</b>
+      <img src="src/main/resources/static/assets/images/Screenshots/11.png" width="400px" alt="Edit Flight"/>
+      <br><b>Edit Flight</b>
     </td>
     <td align="center">
-      <img src="src/main/resources/static/assets/images/Screenshots/11.png" width="400px" alt="Reservation Management"/>
+      <img src="src/main/resources/static/assets/images/Screenshots/12.png" width="400px" alt="Reservation Management"/>
       <br><b>Reservation Management</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="src/main/resources/static/assets/images/Screenshots/13.png" width="400px" alt="Reservation Details"/>
+      <br><b>Reservation Details</b>
     </td>
   </tr>
 </table>
@@ -171,36 +181,6 @@ src/
 │   │   └── application.properties
 ```
 
-## 🌐 API Endpoints
-
-### Public Endpoints
-- `GET /` - Home page
-- `GET /auth/sign-in` - Login page
-- `GET /auth/sign-up` - Registration page
-- `GET /about` - About page
-- `GET /contact` - Contact page
-
-### Client Endpoints
-- `GET /flights` - Flight search
-- `GET /flights/search` - Search results
-- `GET /reservations` - User reservations
-- `POST /reservations/book` - Book a flight
-- `GET /user/profile` - User profile
-
-### Admin Endpoints
-- `GET /admin/dashboard` - Admin dashboard
-- `GET /admin/flights` - Flight management
-- `GET /admin/airports` - Airport management
-- `GET /admin/airplanes` - Airplane management
-- `GET /admin/users` - User management
-- `GET /admin/reservations` - Reservation management
-
-### REST API
-- `GET /api/flights` - Get all flights
-- `POST /api/flights` - Create flight
-- `GET /api/airports` - Get all airports
-- `POST /api/reservations` - Create reservation
-
 ## 🔧 Configuration
 
 ### Server Configuration
@@ -221,62 +201,16 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 - Role-based access control (ADMIN, CLIENT)
 - Session management with remember-me functionality
 
-## 🎨 UI Features
+## 🎨 UI/UX Features
 
 - **Responsive Design**: Bootstrap-based responsive layout
 - **Modern Interface**: Clean and professional design
 - **Interactive Elements**: Dynamic form validation and feedback
 - **Search Functionality**: Advanced flight search with filters
 - **User Dashboard**: Personalized user experience
+- **Modal-Based Management**: Popup windows for all CRUD operations, keeping management functions on a single page for seamless workflow
 
-## 📊 Database Schema
-
-The system uses the following main entities:
-- **User**: System users (clients and admins)
-- **Flight**: Flight information
-- **Airport**: Airport details
-- **Airplane**: Aircraft information
-- **Reservation**: Booking records
-- **Seat**: Seat assignments
-
-## 🧪 Testing
-
-Run tests with:
-```bash
-mvn test
-```
-
-## 📝 Development
-
-### Adding New Features
-1. Create entities in the `entities` package
-2. Add repositories in the `repositories` package
-3. Implement services in the `services` package
-4. Create controllers in the `controllers` package
-5. Add templates in `src/main/resources/templates`
-
-### Code Style
-- Follow Spring Boot best practices
-- Use Lombok annotations for boilerplate code
-- Implement proper error handling
-- Add appropriate validation
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## 📄 License
-
-This project is proprietary software developed for VolMaghreb.
-
-## 📞 Support
-
-For support and questions, please contact the development team.
 
 ---
 
-**VolMaghreb Flight Reservation System** - Streamlining air travel in Morocco and beyond.
+**VolMaghreb Flight Reservation System**
