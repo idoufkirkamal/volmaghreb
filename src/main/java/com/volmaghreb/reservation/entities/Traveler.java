@@ -18,13 +18,19 @@ public class Traveler {
     private String name;
     private String email;
     private String phone;
+    @Column(nullable = false)
     private String firstname;
+    @Column(nullable = false)
     private String lastname;
+    @Column(nullable = false)
     private LocalDate dateOfBirth;
+    @Column(nullable = false)
     private String nationality;
     private Sex sex;
     private String address;
+    @Column(nullable = false)
     private String passportNumber;
+    @Column(nullable = false)
     private String passportIssuingCountry;
     private LocalDateTime passportExpirationDate;
 

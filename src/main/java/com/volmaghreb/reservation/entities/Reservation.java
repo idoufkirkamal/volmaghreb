@@ -22,10 +22,23 @@ public class Reservation {
     private String reservationNumber;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ReservationStatus status;
 
-    @Column(nullable = false)
+    @Column(name = "reservation_time", nullable = false)
     private LocalDateTime reservationTime;
+
+    @Column(name = "reservation_date_time", nullable = false)
+    private LocalDateTime reservationDateTime;
+
+    @Column(name = "seat_class")
+    private String seatClass;
+
+    @Column(name = "seat_number", nullable = false)
+    private String seatNumber;
+
+    @Column(name = "total_price", nullable = false)
+    private Double totalPrice;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -33,7 +46,7 @@ public class Reservation {
     private User user;
 
     @OneToOne
-    @JoinColumn(name = "seat_id", nullable=false)
+    @JoinColumn(name = "seat_id", nullable = false)
     private Seat seat;
 
     @ManyToOne

@@ -18,15 +18,19 @@ public class Payment {
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PaymentMethod method;
 
+    @Column(nullable = false)
     private Float totalAmount;
 
     private String transactionID;
 
+    @Column(nullable = false)
     private LocalDate transactionDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PaymentStatus status;
 
     @OneToOne(mappedBy = "payment")

@@ -69,28 +69,10 @@ public class FlightServiceImpl implements FlightService {
         // Save the flight first
         Flight savedFlight = flightRepository.save(flight);
 
-        Airplane airplane = airplaneRepository.findById(savedFlight.getAirplane().getId()).orElseThrow(() -> new RuntimeException("Airplane not found"));
+        // Create seats automatically for the flight
+        seatService.createSeatsForFlight(savedFlight);
 
-        List<Seat> seats = new ArrayList<>();
-
-        for (int i = 1; i <= airplane.getFirstClassCapacity(); i++) {
-            Seat seat = seatService.createSeat(SeatClass.FIRST_CLASS, i, savedFlight);
-            seats.add(seat);
-        }
-
-        for (int i = 1; i <= airplane.getBusinessClassCapacity(); i++) {
-            Seat seat = seatService.createSeat(SeatClass.BUSINESS_CLASS, i, savedFlight);
-            seats.add(seat);
-        }
-
-        for (int i = 1; i <= airplane.getEconomyClassCapacity(); i++) {
-            Seat seat = seatService.createSeat(SeatClass.ECONOMY_CLASS, i, savedFlight);
-            seats.add(seat);
-        }
-
-        savedFlight.setSeats(seats);
-
-        return flightRepository.save(savedFlight);
+        return savedFlight;
     }
     
     @Override

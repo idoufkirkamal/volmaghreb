@@ -47,14 +47,40 @@ public class ReservationViewController {
         }
         reservationRequest.setTravelers(travelerList);
         reservationRequest.setFlightId(flightId);
+        reservationRequest.setTravelClass(travelClass != null ? travelClass : "ECONOMY");
 
         model.addAttribute("reservationDto", reservationRequest);
         model.addAttribute("travelers", travelers);
-        model.addAttribute("travelClass", travelClass);
+        model.addAttribute("travelClass", travelClass != null ? travelClass : "ECONOMY");
         return "reservations/reservation-detail";
     }    @PostMapping("/book")
     public String createReservation(@ModelAttribute("reservationDto") ReservationRequest reservationRequest, Model model) {
         try {
+            // Validate the request
+            if (reservationRequest.getTravelers() == null || reservationRequest.getTravelers().isEmpty()) {
+                throw new RuntimeException("At least one traveler is required");
+            }
+            
+            // Validate each traveler
+            for (int i = 0; i < reservationRequest.getTravelers().size(); i++) {
+                TravelerInfo traveler = reservationRequest.getTravelers().get(i);
+                if (traveler.getFirstName() == null || traveler.getFirstName().trim().isEmpty()) {
+                    throw new RuntimeException("First name is required for traveler " + (i + 1));
+                }
+                if (traveler.getLastName() == null || traveler.getLastName().trim().isEmpty()) {
+                    throw new RuntimeException("Last name is required for traveler " + (i + 1));
+                }
+                if (traveler.getDateOfBirth() == null) {
+                    throw new RuntimeException("Date of birth is required for traveler " + (i + 1));
+                }
+                if (traveler.getNationality() == null || traveler.getNationality().trim().isEmpty()) {
+                    throw new RuntimeException("Nationality is required for traveler " + (i + 1));
+                }
+                if (traveler.getPassportNumber() == null || traveler.getPassportNumber().trim().isEmpty()) {
+                    throw new RuntimeException("Passport number is required for traveler " + (i + 1));
+                }
+            }
+            
             List<Reservation> reservations = reservationService.createReservation(reservationRequest);
             model.addAttribute("reservations", reservations);
             model.addAttribute("bookingSuccess", true);
@@ -66,6 +92,7 @@ public class ReservationViewController {
             model.addAttribute("flight", flight);
             model.addAttribute("reservationDto", reservationRequest);
             model.addAttribute("travelers", reservationRequest.getTravelers().size());
+            model.addAttribute("travelClass", reservationRequest.getTravelClass());
             model.addAttribute("error", e.getMessage());
             return "reservations/reservation-detail";
         }

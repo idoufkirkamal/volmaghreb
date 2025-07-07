@@ -8,4 +8,5 @@ import java.util.List;
 public class ReservationRequest {
     private Long flightId;
     private List<TravelerInfo> travelers;
+    private String travelClass; // Added travel class field
 }
