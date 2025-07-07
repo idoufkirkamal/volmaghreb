@@ -1,6 +1,6 @@
 # VolMaghreb Flight Reservation System
 
-VolMaghreb is a reliable and user-friendly flight reservation platform built with Spring Boot and modern web technologies. It features a clean, modern design and enables efficient management of flight bookings and airline operations for both customers and administrators.
+VolMaghreb is a user-friendly flight reservation platform built with Spring Boot and modern web technologies. It features a clean, modern design and enables efficient management of flight bookings and airline operations for both customers and administrators.
 
 ## 🚀 Features
 
@@ -99,10 +99,9 @@ VolMaghreb is a reliable and user-friendly flight reservation platform built wit
 
 ## �🛠️ Technology Stack
 
-- **Backend**: Spring Boot 3.2.0, Java 17
-- **Frontend**: Thymeleaf, Bootstrap 5.3.2, jQuery 3.7.1
+- **Backend**: Spring Boot 3.2.0, Java 17, Spring Data JPA, Spring Security 6
+- **Frontend**: Thymeleaf
 - **Database**: MySQL 8.0
-- **Security**: Spring Security 6
 - **Build Tool**: Maven
 - **Additional**: Lombok, Apache Commons Lang3
 
