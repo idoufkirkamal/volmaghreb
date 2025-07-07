@@ -6,6 +6,7 @@ import com.volmaghreb.reservation.entities.User;
 import com.volmaghreb.reservation.enums.Role;
 import com.volmaghreb.reservation.repositories.UserRepository;
 import com.volmaghreb.reservation.services.AuthService;
+import com.volmaghreb.reservation.services.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -31,6 +32,9 @@ public class AuthController {
     
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private UserServiceImpl userService;
 
     @GetMapping("/auth/sign-in")
     public String loginPage(@RequestParam(value = "error", required = false) String error,
@@ -121,7 +125,18 @@ public class AuthController {
     }
     
     @GetMapping("/home")
-    public String home() {
+    public String home(Model model, Authentication authentication) {
+        // Add user information if authenticated
+        if (authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser")) {
+            try {
+                model.addAttribute("user", userService.findByEmail(authentication.getName()));
+            } catch (Exception e) {
+                model.addAttribute("user", null);
+            }
+        } else {
+            model.addAttribute("user", null);
+        }
+        
         return "user/home";
     }
 

@@ -67,17 +67,33 @@ public class ReservationServiceImpl implements ReservationService {
         // Calculate price based on travel class
         BigDecimal pricePerSeat = getPriceByTravelClass(flight, travelClass);
         
-        Payment payment = new Payment();
-        payment.setTotalAmount(pricePerSeat.floatValue() * numberOfTravelers);
-        payment.setTransactionDate(LocalDate.now());
-        payment.setStatus(PaymentStatus.PENDING);
-        payment.setMethod(PaymentMethod.CREDIT_CARD); // Set default payment method
-        payment = paymentRepository.save(payment);
-        
         List<Reservation> reservations = new ArrayList<>();
+        
         for (int i = 0; i < numberOfTravelers; i++) {
             TravelerInfo travelerInfo = travelers.get(i);
-            Seat seat = availableSeats.get(i);
+            
+            // Get a fresh available seat for each traveler to avoid stale data
+            List<Seat> currentAvailableSeats = seatRepository.findByFlightAndSeatClassAndIsAvailable(
+                    flight, seatClassEnum, true);
+            
+            if (currentAvailableSeats.isEmpty()) {
+                throw new RuntimeException("No more available seats in " + travelClass + " class for this flight.");
+            }
+            
+            // Take the first available seat
+            Seat seat = currentAvailableSeats.get(0);
+            
+            // Immediately mark the seat as unavailable to prevent race conditions
+            seat.setAvailable(false);
+            seat = seatRepository.save(seat);
+
+            // Create a separate payment for each reservation
+            Payment payment = new Payment();
+            payment.setTotalAmount(pricePerSeat.floatValue());
+            payment.setTransactionDate(LocalDate.now());
+            payment.setStatus(PaymentStatus.PENDING);
+            payment.setMethod(PaymentMethod.CREDIT_CARD);
+            payment = paymentRepository.save(payment);
 
             Traveler traveler = new Traveler();
             traveler.setFirstname(travelerInfo.getFirstName());
@@ -114,7 +130,7 @@ public class ReservationServiceImpl implements ReservationService {
             traveler = travelerRepository.save(traveler);
 
             Reservation reservation = new Reservation();
-            reservation.setReservationNumber(UUID.randomUUID().toString());
+            reservation.setReservationNumber(generateReservationNumber());
             reservation.setStatus(ReservationStatus.CONFIRMED);
             reservation.setReservationTime(LocalDateTime.now());
             reservation.setReservationDateTime(LocalDateTime.now());
@@ -147,14 +163,9 @@ public class ReservationServiceImpl implements ReservationService {
                 throw new RuntimeException("Total price is required");
             }
 
-            // Save the reservation first
+            // Save the reservation
             reservation = reservationRepository.save(reservation);
             reservations.add(reservation);
-            
-            // Now update the seat availability and save
-            seat.setAvailable(false);
-            seat.setReservation(reservation);
-            seatRepository.save(seat);
         }
 
         return reservations;
@@ -189,6 +200,23 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
+    @Override
+    public ReservationDto getReservationById(Long id) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reservation not found"));
+        
+        // Security check: only allow users to view their own reservations
+        if (!reservation.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Access denied");
+        }
+        
+        return reservationMapper.toDto(reservation);
+    }
+
     private BigDecimal getPriceByTravelClass(Flight flight, String travelClass) {
         switch (travelClass.toUpperCase()) {
             case "FIRST":
@@ -202,5 +230,12 @@ public class ReservationServiceImpl implements ReservationService {
             default:
                 return flight.getEconomyClassPrice();
         }
+    }
+
+    private String generateReservationNumber() {
+        // Get the current count of reservations to generate a sequential number
+        long count = reservationRepository.count();
+        // Format as VOL followed by 4-digit number (e.g., VOL0001, VOL0002, etc.)
+        return String.format("VOL%04d", count + 1);
     }
 }

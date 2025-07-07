@@ -11,4 +11,5 @@ public interface ReservationService {
     List<Reservation> createReservation(ReservationRequest reservationRequest);
     Page<ReservationDto> getReservations(int page, int size);
     List<ReservationDto> getReservationsForCurrentUser();
+    ReservationDto getReservationById(Long id);
 }
