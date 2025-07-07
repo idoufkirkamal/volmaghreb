@@ -1,5 +1,6 @@
 package com.volmaghreb.reservation.controllers;
 
+import com.volmaghreb.reservation.dtos.AdminReservationDto;
 import com.volmaghreb.reservation.entities.Airplane;
 import com.volmaghreb.reservation.entities.Airport;
 import com.volmaghreb.reservation.entities.Flight;
@@ -7,8 +8,10 @@ import com.volmaghreb.reservation.services.AirplaneService;
 import com.volmaghreb.reservation.services.AirportService;
 import com.volmaghreb.reservation.services.DashboardService;
 import com.volmaghreb.reservation.services.FlightService;
+import com.volmaghreb.reservation.services.ReservationService;
 import com.volmaghreb.reservation.services.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +39,9 @@ public class AdminController {
 
     @Autowired
     private DashboardService dashboardService;
+
+    @Autowired
+    private ReservationService reservationService;
 
     @GetMapping("/dashboard")
     public String adminDashboard(Model model) {
@@ -76,9 +82,13 @@ public class AdminController {
     }
 
     @GetMapping("/reservations")
-    public String adminReservations(Model model) {
+    public String adminReservations(Model model, 
+                                   @RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "10") int size) {
+        Page<com.volmaghreb.reservation.dtos.AdminReservationDto> reservations = reservationService.getAdminReservations(page, size);
+        model.addAttribute("reservations", reservations);
         model.addAttribute("pageTitle", "Reservation Management - Volmaghreb");
-        return "reservations/admin-reservations";
+        return "admin/reservations";
     }
 
     @GetMapping("/airports")

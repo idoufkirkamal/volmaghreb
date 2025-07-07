@@ -17,4 +17,5 @@ public class ReservationDto {
     private LocalDate reservationDate;
     private Long userId;
     private FlightDto flight;
+    private TravelerDto traveler;
 }

@@ -9,7 +9,6 @@ import com.volmaghreb.reservation.services.FlightService;
 import com.volmaghreb.reservation.services.ReservationService;
 import com.volmaghreb.reservation.services.impl.UserServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +32,12 @@ public class ReservationViewController {
     private UserServiceImpl userService;
 
     @GetMapping("")
-    public String getReservations(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Page<ReservationDto> reservations = reservationService.getReservations(page, size);
+    public String getReservations(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, Authentication authentication) {
+        // This should only show current user's reservations, not all reservations
+        List<ReservationDto> reservations = reservationService.getReservationsForCurrentUser();
         model.addAttribute("reservations", reservations);
-        model.addAttribute("pageTitle", "Reservations - Volmaghreb");
-        return "reservations/flight-list";
+        model.addAttribute("pageTitle", "My Reservations - Volmaghreb");
+        return "reservations/reservation-list";
     }
     @GetMapping("/book")
     public String showBookingForm(Model model, @RequestParam Long flightId, @RequestParam(defaultValue = "1") int travelers, @RequestParam(required=false) String travelClass, Authentication authentication) {
@@ -160,7 +161,7 @@ public class ReservationViewController {
             model.addAttribute("user", null);
         }
         
-        return "reservations/reservation-account";
+        return "reservations/my-reservations";
     }
 
     @GetMapping("/detail/{id}")
@@ -186,6 +187,21 @@ public class ReservationViewController {
             // If reservation not found or access denied, redirect to my-reservations
             return "redirect:/reservations/my-reservations";
         }
+    }
+
+    @PostMapping("/cancel/{id}")
+    public String cancelReservation(@PathVariable Long id, Model model, Authentication authentication, RedirectAttributes redirectAttributes) {
+        try {
+            System.out.println("Attempting to cancel reservation with ID: " + id);
+            boolean result = reservationService.cancelReservation(id);
+            System.out.println("Cancellation result: " + result);
+            redirectAttributes.addFlashAttribute("successMessage", "Reservation cancelled successfully.");
+        } catch (Exception e) {
+            System.err.println("Error cancelling reservation: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "Error cancelling reservation: " + e.getMessage());
+        }
+        return "redirect:/reservations/my-reservations";
     }
 
 }
