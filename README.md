@@ -1,215 +1,282 @@
-# 🛫 VolMaghreb - Système de Réservation de Vols (Architecture MVC)
+# VolMaghreb Flight Reservation System
 
-## 📋 Description du Projet
+A comprehensive flight reservation system built with Spring Boot and modern web technologies, designed for managing flight bookings and airline operations.
 
-**VolMaghreb** est un système de réservation de vols développé en architecture **Model-View-Controller (MVC)** avec Spring Boot. Ce projet permet aux utilisateurs de rechercher, réserver et gérer leurs vols vers et depuis le Maroc de manière simple et sécurisée.
+## 🚀 Features
 
-## 🏗️ Architecture
+### For Customers
+- **Flight Search**: Search flights by origin, destination, date, and travel class
+- **Flight Booking**: Book flights with multiple travelers
+- **Reservation Management**: View and manage personal reservations
+- **User Authentication**: Secure user registration and login
+- **Profile Management**: Update personal information and passwords
 
-Le projet utilise une **architecture MVC monolithique** avec Spring Boot, offrant :
-- ✅ Simplicité de développement et de déploiement
-- ✅ Performance optimisée pour les équipes de taille moyenne
-- ✅ Maintenance facilitée
-- ✅ Tests d'intégration simplifiés
+### For Administrators
+- **Dashboard**: Overview of system statistics and metrics
+- **Flight Management**: Create, update, and delete flights
+- **Airport Management**: Manage airport information
+- **Airplane Management**: Manage aircraft fleet
+- **User Management**: View and manage user accounts
+- **Reservation Oversight**: Monitor all reservations in the system
 
-### Technologies Utilisées
+## � Screenshots
 
-- **Backend** : Spring Boot 3.2.0, Spring Security, Spring Data JPA
-- **Frontend** : Thymeleaf, Bootstrap 5, JavaScript
-- **Base de données** : MySQL 8.0
-- **Build** : Maven
-- **Conteneurisation** : Docker & Docker Compose
+### Customer Interface
 
-## 🚀 Démarrage Rapide
+<table>
+  <tr>
+    <td align="center">
+      <img src="src/main/resources/static/assets/images/Screenshots/1.png" width="400px" alt="Flight Search"/>
+      <br><b>Flight Search</b>
+    </td>
+    <td align="center">
+      <img src="src/main/resources/static/assets/images/Screenshots/2.png" width="400px" alt="Flight Results"/>
+      <br><b>Flight Results</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="src/main/resources/static/assets/images/Screenshots/3.png" width="400px" alt="Flight Booking"/>
+      <br><b>Flight Booking</b>
+    </td>
+    <td align="center">
+      <img src="src/main/resources/static/assets/images/Screenshots/4.png" width="400px" alt="User Reservations"/>
+      <br><b>User Reservations</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2">
+      <img src="src/main/resources/static/assets/images/Screenshots/5.png" width="400px" alt="User Profile"/>
+      <br><b>User Profile</b>
+    </td>
+  </tr>
+</table>
 
-### Prérequis
-- Java 17+
-- Maven 3.8+
-- Docker & Docker Compose
-- Git
+### Admin Interface
 
-### Installation
+<table>
+  <tr>
+    <td align="center">
+      <img src="src/main/resources/static/assets/images/Screenshots/6.png" width="400px" alt="Admin Dashboard"/>
+      <br><b>Admin Dashboard</b>
+    </td>
+    <td align="center">
+      <img src="src/main/resources/static/assets/images/Screenshots/7.png" width="400px" alt="Flight Management"/>
+      <br><b>Flight Management</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="src/main/resources/static/assets/images/Screenshots/8.png" width="400px" alt="Airport Management"/>
+      <br><b>Airport Management</b>
+    </td>
+    <td align="center">
+      <img src="src/main/resources/static/assets/images/Screenshots/9.png" width="400px" alt="User Management"/>
+      <br><b>User Management</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="src/main/resources/static/assets/images/Screenshots/10.png" width="400px" alt="Airplane Management"/>
+      <br><b>Airplane Management</b>
+    </td>
+    <td align="center">
+      <img src="src/main/resources/static/assets/images/Screenshots/11.png" width="400px" alt="Reservation Management"/>
+      <br><b>Reservation Management</b>
+    </td>
+  </tr>
+</table>
 
-1. **Cloner le projet**
+## �🛠️ Technology Stack
+
+- **Backend**: Spring Boot 3.2.0, Java 17
+- **Frontend**: Thymeleaf, Bootstrap 5.3.2, jQuery 3.7.1
+- **Database**: MySQL 8.0
+- **Security**: Spring Security 6
+- **Build Tool**: Maven
+- **Additional**: Lombok, Apache Commons Lang3
+
+## 📋 Prerequisites
+
+- Java 17 or higher
+- MySQL 8.0 or higher
+- Maven 3.6 or higher
+
+## ⚙️ Installation & Setup
+
+### 1. Clone the Repository
 ```bash
-git clone https://github.com/ouchgoutmohamed/volmaghreb.git
+git clone <repository-url>
 cd volmaghreb
 ```
 
-2. **Démarrer la base de données**
-```bash
-docker-compose up -d mysql
+### 2. Database Setup
+Create a MySQL database:
+```sql
+CREATE DATABASE volmaghreb_db;
 ```
 
-3. **Compiler et lancer l'application**
+### 3. Environment Configuration
+Create a `.env` file in the root directory:
+```env
+DB_USERNAME=your_mysql_username
+DB_PASSWORD=your_mysql_password
+```
+
+Alternatively, copy and configure the application properties:
+```bash
+cp src/main/resources/application.properties.example src/main/resources/application.properties
+```
+
+Update the database credentials in `application.properties`:
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/volmaghreb_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+```
+
+### 4. Build and Run
 ```bash
 mvn clean install
 mvn spring-boot:run
 ```
 
-4. **Accéder à l'application**
-- Application : http://localhost:8080/volmaghreb
-- Adminer (DB Admin) : http://localhost:8081
+The application will be available at: `http://localhost:8080/volmaghreb`
 
-### Configuration par défaut
-- **URL Application** : `http://localhost:8080/volmaghreb`
-- **Base de données** : `volmaghreb_db`
-- **Admin par défaut** : admin / admin123
+## 🔐 Default Credentials
 
-## 👥 Organisation de l'Équipe (4 Développeurs)
+### Admin Account
+- **Email**: admin@volmaghreb.com
+- **Password**: admin123
 
-| Développeur | Rôle | Responsabilités |
-|-------------|------|-----------------|
-| **Développeur 1** | Lead & Backend Core | Configuration, Entités, Services principaux, Sécurité |
-| **Développeur 2** | Backend Services & API | Contrôleurs, Services métier, APIs, Tests |
-| **Développeur 3** | Frontend & UI/UX | Templates Thymeleaf, CSS/JS, Design responsive |
-| **Développeur 4** | Database & DevOps | Base de données, Docker, Tests, Déploiement |
+*Note: The admin account is automatically created on first startup.*
 
-📋 **Voir le plan détaillé** : [PLAN_REPARTITION_TRAVAIL.md](PLAN_REPARTITION_TRAVAIL.md)
-
-## 📁 Structure du Projet
+## 📁 Project Structure
 
 ```
-volmaghreb/
-├── src/
-│   ├── main/
-│   │   ├── java/com/volmaghreb/reservation/
-│   │   │   ├── FlightReservationApplication.java
-│   │   │   ├── config/          # Configuration Spring
-│   │   │   ├── controller/      # Contrôleurs MVC
-│   │   │   ├── model/           # Entités JPA
-│   │   │   ├── repository/      # Repositories Spring Data
-│   │   │   ├── service/         # Services métier
-│   │   │   ├── dto/             # Data Transfer Objects
-│   │   │   └── exception/       # Gestion des exceptions
-│   │   └── resources/
-│   │       ├── application.properties
-│   │       ├── static/          # CSS, JS, Images
-│   │       └── templates/       # Templates Thymeleaf
-│   └── test/                    # Tests unitaires et d'intégration
-├── docker-compose.yml           # Configuration Docker
-├── pom.xml                      # Configuration Maven
-└── README.md
+src/
+├── main/
+│   ├── java/com/volmaghreb/reservation/
+│   │   ├── controllers/          # Web and REST controllers
+│   │   ├── services/             # Business logic layer
+│   │   ├── repositories/         # Data access layer
+│   │   ├── entities/             # JPA entities
+│   │   ├── dtos/                 # Data transfer objects
+│   │   ├── enums/                # Enumeration classes
+│   │   ├── mappers/              # Entity-DTO mappers
+│   │   └── config/               # Configuration classes
+│   ├── resources/
+│   │   ├── templates/            # Thymeleaf templates
+│   │   ├── static/               # Static web assets
+│   │   └── application.properties
 ```
 
-## 🎯 Fonctionnalités
+## 🌐 API Endpoints
 
-### ✅ Fonctionnalités Principales
-- **Authentification** : Connexion/Inscription sécurisée
-- **Recherche de vols** : Par destination, date, nombre de passagers
-- **Réservation** : Processus de réservation complet
-- **Paiement** : Simulation de paiement sécurisé
-- **Gestion des réservations** : Consultation, modification, annulation
-- **Interface responsive** : Compatible mobile et desktop
+### Public Endpoints
+- `GET /` - Home page
+- `GET /auth/sign-in` - Login page
+- `GET /auth/sign-up` - Registration page
+- `GET /about` - About page
+- `GET /contact` - Contact page
 
-### 🔄 Fonctionnalités Optionnelles
-- **Notifications par email** : Confirmations et rappels
-- **Panel d'administration** : Gestion des vols et utilisateurs
-- **API REST** : Pour intégrations futures
-- **Rapports et statistiques** : Tableaux de bord
+### Client Endpoints
+- `GET /flights` - Flight search
+- `GET /flights/search` - Search results
+- `GET /reservations` - User reservations
+- `POST /reservations/book` - Book a flight
+- `GET /user/profile` - User profile
 
-## 🛠️ Commandes Utiles
+### Admin Endpoints
+- `GET /admin/dashboard` - Admin dashboard
+- `GET /admin/flights` - Flight management
+- `GET /admin/airports` - Airport management
+- `GET /admin/airplanes` - Airplane management
+- `GET /admin/users` - User management
+- `GET /admin/reservations` - Reservation management
 
-### Développement
-```bash
-# Démarrer en mode développement
-mvn spring-boot:run
+### REST API
+- `GET /api/flights` - Get all flights
+- `POST /api/flights` - Create flight
+- `GET /api/airports` - Get all airports
+- `POST /api/reservations` - Create reservation
 
-# Tests
-mvn test
+## 🔧 Configuration
 
-# Build complet
-mvn clean package
-
-# Nettoyer le projet
-mvn clean
-```
-
-### Docker
-```bash
-# Démarrer tous les services
-docker-compose up -d
-
-# Voir les logs
-docker-compose logs -f
-
-# Arrêter les services
-docker-compose down
-
-# Rebuild les images
-docker-compose up --build
-```
-
-## 📊 Planning de Développement
-
-| Phase | Durée | Objectifs |
-|-------|-------|-----------|
-| **Phase 1** | Semaines 1-2 | Configuration & Architecture |
-| **Phase 2** | Semaines 3-5 | Développement Core |
-| **Phase 3** | Semaines 6-7 | Fonctionnalités Avancées |
-| **Phase 4** | Semaine 8 | Tests & Optimisation |
-| **Phase 5** | Semaines 9-10 | Finalisation & Livraison |
-
-## 🧪 Tests
-
-```bash
-# Tests unitaires
-mvn test
-
-# Tests d'intégration
-mvn verify
-
-# Couverture de code
-mvn jacoco:report
-```
-
-## 📝 Configuration
-
-### Base de données
-La configuration par défaut utilise MySQL. Pour modifier :
-
+### Server Configuration
 ```properties
-# application.properties
-spring.datasource.url=jdbc:mysql://localhost:3306/volmaghreb_db
-spring.datasource.username=root
-spring.datasource.password=password
+server.port=8080
+server.servlet.context-path=/volmaghreb
 ```
 
-### Profils d'environnement
-- **Développement** : `application.properties`
-- **Production** : `application-prod.properties`
-- **Tests** : `application-test.properties`
+### Database Configuration
+```properties
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+```
 
-## 🤝 Contribution
+### Security Configuration
+- Form-based authentication
+- Role-based access control (ADMIN, CLIENT)
+- Session management with remember-me functionality
 
-1. Fork le projet
-2. Créer une branche pour votre fonctionnalité (`git checkout -b feature/AmazingFeature`)
-3. Commit vos changements (`git commit -m 'Add some AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
+## 🎨 UI Features
+
+- **Responsive Design**: Bootstrap-based responsive layout
+- **Modern Interface**: Clean and professional design
+- **Interactive Elements**: Dynamic form validation and feedback
+- **Search Functionality**: Advanced flight search with filters
+- **User Dashboard**: Personalized user experience
+
+## 📊 Database Schema
+
+The system uses the following main entities:
+- **User**: System users (clients and admins)
+- **Flight**: Flight information
+- **Airport**: Airport details
+- **Airplane**: Aircraft information
+- **Reservation**: Booking records
+- **Seat**: Seat assignments
+
+## 🧪 Testing
+
+Run tests with:
+```bash
+mvn test
+```
+
+## 📝 Development
+
+### Adding New Features
+1. Create entities in the `entities` package
+2. Add repositories in the `repositories` package
+3. Implement services in the `services` package
+4. Create controllers in the `controllers` package
+5. Add templates in `src/main/resources/templates`
+
+### Code Style
+- Follow Spring Boot best practices
+- Use Lombok annotations for boilerplate code
+- Implement proper error handling
+- Add appropriate validation
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## 📄 License
+
+This project is proprietary software developed for VolMaghreb.
 
 ## 📞 Support
 
-- **Documentation** : Consultez le [Plan de Répartition](PLAN_REPARTITION_TRAVAIL.md)
-- **Issues** : Ouvrez une issue sur GitHub
-- **Wiki** : Documentation détaillée sur le wiki du projet
-
-## 📄 Licence
-
-Ce projet est sous licence MIT. Voir `LICENSE` pour plus de détails.
-
-## 🔄 Migration depuis Microservices
-
-Ce projet a été migré d'une architecture microservices vers MVC pour :
-- ✅ Simplifier le développement
-- ✅ Réduire la complexité opérationnelle
-- ✅ Optimiser les performances
-- ✅ Faciliter le travail en équipe
+For support and questions, please contact the development team.
 
 ---
 
-**Version** : 1.0.0  
-**Date de création** : 30 Mai 2025  
-**Équipe** : VolMaghreb Development Team  
-
-🛫 **Votre passerelle vers le Maroc - Réservez facilement et en toute sécurité !**
+**VolMaghreb Flight Reservation System** - Streamlining air travel in Morocco and beyond.
