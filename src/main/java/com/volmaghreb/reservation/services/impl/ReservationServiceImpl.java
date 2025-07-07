@@ -1,5 +1,6 @@
 package com.volmaghreb.reservation.services.impl;
 
+import com.volmaghreb.reservation.dtos.AdminReservationDto;
 import com.volmaghreb.reservation.dtos.ReservationDto;
 import com.volmaghreb.reservation.dtos.ReservationRequest;
 import com.volmaghreb.reservation.dtos.TravelerInfo;
@@ -8,6 +9,7 @@ import com.volmaghreb.reservation.enums.PaymentMethod;
 import com.volmaghreb.reservation.enums.PaymentStatus;
 import com.volmaghreb.reservation.enums.ReservationStatus;
 import com.volmaghreb.reservation.enums.SeatClass;
+import com.volmaghreb.reservation.mappers.AdminReservationMapper;
 import com.volmaghreb.reservation.mappers.ReservationMapper;
 import com.volmaghreb.reservation.repositories.*;
 import com.volmaghreb.reservation.services.ReservationService;
@@ -23,7 +25,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -37,6 +38,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final SeatRepository seatRepository;
     private final PaymentRepository paymentRepository;
     private final ReservationMapper reservationMapper;
+    private final AdminReservationMapper adminReservationMapper;
 
 
     @Override
@@ -178,6 +180,12 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public Page<AdminReservationDto> getAdminReservations(int page, int size) {
+        Page<Reservation> reservationPage = reservationRepository.findAll(PageRequest.of(page, size));
+        return reservationPage.map(adminReservationMapper::toDto);
+    }
+
+    @Override
     public List<ReservationDto> getReservationsForCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
@@ -217,6 +225,52 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationMapper.toDto(reservation);
     }
 
+    @Override
+    public AdminReservationDto getAdminReservationById(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reservation not found"));
+        return adminReservationMapper.toDto(reservation);
+    }
+
+    @Override
+    public boolean cancelReservation(Long reservationId) {
+        System.out.println("Service: Attempting to cancel reservation with ID: " + reservationId);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("Service: Current user: " + username);
+        User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
+        
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new RuntimeException("Reservation not found"));
+        
+        System.out.println("Service: Found reservation with status: " + reservation.getStatus());
+        
+        // Security check: only allow users to cancel their own reservations
+        if (!reservation.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Access denied: You can only cancel your own reservations");
+        }
+        
+        // Check if reservation can be cancelled (not already cancelled or completed)
+        if (reservation.getStatus() == ReservationStatus.CANCELLED) {
+            throw new RuntimeException("Reservation is already cancelled");
+        }
+        
+        if (reservation.getStatus() == ReservationStatus.COMPLETED) {
+            throw new RuntimeException("Cannot cancel a completed reservation");
+        }
+        
+        // Update reservation status to cancelled
+        System.out.println("Service: Setting reservation status to CANCELLED");
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        Reservation savedReservation = reservationRepository.save(reservation);
+        System.out.println("Service: Saved reservation with new status: " + savedReservation.getStatus());
+        
+        // Note: We don't update payment status as the payment was already processed successfully
+        // The payment remains as SUCCESS/COMPLETED to maintain financial record integrity
+        
+        System.out.println("Service: Cancellation completed successfully");
+        return true;
+    }
+
     private BigDecimal getPriceByTravelClass(Flight flight, String travelClass) {
         switch (travelClass.toUpperCase()) {
             case "FIRST":
@@ -235,7 +289,7 @@ public class ReservationServiceImpl implements ReservationService {
     private String generateReservationNumber() {
         // Get the current count of reservations to generate a sequential number
         long count = reservationRepository.count();
-        // Format as VOL followed by 4-digit number (e.g., VOL0001, VOL0002, etc.)
-        return String.format("VOL%04d", count + 1);
+        // Format as BK followed by 4-digit number (e.g., BK0001, BK0002, etc.)
+        return String.format("BK%04d", count + 1);
     }
 }

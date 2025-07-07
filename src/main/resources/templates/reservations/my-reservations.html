@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head}">
+</head>
+
+<body>
+
+<!-- Header START -->
+<header th:replace="~{fragments/navbar :: navbar}"></header>
+<!-- Header END -->
+
+<!-- **************** MAIN CONTENT START **************** -->
+<main>
+	
+<!-- =======================
+Content START -->
+<section class="pt-3">
+	<div class="container">
+		<div class="row g-2 g-lg-4">
+
+			<!-- Sidebar START -->
+			<div th:replace="~{fragments/profileSidebarFragment :: profile-sidebar(currentPage='reservations')}">
+			</div>
+			<!-- Sidebar END -->
+
+			<!-- Main content START -->
+			<div class="col-lg-8 col-xl-9 ps-xl-5">
+
+				<!-- Offcanvas menu button -->
+				<div class="d-grid mb-0 d-lg-none w-100">
+					<button class="btn btn-primary mb-4" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+						<i class="fas fa-sliders-h"></i> Menu
+					</button>
+				</div>
+
+				<div class="card border bg-transparent">
+					<!-- Success/Error Messages -->
+					<div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+						<i class="bi bi-check-circle-fill me-2"></i>
+						<span th:text="${successMessage}">Success message</span>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+					<div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+						<i class="bi bi-exclamation-triangle-fill me-2"></i>
+						<span th:text="${errorMessage}">Error message</span>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+					
+					<!-- Card header -->
+					<div class="card-header bg-transparent border-bottom">
+						<h4 class="card-header-title">My Reservations</h4>
+					</div>
+
+					<!-- Card body START -->
+					<div class="card-body p-0">
+
+						<!-- Tabs -->
+						<ul class="nav nav-tabs nav-bottom-line nav-responsive nav-justified">
+							<li class="nav-item"> 
+								<a class="nav-link mb-0 active" data-bs-toggle="tab" href="#tab-1"><i class="bi bi-briefcase-fill fa-fw me-1"></i>Upcoming Booking</a> 
+							</li>
+							<li class="nav-item">
+								<a class="nav-link mb-0" data-bs-toggle="tab" href="#tab-2"><i class="bi bi-x-octagon fa-fw me-1"></i>Canceled Booking</a> 
+								</li>
+							<li class="nav-item"> 
+								<a class="nav-link mb-0" data-bs-toggle="tab" href="#tab-3"><i class="bi bi-patch-check fa-fw me-1"></i>Completed Booking</a> 
+							</li>
+						</ul>
+
+						<!-- Tabs content START -->
+						<div class="tab-content p-2 p-sm-4" id="nav-tabContent">
+
+							<!-- Tab content item START -->
+							<div class="tab-pane fade show active" id="tab-1">
+                				<!-- Upcoming Reservations -->
+								<div th:each="reservation : ${reservations}" 
+									 th:if="${reservation.status != null and reservation.status.name() == 'CONFIRMED'}" 
+									 class="card border mb-4">
+									<!-- Card header -->
+									<div class="card-header border-bottom d-md-flex justify-content-md-between align-items-center">
+										<!-- Icon and Title -->
+										<div class="d-flex align-items-center">
+											<div class="icon-lg bg-light rounded-circle flex-shrink-0"><i class="fa-solid fa-plane"></i></div>	
+											<!-- Title -->
+											<div class="ms-2">
+												<h6 class="card-title mb-0" th:text="${reservation.flight.departureAirport.iataCode + ' (' + reservation.flight.departureAirport.city + ') to ' + reservation.flight.arrivalAirport.iataCode + ' (' + reservation.flight.arrivalAirport.city + ')'}">AGA (Agadir) to CMN (Casablanca)</h6>
+												<ul class="nav nav-divider small">
+													<li class="nav-item" th:text="'Reservation ID: ' + ${reservation.reservationNumber}">Reservation ID: CGDSUAHA12548</li>
+													<li class="nav-item" th:text="${reservation.flight.travelClass ?: 'Economy'}">Economy</li>
+												</ul>
+											</div>
+										</div>
+	
+										<!-- Buttons -->
+										<div class="hstack gap-2 mt-3 mt-sm-0">
+											<a href="#" class="btn btn-sm btn-danger mb-0" th:attr="data-bs-target=${'#removeModal' + reservation.id}" data-bs-toggle="modal"><i class="bi bi-trash3 fa-fw me-1"></i>Cancel</a>
+											<a href="#" class="btn btn-sm btn-light mb-0" th:attr="data-bs-target=${'#viewModal' + reservation.id}" data-bs-toggle="modal"><i class="bi bi-eye fa-fw me-1"></i>View</a>
+										</div>
+									</div>
+	
+									<!-- Card body -->
+									<div class="card-body">
+										<div class="row g-3">
+											<div class="col-sm-6 col-md-4">
+												<span>Departure time</span>
+												<h6 class="mb-0" th:text="${reservation.flight != null and reservation.flight.departureTime != null ? #temporals.format(reservation.flight.departureTime, 'EEE dd MMM HH:mm') : 'N/A'}">Tue 05 Aug 12:00 AM</h6>
+											</div>
+	
+											<div class="col-sm-6 col-md-4">
+												<span>Arrival time</span>
+												<h6 class="mb-0" th:text="${reservation.flight != null and reservation.flight.arrivalTime != null ? #temporals.format(reservation.flight.arrivalTime, 'EEE dd MMM HH:mm') : 'N/A'}">Tue 06 Aug 4:00 PM</h6>
+											</div>
+	
+											<div class="col-md-4">
+												<span>Traveler Name</span>
+												<h6 class="mb-0" th:text="${reservation.traveler != null ? reservation.traveler.fullName : 'N/A'}">N/A</h6>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<!-- No upcoming reservations message -->
+								<div th:if="${#lists.isEmpty(reservations.?[status != null and status.name() == 'CONFIRMED'])}" 
+									 class="bg-mode shadow p-4 rounded overflow-hidden">
+									<div class="row g-4 align-items-center">
+										<!-- Content -->
+										<div class="col-md-9">
+											<h6>No upcoming reservations found</h6>
+											<h4 class="mb-2">When you book a flight, it will appear here.</h4>
+											<a th:href="@{/flights}" class="btn btn-primary-soft mb-0">Start booking now</a>
+										</div>
+										<!-- Image -->
+										<div class="col-md-3 text-end">
+											<img th:src="@{/assets/images/element/17.svg}" class="mb-n5" alt="">
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- Tabs content item END -->
+
+							<!-- Tab content item START -->
+							<div class="tab-pane fade" id="tab-2">
+								<!-- Cancelled Reservations -->
+								<div th:each="reservation : ${reservations}" 
+									 th:if="${reservation.status != null and reservation.status.name() == 'CANCELLED'}" 
+									 class="card border mb-4">
+									<!-- Card header -->
+									<div class="card-header border-bottom d-md-flex justify-content-md-between align-items-center">
+										<!-- Icon and Title -->
+										<div class="d-flex align-items-center">
+											<div class="icon-lg bg-light rounded-circle flex-shrink-0"><i class="fa-solid fa-plane"></i></div>	
+											<!-- Title -->
+											<div class="ms-2">
+												<h6 class="card-title mb-0" th:text="${reservation.flight.departureAirport.iataCode + ' (' + reservation.flight.departureAirport.city + ') to ' + reservation.flight.arrivalAirport.iataCode + ' (' + reservation.flight.arrivalAirport.city + ')'}">AGA (Agadir) to CMN (Casablanca)</h6>
+												<ul class="nav nav-divider small">
+													<li class="nav-item" th:text="'Reservation ID: ' + ${reservation.reservationNumber}">Reservation ID: CGDSUAHA12548</li>
+													<li class="nav-item" th:text="${reservation.flight.travelClass ?: 'Economy'}">Economy</li>
+												</ul>
+											</div>
+										</div>
+	
+										<!-- Button -->
+										<div class="mt-2 mt-md-0">
+											<p class="text-danger text-md-end mb-0">Booking cancelled</p>
+										</div>
+									</div>
+	
+									<!-- Card body -->
+									<div class="card-body">
+										<div class="row g-3">
+											<div class="col-sm-6 col-md-4">
+												<span>Departure time</span>
+												<h6 class="mb-0" th:text="${reservation.flight != null and reservation.flight.departureTime != null ? #temporals.format(reservation.flight.departureTime, 'EEE dd MMM HH:mm') : 'N/A'}">Tue 05 Aug 12:00 AM</h6>
+											</div>
+	
+											<div class="col-sm-6 col-md-4">
+												<span>Arrival time</span>
+												<h6 class="mb-0" th:text="${reservation.flight != null and reservation.flight.arrivalTime != null ? #temporals.format(reservation.flight.arrivalTime, 'EEE dd MMM HH:mm') : 'N/A'}">Tue 06 Aug 4:00 PM</h6>
+											</div>
+	
+											<div class="col-md-4">
+												<span>Traveler Name</span>
+												<h6 class="mb-0" th:text="${reservation.traveler != null ? reservation.traveler.fullName : 'N/A'}">N/A</h6>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<!-- No cancelled reservations message -->
+								<div th:if="${#lists.isEmpty(reservations.?[status != null and status.name() == 'CANCELLED'])}" 
+									 class="bg-mode shadow p-4 rounded overflow-hidden">
+									<div class="row g-4 align-items-center">
+										<!-- Content -->
+										<div class="col-md-9">
+											<h6>No cancelled reservations</h6>
+											<h4 class="mb-2">You have no cancelled bookings.</h4>
+										</div>
+										<!-- Image -->
+										<div class="col-md-3 text-end">
+											<img th:src="@{/assets/images/element/17.svg}" class="mb-n5" alt="">
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- Tabs content item END -->
+	
+							<!-- Tab content item START -->
+							<div class="tab-pane fade" id="tab-3">
+								<!-- Completed Reservations -->
+								<div th:each="reservation : ${reservations}" 
+									 th:if="${reservation.status != null and reservation.status.name() == 'COMPLETED'}" 
+									 class="card border mb-4">
+									<!-- Card header -->
+									<div class="card-header border-bottom d-md-flex justify-content-md-between align-items-center">
+										<!-- Icon and Title -->
+										<div class="d-flex align-items-center">
+											<div class="icon-lg bg-light rounded-circle flex-shrink-0"><i class="fa-solid fa-plane"></i></div>	
+											<!-- Title -->
+											<div class="ms-2">
+												<h6 class="card-title mb-0" th:text="${reservation.flight.departureAirport.iataCode + ' (' + reservation.flight.departureAirport.city + ') to ' + reservation.flight.arrivalAirport.iataCode + ' (' + reservation.flight.arrivalAirport.city + ')'}">AGA (Agadir) to CMN (Casablanca)</h6>
+												<ul class="nav nav-divider small">
+													<li class="nav-item" th:text="'Reservation ID: ' + ${reservation.reservationNumber}">Reservation ID: CGDSUAHA12548</li>
+													<li class="nav-item" th:text="${reservation.flight.travelClass ?: 'Economy'}">Economy</li>
+												</ul>
+											</div>
+										</div>
+	
+										<!-- Button -->
+										<div class="mt-2 mt-md-0">
+											<p class="text-success text-md-end mb-0">Completed</p>
+										</div>
+									</div>
+	
+									<!-- Card body -->
+									<div class="card-body">
+										<div class="row g-3">
+											<div class="col-sm-6 col-md-4">
+												<span>Departure time</span>
+												<h6 class="mb-0" th:text="${reservation.flight != null and reservation.flight.departureTime != null ? #temporals.format(reservation.flight.departureTime, 'EEE dd MMM HH:mm') : 'N/A'}">Tue 05 Aug 12:00 AM</h6>
+											</div>
+	
+											<div class="col-sm-6 col-md-4">
+												<span>Arrival time</span>
+												<h6 class="mb-0" th:text="${reservation.flight != null and reservation.flight.arrivalTime != null ? #temporals.format(reservation.flight.arrivalTime, 'EEE dd MMM HH:mm') : 'N/A'}">Tue 06 Aug 4:00 PM</h6>
+											</div>
+	
+											<div class="col-md-4">
+												<span>Traveler Name</span>
+												<h6 class="mb-0" th:text="${reservation.traveler != null ? reservation.traveler.fullName : 'N/A'}">N/A</h6>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<!-- No completed reservations message -->
+								<div th:if="${#lists.isEmpty(reservations.?[status != null and status.name() == 'COMPLETED'])}" 
+									 class="bg-mode shadow p-4 rounded overflow-hidden">
+									<div class="row g-4 align-items-center">
+										<!-- Content -->
+										<div class="col-md-9">
+											<h6>Looks like you have never completed a trip with Volmaghreb</h6>
+											<h4 class="mb-2">When you complete your trip, it will be shown here.</h4>
+											<a th:href="@{/flights}" class="btn btn-primary-soft mb-0">Start booking now</a>
+										</div>
+										<!-- Image -->
+										<div class="col-md-3 text-end">
+											<img th:src="@{/assets/images/element/17.svg}" class="mb-n5" alt="">
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- Tabs content item END -->
+						</div>
+
+					</div>
+					<!-- Card body END -->
+				</div>
+
+			</div>
+			<!-- Main content END -->
+		</div>
+	</div>
+</section>
+<!-- =======================
+Content END -->
+
+<!-- Dynamic View Modals for each reservation -->
+<div th:each="reservation : ${reservations}" th:id="'viewModal' + ${reservation.id}" class="modal fade" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" th:text="'Reservation Details - ' + ${reservation.reservationNumber}">Reservation Details</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="row g-4">
+					<!-- Basic Information -->
+					<div class="col-md-6">
+						<h6 class="mb-3">Basic Information</h6>
+						<div class="bg-light p-3 rounded">
+							<div class="row g-2">
+								<div class="col-sm-4"><strong>Reservation #:</strong></div>
+								<div class="col-sm-8" th:text="${reservation.reservationNumber}">CGDSUAHA12548</div>
+								<div class="col-sm-4"><strong>Status:</strong></div>
+								<div class="col-sm-8">
+									<span th:if="${reservation.status != null}" th:switch="${reservation.status.name()}"
+										  class="badge"
+										  th:classappend="${reservation.status.name() == 'CONFIRMED' ? 'text-bg-success' : (reservation.status.name() == 'CANCELLED' ? 'text-bg-danger' : 'text-bg-warning')}">
+										<span th:case="'CONFIRMED'">Confirmed</span>
+										<span th:case="'CANCELLED'">Cancelled</span>
+										<span th:case="'COMPLETED'">Completed</span>
+										<span th:case="*" th:text="${reservation.status}">Status</span>
+									</span>
+									<span th:if="${reservation.status == null}" class="badge text-bg-secondary">Unknown</span>
+								</div>
+								<div class="col-sm-4"><strong>Airline:</strong></div>
+								<div class="col-sm-8">Volmaghreb Airlines</div>
+							</div>
+						</div><img class="light-mode-item navbar-brand-item h-70px" th:src="@{/assets/images/logo-dark.png}" alt="logo">
+                <img class="dark-mode-item navbar-brand-item h-70px" th:src="@{/assets/images/logo-light.png}" alt="logo">
+					</div>
+					
+					<!-- Passenger Information -->
+					<div class="col-md-6">
+						<h6 class="mb-3">Passenger Information</h6>
+						<div class="bg-light p-3 rounded">
+							<div class="row g-2">
+								<div class="col-sm-4"><strong>Name:</strong></div>
+								<div class="col-sm-8" th:text="${reservation.traveler != null ? reservation.traveler.fullName : 'N/A'}">N/A</div>
+								<div class="col-sm-4"><strong>Email:</strong></div>
+								<div class="col-sm-8" th:text="${reservation.traveler != null ? reservation.traveler.email : (user != null ? user.email : 'N/A')}">N/A</div>
+								<div class="col-sm-4"><strong>Travel Class:</strong></div>
+								<div class="col-sm-8" th:text="${reservation.flight.travelClass ?: 'Economy'}">Economy</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Flight Information -->
+					<div class="col-12">
+						<h6 class="mb-3">Flight Information</h6>
+						<div class="bg-light p-3 rounded">
+							<div class="row g-2">
+								<div class="col-sm-2"><strong>Route:</strong></div>
+								<div class="col-sm-4" th:text="${reservation.flight.departureAirport.iataCode + ' (' + reservation.flight.departureAirport.city + ') → ' + reservation.flight.arrivalAirport.iataCode + ' (' + reservation.flight.arrivalAirport.city + ')'}">AGA (Agadir) → CMN (Casablanca)</div>
+								<div class="col-sm-2"><strong>Flight:</strong></div>
+								<div class="col-sm-4" th:text="${reservation.flight.flightNumber ?: 'N/A'}">N/A</div>
+								<div class="col-sm-2"><strong>Departure:</strong></div>
+								<div class="col-sm-4" th:text="${reservation.flight != null and reservation.flight.departureTime != null ? #temporals.format(reservation.flight.departureTime, 'EEE dd MMM yyyy HH:mm') : 'N/A'}">N/A</div>
+								<div class="col-sm-2"><strong>Arrival:</strong></div>
+								<div class="col-sm-4" th:text="${reservation.flight != null and reservation.flight.arrivalTime != null ? #temporals.format(reservation.flight.arrivalTime, 'EEE dd MMM yyyy HH:mm') : 'N/A'}">N/A</div>
+								<div class="col-sm-2"><strong>Duration:</strong></div>
+								<div class="col-sm-4" th:text="${reservation.flight.duration ?: 'N/A'}">N/A</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Payment Information -->
+					<div class="col-12">
+						<h6 class="mb-3">Payment Information</h6>
+						<div class="bg-light p-3 rounded">
+							<div class="row g-2">
+								<div class="col-sm-2"><strong>Amount:</strong></div>
+								<div class="col-sm-4" th:text="${reservation.flight != null and reservation.flight.price != null ? (#numbers.formatDecimal(reservation.flight.price, 1, 'COMMA', 2, 'POINT') + ' DH') : 'N/A'}">N/A</div>
+								<div class="col-sm-2"><strong>Payment Method:</strong></div>
+								<div class="col-sm-4">Credit Card</div>
+								<div class="col-sm-2"><strong>Payment Status:</strong></div>
+								<div class="col-sm-4">
+									<span class="badge text-bg-success">Completed</span>
+								</div>
+								<div class="col-sm-2"><strong>Policy:</strong></div>
+								<div class="col-sm-4">Non-refundable</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Dynamic Remove Confirmation Modals for each reservation -->
+<div th:each="reservation : ${reservations}" th:id="'removeModal' + ${reservation.id}" class="modal fade" tabindex="-1" aria-labelledby="removeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="removeModalLabel">Confirm Cancellation</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p th:text="'Are you sure you want to cancel this reservation (Reservation ID: ' + ${reservation.reservationNumber} + ')? This action is non-refundable.'">Are you sure you want to cancel this reservation?</p>
+				<div class="alert alert-warning">
+					<i class="bi bi-exclamation-triangle-fill me-2"></i>
+					<strong>Warning:</strong> Once cancelled, this reservation cannot be restored and no refund will be provided.
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Keep Reservation</button>
+				<form th:action="@{/reservations/cancel/{id}(id=${reservation.id})}" method="post" style="display: inline;">
+					<button type="submit" class="btn btn-danger">
+						<i class="bi bi-trash3 me-1"></i>Yes, Cancel Reservation
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+</main>
+<!-- **************** MAIN CONTENT END **************** -->
+
+<!-- =======================
+Footer START -->
+<footer th:replace="~{fragments/footer :: footer}">
+</footer>
+<!-- =======================
+Footer END -->
+
+<!-- Back to top -->
+<div class="back-top"></div>
+
+<!-- Bootstrap JS -->
+<script th:src="@{/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Vendors -->
+<script th:src="@{/assets/vendor/sticky-js/sticky.min.js}"></script>
+<script th:src="@{/assets/vendor/aos/aos.js}"></script>
+<script th:src="@{/assets/vendor/flatpickr/js/flatpickr.min.js}"></script>
+<script th:src="@{/assets/vendor/choices/js/choices.min.js}"></script>
+
+<!-- ThemeFunctions -->
+<script th:src="@{/assets/js/functions.js}"></script>
+
+<!-- Initialize dropdowns -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all dropdowns
+    var dropdownElementList = [].slice.call(document.querySelectorAll('[data-bs-toggle="dropdown"]'));
+    var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+        return new bootstrap.Dropdown(dropdownToggleEl);
+    });
+    
+    // Initialize theme switcher
+    const themeButtons = document.querySelectorAll('[data-bs-theme-value]');
+    themeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const theme = this.getAttribute('data-bs-theme-value');
+            if (theme) {
+                document.documentElement.setAttribute('data-bs-theme', theme);
+                localStorage.setItem('theme', theme);
+            }
+        });
+    });
+});
+</script>
+
+</body>
+
+<!-- Mirrored from stackbros.in/bookinga/landing/account-bookings.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 Apr 2025 18:38:23 GMT -->
+</html>
