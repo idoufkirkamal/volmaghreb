@@ -78,12 +78,11 @@ Flight list START -->
 					<div th:if="${flights != null and flights.size() > 0}">
 						<div th:each="flight : ${flights}" class="card border">
 							<!-- Card header -->
-							<div class="card-header d-sm-flex justify-content-sm-between align-items-center">
-								<!-- Airline Name -->
-								<div class="d-flex align-items-center mb-2 mb-sm-0">
-									<img th:src="@{/assets/images/element/13.svg}" class="w-30px me-2" alt="">
-									<h6 class="fw-normal mb-0">Volmaghreb Airlines</h6>
-								</div>
+							<div class="card-header d-sm-flex justify-content-sm-between align-items-center">							<!-- Airline Name -->
+							<div class="d-flex align-items-center mb-2 mb-sm-0">
+								<img th:src="@{/assets/images/logo-dark.png}" class="w-40px me-2" alt="Volmaghreb Airlines Logo">
+								<h6 class="fw-normal mb-0">Volmaghreb Airlines</h6>
+							</div>
 								<h6 class="fw-normal mb-0">
 									<span class="text-body">Flight:</span> 
 									<span th:text="${flight.flightNumber}">VM001</span>
