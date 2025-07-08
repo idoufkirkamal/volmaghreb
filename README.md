@@ -103,7 +103,9 @@ VolMaghreb is a user-friendly flight reservation platform built with Spring Boot
 - **Frontend**: Thymeleaf
 - **Database**: MySQL 8.0
 - **Build Tool**: Maven
-- **Additional**: Lombok, Apache Commons Lang3
+- **Deployment**: Docker, Render(Free Tier)
+- **Database Hosting**: Aiven MySQL Cloud Service
+- **Additional**: Lombok, DBeaver
 
 ## 📋 Prerequisites
 
@@ -213,3 +215,5 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 ---
 
 **VolMaghreb Flight Reservation System**
+
+🔗 **Live Demo**: [https://volmaghreb.onrender.com/volmaghreb/](https://volmaghreb.onrender.com/volmaghreb/)  
