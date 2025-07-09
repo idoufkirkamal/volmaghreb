@@ -34,7 +34,7 @@ public class Flight {
     @JoinColumn(name = "destination_airport_id", nullable = false)
     private Airport destinationAirport;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "airplane_id", nullable = false)
     private Airplane airplane;
 

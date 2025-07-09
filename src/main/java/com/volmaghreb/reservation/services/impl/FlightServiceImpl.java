@@ -66,6 +66,11 @@ public class FlightServiceImpl implements FlightService {
             flight.setFlightNumber(generateFlightNumber());
         }
         
+        // Validate airplane is assigned
+        if (flight.getAirplane() == null) {
+            throw new RuntimeException("Flight must have an airplane assigned");
+        }
+        
         // Save the flight first
         Flight savedFlight = flightRepository.save(flight);
 

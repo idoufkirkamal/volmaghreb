@@ -1,8 +1,10 @@
 package com.volmaghreb.reservation.services.impl;
 
+import com.volmaghreb.reservation.entities.Airplane;
 import com.volmaghreb.reservation.entities.Flight;
 import com.volmaghreb.reservation.entities.Seat;
 import com.volmaghreb.reservation.enums.SeatClass;
+import com.volmaghreb.reservation.repositories.AirplaneRepository;
 import com.volmaghreb.reservation.repositories.SeatRepository;
 import com.volmaghreb.reservation.services.SeatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ public class SeatServiceImpl implements SeatService {
 
     @Autowired
     private SeatRepository seatRepository;
+    
+    @Autowired
+    private AirplaneRepository airplaneRepository;
 
     @Override
     public Seat createSeat(SeatClass seatClass, int seatNumber, Flight flight) {
@@ -34,15 +39,23 @@ public class SeatServiceImpl implements SeatService {
     public void createSeatsForFlight(Flight flight) {
         // Check if seats already exist for this flight
         if (seatRepository.existsByFlight(flight)) {
-            System.out.println("Seats already exist for flight: " + flight.getFlightNumber());
             return;
         }
-
-        System.out.println("Creating seats for flight: " + flight.getFlightNumber());
+        
+        // Validate airplane exists
+        if (flight.getAirplane() == null) {
+            throw new RuntimeException("Cannot create seats: Flight has no airplane assigned");
+        }
+        
+        // Force fetch the airplane from the database to ensure we have all the data
+        Airplane airplane = airplaneRepository.findById(flight.getAirplane().getId())
+                .orElseThrow(() -> new RuntimeException("Airplane not found with ID: " + flight.getAirplane().getId()));
+        
         List<Seat> seats = new ArrayList<>();
 
         // Create First Class seats
-        for (int i = 1; i <= flight.getAirplane().getFirstClassCapacity(); i++) {
+        int firstClassCapacity = airplane.getFirstClassCapacity();
+        for (int i = 1; i <= firstClassCapacity; i++) {
             Seat seat = new Seat();
             seat.setSeatClass(SeatClass.FIRST_CLASS);
             seat.setSeatNumber("F" + i);
@@ -52,7 +65,8 @@ public class SeatServiceImpl implements SeatService {
         }
 
         // Create Business Class seats
-        for (int i = 1; i <= flight.getAirplane().getBusinessClassCapacity(); i++) {
+        int businessClassCapacity = airplane.getBusinessClassCapacity();
+        for (int i = 1; i <= businessClassCapacity; i++) {
             Seat seat = new Seat();
             seat.setSeatClass(SeatClass.BUSINESS_CLASS);
             seat.setSeatNumber("B" + i);
@@ -62,7 +76,8 @@ public class SeatServiceImpl implements SeatService {
         }
 
         // Create Economy Class seats
-        for (int i = 1; i <= flight.getAirplane().getEconomyClassCapacity(); i++) {
+        int economyClassCapacity = airplane.getEconomyClassCapacity();
+        for (int i = 1; i <= economyClassCapacity; i++) {
             Seat seat = new Seat();
             seat.setSeatClass(SeatClass.ECONOMY_CLASS);
             seat.setSeatNumber("E" + i);
@@ -71,9 +86,13 @@ public class SeatServiceImpl implements SeatService {
             seats.add(seat);
         }
 
+        // Validate that we have some seats to create
+        if (seats.isEmpty()) {
+            return;
+        }
+
         // Save all seats in batch
         seatRepository.saveAll(seats);
-        System.out.println("Created " + seats.size() + " seats for flight: " + flight.getFlightNumber());
     }
 
     @Override
