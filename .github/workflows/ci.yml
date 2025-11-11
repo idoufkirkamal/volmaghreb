@@ -1,6 +1,6 @@
-name: CI Pipeline
+name: CI/CD Pipeline - Azure Web App
 
-# Trigger the workflow on pushes and pull requests to the main and develop branches
+# Déclenche le workflow sur push et PR sur main ou develop
 on:
   push:
     branches: [ main, develop ]
@@ -8,38 +8,48 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  build-and-test:
+  build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the repositories code
+      # 1️⃣ Récupérer le code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up JDK 17 (since your project uses Java 17)
+      # 2️⃣ Installer Java 17
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin' # A popular JDK distribution
+          distribution: 'temurin'
 
-      # Step 3: Cache Maven dependencies to speed up builds
+      # 3️⃣ Cacher les dépendances Maven pour accélérer les builds
       - name: Cache Maven dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.m2/repositories
+          path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # Step 4: Build the project with Maven and run tests
+      # 4️⃣ Construire le projet avec Maven et lancer les tests
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean package
 
-      # Step 5: (Optional) Upload test results as an artifact
+      # 5️⃣ Upload des résultats de test (optionnel)
       - name: Upload test results
-        if: always() # Run even if the build fails
+        if: always()  # exécute même si le build échoue
         uses: actions/upload-artifact@v3
         with:
           name: test-results
           path: target/surefire-reports/
+
+      # 6️⃣ Déployer sur Azure App Service avec Basic Auth
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: SystemeReservationVOl         # Nom de ton App Service
+          slot-name: Production                   # Slot de production
+          package: target/*.jar                    # Jar généré par Maven
+          username: ${{ secrets.AZURE_USERNAME }} # Username Basic Auth
+          password: ${{ secrets.AZURE_PASSWORD }} # Password Basic Auth
