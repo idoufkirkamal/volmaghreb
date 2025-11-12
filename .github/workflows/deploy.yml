@@ -3,7 +3,7 @@ name: CI/CD Spring Boot to Azure
 on:
   push:
     branches:
-      - main  # ou master selon ton dépôt
+      - master  # ou master selon ton dépôt
 
 jobs:
   build-and-deploy:
@@ -33,6 +33,6 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'SystemeReservationVOl'           # ton App Service
+          app-name: 'SystemeReservationVOl'           
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: target/*.jar                        # le jar généré
+          package: target/*.jar                       

@@ -157,6 +157,7 @@
 
     <!-- Build Configuration -->
     <build>
+         <finalName>app</finalName>
         <plugins>
             <!-- Spring Boot Maven Plugin -->
             <plugin>
