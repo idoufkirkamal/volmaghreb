@@ -13,10 +13,6 @@ target/
 .env
 mysql-config.env
 
-# Application configuration with sensitive data
-application.properties
-application-*.properties
-
 # Docker volumes and temporary files
 docker-compose.yml.bak
 *.swp
