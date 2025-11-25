@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
-//admin controller 
+// admin controller 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
